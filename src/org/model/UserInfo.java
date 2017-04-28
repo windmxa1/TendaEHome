@@ -10,6 +10,8 @@ public class UserInfo implements java.io.Serializable {
 
 	private Long id;
 	private String nickName;
+	private String headUrl;
+	private Long userid;
 
 	// Constructors
 
@@ -17,9 +19,16 @@ public class UserInfo implements java.io.Serializable {
 	public UserInfo() {
 	}
 
+	/** minimal constructor */
+	public UserInfo(Long userid) {
+		this.userid = userid;
+	}
+
 	/** full constructor */
-	public UserInfo(String nickName) {
+	public UserInfo(String nickName, String headUrl, Long userid) {
 		this.nickName = nickName;
+		this.headUrl = headUrl;
+		this.userid = userid;
 	}
 
 	// Property accessors
@@ -38,6 +47,22 @@ public class UserInfo implements java.io.Serializable {
 
 	public void setNickName(String nickName) {
 		this.nickName = nickName;
+	}
+
+	public String getHeadUrl() {
+		return this.headUrl;
+	}
+
+	public void setHeadUrl(String headUrl) {
+		this.headUrl = headUrl;
+	}
+
+	public Long getUserid() {
+		return this.userid;
+	}
+
+	public void setUserid(Long userid) {
+		this.userid = userid;
 	}
 
 }

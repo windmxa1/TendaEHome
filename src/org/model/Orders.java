@@ -10,7 +10,7 @@ public class Orders implements java.io.Serializable {
 
 	private Long id;
 	private Long userid;
-	private Integer time;
+	private Long time;
 	private Integer state;
 	private Long addressId;
 
@@ -21,7 +21,7 @@ public class Orders implements java.io.Serializable {
 	}
 
 	/** full constructor */
-	public Orders(Long userid, Integer time, Integer state, Long addressId) {
+	public Orders(Long userid, Long time, Integer state, Long addressId) {
 		this.userid = userid;
 		this.time = time;
 		this.state = state;
@@ -46,11 +46,11 @@ public class Orders implements java.io.Serializable {
 		this.userid = userid;
 	}
 
-	public Integer getTime() {
+	public Long getTime() {
 		return this.time;
 	}
 
-	public void setTime(Integer time) {
+	public void setTime(Long time) {
 		this.time = time;
 	}
 

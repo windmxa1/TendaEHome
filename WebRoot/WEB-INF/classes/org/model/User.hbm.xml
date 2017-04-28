@@ -16,7 +16,7 @@
         <property name="password" type="java.lang.String">
             <column name="password" length="20" not-null="true" />
         </property>
-        <property name="time" type="java.lang.Integer">
+        <property name="time" type="java.lang.Long">
             <column name="time" not-null="true" />
         </property>
     </class>

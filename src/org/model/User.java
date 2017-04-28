@@ -11,7 +11,7 @@ public class User implements java.io.Serializable {
 	private Long id;
 	private String phone;
 	private String password;
-	private Integer time;
+	private Long time;
 
 	// Constructors
 
@@ -20,7 +20,7 @@ public class User implements java.io.Serializable {
 	}
 
 	/** full constructor */
-	public User(String phone, String password, Integer time) {
+	public User(String phone, String password, Long time) {
 		this.phone = phone;
 		this.password = password;
 		this.time = time;
@@ -52,11 +52,11 @@ public class User implements java.io.Serializable {
 		this.password = password;
 	}
 
-	public Integer getTime() {
+	public Long getTime() {
 		return this.time;
 	}
 
-	public void setTime(Integer time) {
+	public void setTime(Long time) {
 		this.time = time;
 	}
 

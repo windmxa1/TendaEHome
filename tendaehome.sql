@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50535
 File Encoding         : 65001
 
-Date: 2017-04-28 18:03:04
+Date: 2017-04-28 18:53:45
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -56,7 +56,7 @@ DROP TABLE IF EXISTS `orders`;
 CREATE TABLE `orders` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `userid` bigint(20) NOT NULL,
-  `time` int(11) NOT NULL,
+  `time` bigint(20) NOT NULL,
   `state` int(11) NOT NULL DEFAULT '0',
   `address_id` bigint(20) NOT NULL,
   PRIMARY KEY (`id`)
@@ -91,7 +91,7 @@ CREATE TABLE `user` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `phone` varchar(11) NOT NULL,
   `password` varchar(20) NOT NULL,
-  `time` int(11) NOT NULL,
+  `time` bigint(20) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
@@ -123,6 +123,8 @@ DROP TABLE IF EXISTS `user_info`;
 CREATE TABLE `user_info` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `nick_name` varchar(20) DEFAULT '',
+  `head_url` varchar(200) DEFAULT '',
+  `userid` bigint(20) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

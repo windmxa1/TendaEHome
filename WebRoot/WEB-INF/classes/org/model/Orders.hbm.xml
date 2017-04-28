@@ -13,7 +13,7 @@
         <property name="userid" type="java.lang.Long">
             <column name="userid" not-null="true" />
         </property>
-        <property name="time" type="java.lang.Integer">
+        <property name="time" type="java.lang.Long">
             <column name="time" not-null="true" />
         </property>
         <property name="state" type="java.lang.Integer">

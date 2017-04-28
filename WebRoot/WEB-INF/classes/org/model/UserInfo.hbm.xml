@@ -13,5 +13,11 @@
         <property name="nickName" type="java.lang.String">
             <column name="nick_name" length="20" />
         </property>
+        <property name="headUrl" type="java.lang.String">
+            <column name="head_url" length="200" />
+        </property>
+        <property name="userid" type="java.lang.Long">
+            <column name="userid" not-null="true" />
+        </property>
     </class>
 </hibernate-mapping>
