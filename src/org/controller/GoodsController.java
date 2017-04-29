@@ -8,6 +8,7 @@ public class GoodsController {
 	@RequestMapping("/getGoodsList")
 	public @ResponseBody
 	Object getGoodsList(Long catalogId,Integer start,Integer limit) {
+		
 		return null;
 	}
 	//获取折扣商品信息

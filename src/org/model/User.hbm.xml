@@ -19,5 +19,11 @@
         <property name="time" type="java.lang.Long">
             <column name="time" not-null="true" />
         </property>
+        <property name="nickname" type="java.lang.String">
+            <column name="nickname" length="20" />
+        </property>
+        <property name="headUrl" type="java.lang.String">
+            <column name="head_url" length="200" />
+        </property>
     </class>
 </hibernate-mapping>

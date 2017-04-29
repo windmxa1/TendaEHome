@@ -1,7 +1,6 @@
 package org.dao;
 
 import org.model.User;
-import org.model.UserInfo;
 
 public interface UserDao {
 	/**

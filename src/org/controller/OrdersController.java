@@ -5,21 +5,24 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 public class OrdersController {
 	@RequestMapping("/getOrdersList")
-	public @ResponseBody
-	Object getOrdersList(){
+	@ResponseBody
+	public Object getOrdersList() {
+		
 		return null;
 	}
+
 	@RequestMapping("/cancelOrder")
-	public @ResponseBody
-	Object cancelOrder(){
-		
+	@ResponseBody
+	public Object cancelOrder() {
+
 		return null;
 	}
+
 	@RequestMapping("/addOrder")
-	public @ResponseBody
-	Object addOrder(){
-		
+	@ResponseBody
+	public Object addOrder() {
+
 		return null;
-		
+
 	}
 }

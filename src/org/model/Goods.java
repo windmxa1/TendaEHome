@@ -16,6 +16,8 @@ public class Goods implements java.io.Serializable {
 	private String description;
 	private Integer state;
 	private Long discount;
+	private Long time;
+	private Long count;
 
 	// Constructors
 
@@ -24,16 +26,18 @@ public class Goods implements java.io.Serializable {
 	}
 
 	/** minimal constructor */
-	public Goods(String name, Long price, String url, Long catalogId) {
+	public Goods(String name, Long price, String url, Long catalogId, Long time) {
 		this.name = name;
 		this.price = price;
 		this.url = url;
 		this.catalogId = catalogId;
+		this.time = time;
 	}
 
 	/** full constructor */
 	public Goods(String name, Long price, String url, Long catalogId,
-			String description, Integer state, Long discount) {
+			String description, Integer state, Long discount, Long time,
+			Long count) {
 		this.name = name;
 		this.price = price;
 		this.url = url;
@@ -41,6 +45,8 @@ public class Goods implements java.io.Serializable {
 		this.description = description;
 		this.state = state;
 		this.discount = discount;
+		this.time = time;
+		this.count = count;
 	}
 
 	// Property accessors
@@ -107,6 +113,22 @@ public class Goods implements java.io.Serializable {
 
 	public void setDiscount(Long discount) {
 		this.discount = discount;
+	}
+
+	public Long getTime() {
+		return this.time;
+	}
+
+	public void setTime(Long time) {
+		this.time = time;
+	}
+
+	public Long getCount() {
+		return this.count;
+	}
+
+	public void setCount(Long count) {
+		this.count = count;
 	}
 
 }

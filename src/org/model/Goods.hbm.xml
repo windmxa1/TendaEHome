@@ -31,7 +31,17 @@
             </column>
         </property>
         <property name="discount" type="java.lang.Long">
-            <column name="discount" precision="11" scale="0" />
+            <column name="discount" precision="11" scale="0">
+                <comment>折扣价格</comment>
+            </column>
+        </property>
+        <property name="time" type="java.lang.Long">
+            <column name="time" not-null="true" />
+        </property>
+        <property name="count" type="java.lang.Long">
+            <column name="count">
+                <comment>已售数目</comment>
+            </column>
         </property>
     </class>
 </hibernate-mapping>

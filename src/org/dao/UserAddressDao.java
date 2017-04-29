@@ -19,5 +19,4 @@ public interface UserAddressDao {
 	 * 查出用户对应的地址信息
 	 */
 	public List<UserAddress> getList(Long userid);
-	
 }

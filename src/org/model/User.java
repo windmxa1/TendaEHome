@@ -12,6 +12,8 @@ public class User implements java.io.Serializable {
 	private String phone;
 	private String password;
 	private Long time;
+	private String nickname;
+	private String headUrl;
 
 	// Constructors
 
@@ -19,11 +21,21 @@ public class User implements java.io.Serializable {
 	public User() {
 	}
 
-	/** full constructor */
+	/** minimal constructor */
 	public User(String phone, String password, Long time) {
 		this.phone = phone;
 		this.password = password;
 		this.time = time;
+	}
+
+	/** full constructor */
+	public User(String phone, String password, Long time, String nickname,
+			String headUrl) {
+		this.phone = phone;
+		this.password = password;
+		this.time = time;
+		this.nickname = nickname;
+		this.headUrl = headUrl;
 	}
 
 	// Property accessors
@@ -58,6 +70,22 @@ public class User implements java.io.Serializable {
 
 	public void setTime(Long time) {
 		this.time = time;
+	}
+
+	public String getNickname() {
+		return this.nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+
+	public String getHeadUrl() {
+		return this.headUrl;
+	}
+
+	public void setHeadUrl(String headUrl) {
+		this.headUrl = headUrl;
 	}
 
 }

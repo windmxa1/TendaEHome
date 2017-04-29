@@ -21,5 +21,10 @@
                 <comment>收件人</comment>
             </column>
         </property>
+        <property name="default_" type="java.lang.Integer">
+            <column name="default">
+                <comment>0为备选，1为默认</comment>
+            </column>
+        </property>
     </class>
 </hibernate-mapping>
