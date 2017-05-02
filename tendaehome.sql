@@ -1,22 +1,22 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : 2_Marshall
-Source Server Version : 50535
+Source Server         : localhost_3306
+Source Server Version : 50543
 Source Host           : localhost:3306
 Source Database       : tendaehome
 
 Target Server Type    : MYSQL
-Target Server Version : 50535
+Target Server Version : 50543
 File Encoding         : 65001
 
-Date: 2017-05-02 18:51:34
+Date: 2017-05-02 22:34:43
 */
 
 SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
--- Table structure for `goods`
+-- Table structure for goods
 -- ----------------------------
 DROP TABLE IF EXISTS `goods`;
 CREATE TABLE `goods` (
@@ -41,7 +41,7 @@ INSERT INTO `goods` VALUES ('1', '白菜', '11.00', 'upload/goods/cagg.jpg', '2'
 INSERT INTO `goods` VALUES ('2', '黄瓜', '10.00', 'upload/goods/kjs.jpg', '2', '', '0', '12.24', '0', '0', '');
 
 -- ----------------------------
--- Table structure for `goods_catalog`
+-- Table structure for goods_catalog
 -- ----------------------------
 DROP TABLE IF EXISTS `goods_catalog`;
 CREATE TABLE `goods_catalog` (
@@ -58,7 +58,7 @@ INSERT INTO `goods_catalog` VALUES ('2', '西红柿');
 INSERT INTO `goods_catalog` VALUES ('3', '西兰花');
 
 -- ----------------------------
--- Table structure for `orders`
+-- Table structure for orders
 -- ----------------------------
 DROP TABLE IF EXISTS `orders`;
 CREATE TABLE `orders` (
@@ -78,7 +78,7 @@ INSERT INTO `orders` VALUES ('11', '1', '1493719039', '0', '1');
 INSERT INTO `orders` VALUES ('12', '1', '1493719049', '0', '1');
 
 -- ----------------------------
--- Table structure for `orders_detail`
+-- Table structure for orders_detail
 -- ----------------------------
 DROP TABLE IF EXISTS `orders_detail`;
 CREATE TABLE `orders_detail` (
@@ -100,7 +100,7 @@ INSERT INTO `orders_detail` VALUES ('11', '12', '1', '1.00', '1.00');
 INSERT INTO `orders_detail` VALUES ('12', '12', '2', '1.00', '1.00');
 
 -- ----------------------------
--- Table structure for `user`
+-- Table structure for user
 -- ----------------------------
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
@@ -119,7 +119,7 @@ CREATE TABLE `user` (
 INSERT INTO `user` VALUES ('1', '13590440185', '123456', '0', '', 'upload/image/12312839sdasd.jpg');
 
 -- ----------------------------
--- Table structure for `user_address`
+-- Table structure for user_address
 -- ----------------------------
 DROP TABLE IF EXISTS `user_address`;
 CREATE TABLE `user_address` (
@@ -135,19 +135,26 @@ CREATE TABLE `user_address` (
 -- ----------------------------
 
 -- ----------------------------
--- View structure for `v_goods`
+-- View structure for v_goods
 -- ----------------------------
 DROP VIEW IF EXISTS `v_goods`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_goods` AS select `g`.`id` AS `id`,`g`.`name` AS `name`,`g`.`price` AS `price`,`g`.`url` AS `url`,`g`.`catalog_id` AS `catalog_id`,`g`.`description` AS `description`,`g`.`state` AS `state`,`g`.`discount` AS `discount`,`g`.`time` AS `time`,date_format(from_unixtime(`g`.`time`),'%Y-%m-%d %H:%i:%S') AS `create_time`,(select `gc`.`catalog` from `goods_catalog` `gc` where (`g`.`catalog_id` = `gc`.`id`)) AS `catalog`,`g`.`count` AS `count`,concat('http://192.168.1.150:8080/TendaEHome/',`g`.`url`) AS `goods_url`,`g`.`origin` AS `origin` from `goods` `g` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER  VIEW `v_goods` AS select `g`.`id` AS `id`,`g`.`name` AS `name`,`g`.`price` AS `price`,`g`.`url` AS `url`,`g`.`catalog_id` AS `catalog_id`,`g`.`description` AS `description`,`g`.`state` AS `state`,`g`.`discount` AS `discount`,`g`.`time` AS `time`,date_format(from_unixtime(`g`.`time`),'%Y-%m-%d %H:%i:%S') AS `create_time`,(select `gc`.`catalog` from `goods_catalog` `gc` where (`g`.`catalog_id` = `gc`.`id`)) AS `catalog`,`g`.`count` AS `count`,concat('http://192.168.1.150:8080/TendaEHome/',`g`.`url`) AS `goods_url`,`g`.`origin` AS `origin` from `goods` `g` ; ;
 
 -- ----------------------------
--- View structure for `v_orders`
+-- View structure for v_orders
 -- ----------------------------
 DROP VIEW IF EXISTS `v_orders`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_orders` AS select `o`.`id` AS `id`,`o`.`userid` AS `userid`,`o`.`time` AS `time`,date_format(from_unixtime(`o`.`time`),'%Y-%m-%d %H:%i:%S') AS `create_time`,`o`.`state` AS `state`,(case `o`.`state` when 0 then '未付款' when 1 then '已付款，未发货' when 2 then '已发货，未签收' when 3 then '已签收，订单完成' else '订单已取消' end) AS `status` from `orders` `o` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER  VIEW `v_orders` AS select `o`.`id` AS `id`,`o`.`userid` AS `userid`,`o`.`time` AS `time`,date_format(from_unixtime(`o`.`time`),'%Y-%m-%d %H:%i:%S') AS `create_time`,`o`.`state` AS `state`,(case `o`.`state` when 0 then '未付款' when 1 then '已付款，未发货' when 2 then '已发货，未签收' when 3 then '已签收，订单完成' else '订单已取消' end) AS `status` from `orders` `o` ; ;
 
 -- ----------------------------
--- View structure for `v_user`
+-- View structure for v_orders_details
+-- ----------------------------
+DROP VIEW IF EXISTS `v_orders_details`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost`  VIEW `v_orders_details` AS SELECT 
+od.id,od.order_id,od.goods_id,(select g.name from goods g where od.goods_id=g.id) goods_name,(select concat('http://192.168.1.150:8080/TendaEHome/',g.url) from goods g where od.goods_id=g.id )goods_url,od.num,od.prices from orders_detail od ;
+
+-- ----------------------------
+-- View structure for v_user
 -- ----------------------------
 DROP VIEW IF EXISTS `v_user`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_user` AS select `u`.`id` AS `id`,`u`.`phone` AS `phone`,`u`.`password` AS `password`,`u`.`time` AS `time`,`u`.`nickname` AS `nickname`,`u`.`head_url` AS `head_url`,date_format(from_unixtime(`u`.`time`),'%Y-%m-%d %H:%i:%S') AS `create_time`,concat('http://192.168.1.150:8080/TendaEHome/',`u`.`head_url`) AS `url` from `user` `u` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER  VIEW `v_user` AS select `u`.`id` AS `id`,`u`.`phone` AS `phone`,`u`.`password` AS `password`,`u`.`time` AS `time`,`u`.`nickname` AS `nickname`,`u`.`head_url` AS `head_url`,date_format(from_unixtime(`u`.`time`),'%Y-%m-%d %H:%i:%S') AS `create_time`,concat('http://192.168.1.150:8080/TendaEHome/',`u`.`head_url`) AS `url` from `user` `u` ;
