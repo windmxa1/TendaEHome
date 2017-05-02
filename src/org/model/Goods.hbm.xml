@@ -13,8 +13,8 @@
         <property name="name" type="java.lang.String">
             <column name="name" length="200" not-null="true" />
         </property>
-        <property name="price" type="java.lang.Long">
-            <column name="price" precision="11" scale="0" not-null="true" />
+        <property name="price" type="java.lang.Double">
+            <column name="price" precision="11" not-null="true" />
         </property>
         <property name="url" type="java.lang.String">
             <column name="url" length="200" not-null="true" />
@@ -30,17 +30,22 @@
                 <comment>活动状态，0为活动状态，1为非活动状态</comment>
             </column>
         </property>
-        <property name="discount" type="java.lang.Long">
-            <column name="discount" precision="11" scale="0">
+        <property name="discount" type="java.lang.Double">
+            <column name="discount" precision="11">
                 <comment>折扣价格</comment>
             </column>
         </property>
         <property name="time" type="java.lang.Long">
             <column name="time" not-null="true" />
         </property>
-        <property name="count" type="java.lang.Long">
-            <column name="count">
+        <property name="count" type="java.math.BigDecimal">
+            <column name="count" precision="20" scale="0">
                 <comment>已售数目</comment>
+            </column>
+        </property>
+        <property name="origin" type="java.lang.String">
+            <column name="origin" length="20">
+                <comment>源产地</comment>
             </column>
         </property>
     </class>

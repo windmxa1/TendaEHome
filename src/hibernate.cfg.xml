@@ -26,6 +26,9 @@
 		<mapping resource="org/model/Goods.hbm.xml" />
 		<mapping resource="org/model/User.hbm.xml" />
 		<mapping resource="org/model/UserAddress.hbm.xml" />
+		<mapping resource="org/view/VGoods.hbm.xml" />
+		<mapping resource="org/view/VOrders.hbm.xml" />
+		<mapping resource="org/view/VUser.hbm.xml" />
 
 	</session-factory>
 

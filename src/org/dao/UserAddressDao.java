@@ -13,7 +13,7 @@ public interface UserAddressDao {
 	/**
 	 * 删除用户地址
 	 */
-	public boolean delete(Long id);
+	public boolean delete(Long userid,Long id);
 	
 	/**
 	 * 查出用户对应的地址信息

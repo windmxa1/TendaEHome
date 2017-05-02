@@ -18,7 +18,7 @@
         </property>
         <property name="state" type="java.lang.Integer">
             <column name="state" not-null="true">
-                <comment>0未支付，1支付，2未发货，3发货未签收，4发货已签收</comment>
+                <comment>0未支付，1已支付未发货，2发货未签收，3发货已签收</comment>
             </column>
         </property>
         <property name="addressId" type="java.lang.Long">

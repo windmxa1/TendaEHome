@@ -1,5 +1,7 @@
 package org.model;
 
+import java.math.BigDecimal;
+
 /**
  * Goods entity. @author MyEclipse Persistence Tools
  */
@@ -10,14 +12,15 @@ public class Goods implements java.io.Serializable {
 
 	private Long id;
 	private String name;
-	private Long price;
+	private Double price;
 	private String url;
 	private Long catalogId;
 	private String description;
 	private Integer state;
-	private Long discount;
+	private Double discount;
 	private Long time;
-	private Long count;
+	private BigDecimal count;
+	private String origin;
 
 	// Constructors
 
@@ -26,7 +29,8 @@ public class Goods implements java.io.Serializable {
 	}
 
 	/** minimal constructor */
-	public Goods(String name, Long price, String url, Long catalogId, Long time) {
+	public Goods(String name, Double price, String url, Long catalogId,
+			Long time) {
 		this.name = name;
 		this.price = price;
 		this.url = url;
@@ -35,9 +39,9 @@ public class Goods implements java.io.Serializable {
 	}
 
 	/** full constructor */
-	public Goods(String name, Long price, String url, Long catalogId,
-			String description, Integer state, Long discount, Long time,
-			Long count) {
+	public Goods(String name, Double price, String url, Long catalogId,
+			String description, Integer state, Double discount, Long time,
+			BigDecimal count, String origin) {
 		this.name = name;
 		this.price = price;
 		this.url = url;
@@ -47,6 +51,7 @@ public class Goods implements java.io.Serializable {
 		this.discount = discount;
 		this.time = time;
 		this.count = count;
+		this.origin = origin;
 	}
 
 	// Property accessors
@@ -67,11 +72,11 @@ public class Goods implements java.io.Serializable {
 		this.name = name;
 	}
 
-	public Long getPrice() {
+	public Double getPrice() {
 		return this.price;
 	}
 
-	public void setPrice(Long price) {
+	public void setPrice(Double price) {
 		this.price = price;
 	}
 
@@ -107,11 +112,11 @@ public class Goods implements java.io.Serializable {
 		this.state = state;
 	}
 
-	public Long getDiscount() {
+	public Double getDiscount() {
 		return this.discount;
 	}
 
-	public void setDiscount(Long discount) {
+	public void setDiscount(Double discount) {
 		this.discount = discount;
 	}
 
@@ -123,12 +128,20 @@ public class Goods implements java.io.Serializable {
 		this.time = time;
 	}
 
-	public Long getCount() {
+	public BigDecimal getCount() {
 		return this.count;
 	}
 
-	public void setCount(Long count) {
+	public void setCount(BigDecimal count) {
 		this.count = count;
+	}
+
+	public String getOrigin() {
+		return this.origin;
+	}
+
+	public void setOrigin(String origin) {
+		this.origin = origin;
 	}
 
 }

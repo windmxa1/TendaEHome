@@ -11,8 +11,8 @@ public class OrdersDetail implements java.io.Serializable {
 	private Long id;
 	private Long orderId;
 	private Long goodsId;
-	private Long num;
-	private Long prices;
+	private Double num;
+	private Double prices;
 
 	// Constructors
 
@@ -21,7 +21,7 @@ public class OrdersDetail implements java.io.Serializable {
 	}
 
 	/** full constructor */
-	public OrdersDetail(Long orderId, Long goodsId, Long num, Long prices) {
+	public OrdersDetail(Long orderId, Long goodsId, Double num, Double prices) {
 		this.orderId = orderId;
 		this.goodsId = goodsId;
 		this.num = num;
@@ -54,19 +54,19 @@ public class OrdersDetail implements java.io.Serializable {
 		this.goodsId = goodsId;
 	}
 
-	public Long getNum() {
+	public Double getNum() {
 		return this.num;
 	}
 
-	public void setNum(Long num) {
+	public void setNum(Double num) {
 		this.num = num;
 	}
 
-	public Long getPrices() {
+	public Double getPrices() {
 		return this.prices;
 	}
 
-	public void setPrices(Long prices) {
+	public void setPrices(Double prices) {
 		this.prices = prices;
 	}
 
