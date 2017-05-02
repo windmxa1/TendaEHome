@@ -32,4 +32,8 @@ public interface GoodsDao {
 	 * 获取目录对应的商品列表
 	 */
 	public List<VGoodsId> getCataGoods(Integer start, Integer limit,Long catalogId);
+	/**
+	 * 获取指定名称的商品
+	 */
+	public List<VGoodsId> getGoodsByKey(Integer start, Integer limit,String key);
 }

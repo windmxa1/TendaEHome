@@ -15,6 +15,8 @@ import org.model.Orders;
 import org.model.OrdersDetail;
 import org.util.HibernateSessionFactory;
 import org.view.VOrders;
+import org.view.VOrdersDetails;
+import org.view.VOrdersDetailsId;
 import org.view.VOrdersId;
 
 public class OrdersDaoImp implements OrdersDao {
@@ -117,6 +119,36 @@ public class OrdersDaoImp implements OrdersDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
+	@Override
+	public List<VOrdersDetailsId> getDetailList(Long orderId, Integer start,
+			Integer limit) {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			String sql = "from VOrdersDetails where v.id.orderId=?";
+			Query query = session.createQuery(sql);
+			query.setParameter(0, orderId);
+			if (start == null) {
+				start = 0;
+			}
+			if (limit == null) {
+				limit = 15;
+			}
+			query.setFirstResult(start);
+			query.setMaxResults(limit);
+			List<VOrdersDetails> vOrders = query.list();
+			List<VOrdersDetailsId> list = new ArrayList<VOrdersDetailsId>();
+			for (VOrdersDetails v : vOrders) {
+				list.add(v.getId());
+			}
+			return list;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
 		} finally {
 			HibernateSessionFactory.closeSession();
 		}

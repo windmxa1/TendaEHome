@@ -8,16 +8,14 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.dao.OrdersDao;
 import org.dao.imp.OrdersDaoImp;
-import org.hibernate.Query;
-import org.hibernate.Session;
 import org.model.Orders;
 import org.model.OrdersDetail;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.util.HibernateSessionFactory;
 import org.util.ResultUtils;
+import org.view.VOrdersDetailsId;
 import org.view.VOrdersId;
 
 @Controller
@@ -34,7 +32,20 @@ public class OrdersController {
 		if (list != null) {
 			data.put("list", list);
 		} else {
-			data.put("list", new ArrayList<VOrdersId>());
+			data.put("list", new ArrayList<>());
+		}
+		return ResultUtils.toJson(100, "", data);
+	}
+
+	@RequestMapping("/getOrdersDetailList")
+	@ResponseBody
+	public Object getOrdersDetailList(Long orderId, Integer start, Integer limit) {
+		oDao = new OrdersDaoImp();
+		List<VOrdersDetailsId> list = oDao.getDetailList(orderId, start, limit);
+		if (list != null) {
+			data.put("list", list);
+		} else {
+			data.put("list", new ArrayList<>());
 		}
 		return ResultUtils.toJson(100, "", data);
 	}

@@ -8,7 +8,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.io.FileUtils;
 import org.dao.UserAddressDao;
 import org.dao.UserDao;
 import org.dao.imp.UserAddressDaoImp;

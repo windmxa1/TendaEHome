@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.model.Orders;
 import org.model.OrdersDetail;
-import org.model.User;
+import org.view.VOrdersDetailsId;
 import org.view.VOrdersId;
 
 public interface OrdersDao {
@@ -14,6 +14,11 @@ public interface OrdersDao {
 	 */
 	public List<VOrdersId> getList(Long userid, Integer start, Integer limit);
 
+	/**
+	 * 获取订单详情列表
+	 */
+	public List<VOrdersDetailsId> getDetailList(Long goodsId, Integer start, Integer limit);
+	
 	/**
 	 * 增加订单
 	 */

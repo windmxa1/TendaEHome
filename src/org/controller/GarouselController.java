@@ -9,7 +9,7 @@ public class GarouselController {
 	@RequestMapping("/getGarousel")
 	@ResponseBody
 	public Object getGarousel() {
-
+		
 		return null;
 	}
 }

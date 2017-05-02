@@ -29,6 +29,7 @@
 		<mapping resource="org/view/VGoods.hbm.xml" />
 		<mapping resource="org/view/VOrders.hbm.xml" />
 		<mapping resource="org/view/VUser.hbm.xml" />
+		<mapping resource="org/view/VOrdersDetails.hbm.xml" />
 
 	</session-factory>
 
