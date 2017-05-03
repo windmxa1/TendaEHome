@@ -1,11 +1,20 @@
 package org.util;
 
-import org.model.User;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.impl.crypto.MacProvider;
+
+import java.security.Key;
 
 public class TokenUtils {
-	public static String proccessToken(User user) {
-		String token = MD5.string2MD5(user.getPhone() + user.getPassword()
-				+ (System.currentTimeMillis() / 1000));
-		return token;
+
+	public static String generateToken() {
+		Key key = MacProvider.generateKey();
+
+		String compactJws = Jwts.builder().setSubject("Joe")
+				.signWith(SignatureAlgorithm.HS512, key).compact();
+		
+		
+		return null;
 	}
 }

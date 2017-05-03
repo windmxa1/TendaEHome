@@ -16,8 +16,8 @@
         <property name="address" type="java.lang.String">
             <column name="address" length="200" not-null="true" />
         </property>
-        <property name="recevier" type="java.lang.String">
-            <column name="recevier" length="20" not-null="true">
+        <property name="receiver" type="java.lang.String">
+            <column name="receiver" length="20" not-null="true">
                 <comment>收件人</comment>
             </column>
         </property>

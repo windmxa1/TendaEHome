@@ -2,6 +2,7 @@ package org.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.MessageDigest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,8 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.util.ResultUtils;
 import org.view.VUserId;
 
+import sun.misc.BASE64Encoder;
+
 @Controller
 public class UserController {
 	UserDao uDao;
@@ -32,7 +35,9 @@ public class UserController {
 	@RequestMapping("/login")
 	@ResponseBody
 	public Object login(String phone, String password) {
-
+		BASE64Encoder encoder = new BASE64Encoder();
+//		MessageDigest  
+//		encoder.encode(arg0);
 		uDao = new UserDaoImp();
 		VUserId u = uDao.getUser(phone, password);
 		if (u != null) {
@@ -88,7 +93,7 @@ public class UserController {
 		File newFile = new File(filePath);
 		// 通过CommonsMultipartFile的方法直接写文件（注意这个时候）
 		file.transferTo(newFile);
-
+		
 		String url = "upload/headphoto/" + filename;
 
 		// 删除之前的头像

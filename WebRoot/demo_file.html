@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<link rel="stylesheet" href="css/a.css" type="text/css"></link>
+	<script src="js/jquery.min.js"></script>
+	<script>
+		$(function(){
+			$("#but").click(function(){
+				//alert($("#u").val());
+				var formData = new FormData(document.getElementById("photoForm"));
+				$.ajax({
+					type:"post",
+					url:"updateHead",
+					data:formData,
+					async:false,
+					cache:false,
+					contentType:false,
+					processData:false,
+					success:function(data){
+						alert("12");
+					},
+					error:function(data){
+						alert("error");
+					}
+				});
+			});
+		});
+	</script>
+</head>
+<body>
+	<h1>hello ,this is a.html</h1>
+	<h2>方案1</h2>
+	<form action="addFile" method="post" enctype="multipart/form-data">
+		<input type="file" id="upFile" name="file">
+		<input type="submit" id="uploadButton" value="upload">
+	</form>
+	
+	<h2>方案2</h2>
+	<form action="addFile" method="post" enctype="multipart/form-data">
+		<input type="file" id="upFile" name="file">
+		<input type="submit" id="uploadButton" value="upload">
+	</form>
+	
+	<p></p>
+	<hr>
+	<form id="photoForm">
+		名字1：<input type="text" name="username"/><br>
+		名字2：<input type="text" name="username" /><br>
+		文件1：<input type="file" name="file" value="3" id="f" /><br>
+		<input type="button" id="but" value="提交" />
+	</form>
+</body>
+</html>

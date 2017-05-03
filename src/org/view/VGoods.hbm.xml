@@ -7,8 +7,8 @@
 <hibernate-mapping>
     <class name="org.view.VGoods" table="v_goods" catalog="tendaehome">
         <composite-id name="id" class="org.view.VGoodsId">
-            <key-property name="id" type="java.lang.Long">
-                <column name="id" />
+            <key-property name="goodsId" type="java.lang.Long">
+                <column name="goods_id" />
             </key-property>
             <key-property name="name" type="java.lang.String">
                 <column name="name" length="200" />

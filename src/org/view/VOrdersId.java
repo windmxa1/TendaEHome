@@ -14,6 +14,7 @@ public class VOrdersId implements java.io.Serializable {
 	private String createTime;
 	private Integer state;
 	private String status;
+	private String address;
 
 	// Constructors
 
@@ -33,13 +34,14 @@ public class VOrdersId implements java.io.Serializable {
 
 	/** full constructor */
 	public VOrdersId(Long id, Long userid, Long time, String createTime,
-			Integer state, String status) {
+			Integer state, String status, String address) {
 		this.id = id;
 		this.userid = userid;
 		this.time = time;
 		this.createTime = createTime;
 		this.state = state;
 		this.status = status;
+		this.address = address;
 	}
 
 	// Property accessors
@@ -92,6 +94,14 @@ public class VOrdersId implements java.io.Serializable {
 		this.status = status;
 	}
 
+	public String getAddress() {
+		return this.address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
 	public boolean equals(Object other) {
 		if ((this == other))
 			return true;
@@ -119,7 +129,10 @@ public class VOrdersId implements java.io.Serializable {
 						.getState().equals(castOther.getState())))
 				&& ((this.getStatus() == castOther.getStatus()) || (this
 						.getStatus() != null && castOther.getStatus() != null && this
-						.getStatus().equals(castOther.getStatus())));
+						.getStatus().equals(castOther.getStatus())))
+				&& ((this.getAddress() == castOther.getAddress()) || (this
+						.getAddress() != null && castOther.getAddress() != null && this
+						.getAddress().equals(castOther.getAddress())));
 	}
 
 	public int hashCode() {
@@ -138,6 +151,8 @@ public class VOrdersId implements java.io.Serializable {
 				+ (getState() == null ? 0 : this.getState().hashCode());
 		result = 37 * result
 				+ (getStatus() == null ? 0 : this.getStatus().hashCode());
+		result = 37 * result
+				+ (getAddress() == null ? 0 : this.getAddress().hashCode());
 		return result;
 	}
 

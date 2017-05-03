@@ -25,6 +25,9 @@
             <key-property name="status" type="java.lang.String">
                 <column name="status" length="8" />
             </key-property>
+            <key-property name="address" type="java.lang.String">
+                <column name="address" length="221" />
+            </key-property>
         </composite-id>
     </class>
 </hibernate-mapping>

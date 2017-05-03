@@ -10,7 +10,7 @@ public class VGoodsId implements java.io.Serializable {
 
 	// Fields
 
-	private Long id;
+	private Long goodsId;
 	private String name;
 	private Double price;
 	private String url;
@@ -32,9 +32,9 @@ public class VGoodsId implements java.io.Serializable {
 	}
 
 	/** minimal constructor */
-	public VGoodsId(Long id, String name, Double price, String url,
+	public VGoodsId(Long goodsId, String name, Double price, String url,
 			Long catalogId, Long time) {
-		this.id = id;
+		this.goodsId = goodsId;
 		this.name = name;
 		this.price = price;
 		this.url = url;
@@ -43,11 +43,11 @@ public class VGoodsId implements java.io.Serializable {
 	}
 
 	/** full constructor */
-	public VGoodsId(Long id, String name, Double price, String url,
+	public VGoodsId(Long goodsId, String name, Double price, String url,
 			Long catalogId, String description, Integer state, Double discount,
 			Long time, String createTime, String catalog, BigDecimal count,
 			String goodsUrl, String origin) {
-		this.id = id;
+		this.goodsId = goodsId;
 		this.name = name;
 		this.price = price;
 		this.url = url;
@@ -65,12 +65,12 @@ public class VGoodsId implements java.io.Serializable {
 
 	// Property accessors
 
-	public Long getId() {
-		return this.id;
+	public Long getGoodsId() {
+		return this.goodsId;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setGoodsId(Long goodsId) {
+		this.goodsId = goodsId;
 	}
 
 	public String getName() {
@@ -186,9 +186,9 @@ public class VGoodsId implements java.io.Serializable {
 			return false;
 		VGoodsId castOther = (VGoodsId) other;
 
-		return ((this.getId() == castOther.getId()) || (this.getId() != null
-				&& castOther.getId() != null && this.getId().equals(
-				castOther.getId())))
+		return ((this.getGoodsId() == castOther.getGoodsId()) || (this
+				.getGoodsId() != null && castOther.getGoodsId() != null && this
+				.getGoodsId().equals(castOther.getGoodsId())))
 				&& ((this.getName() == castOther.getName()) || (this.getName() != null
 						&& castOther.getName() != null && this.getName()
 						.equals(castOther.getName())))
@@ -238,7 +238,8 @@ public class VGoodsId implements java.io.Serializable {
 	public int hashCode() {
 		int result = 17;
 
-		result = 37 * result + (getId() == null ? 0 : this.getId().hashCode());
+		result = 37 * result
+				+ (getGoodsId() == null ? 0 : this.getGoodsId().hashCode());
 		result = 37 * result
 				+ (getName() == null ? 0 : this.getName().hashCode());
 		result = 37 * result
