@@ -15,19 +15,27 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.util.ResultUtils;
+import org.util.TokenUtils;
 import org.view.VOrdersDetailsId;
 import org.view.VOrdersId;
 
 @Controller
+@RequestMapping("/orders")
 public class OrdersController {
 	OrdersDao oDao;
-	Long userid;
+	// Long userid;
 	Map<String, Object> data;
 
 	@RequestMapping("/getOrdersList")
 	@ResponseBody
-	public Object getOrdersList(Integer start, Integer limit) {
+	public Object getOrdersList(HttpServletRequest request, Integer start,
+			Integer limit) {
 		oDao = new OrdersDaoImp();
+		/**** 获取header中的token并取出userid ****/
+		String token = request.getHeader("token");
+		Long userid = (Long) TokenUtils.getValue(token, TokenUtils.getKey(),
+				"userid");
+		/*********************************/
 		List<VOrdersId> list = oDao.getList(userid, start, limit);
 		if (list != null) {
 			data.put("list", list);
@@ -58,8 +66,13 @@ public class OrdersController {
 
 	@RequestMapping("/cancelOrder")
 	@ResponseBody
-	public Object cancelOrder(Long id) {
+	public Object cancelOrder(HttpServletRequest request, Long id) {
 		oDao = new OrdersDaoImp();
+		/**** 获取header中的token并取出userid ****/
+		String token = request.getHeader("token");
+		Long userid = (Long) TokenUtils.getValue(token, TokenUtils.getKey(),
+				"userid");
+		/*********************************/
 		if (oDao.cancel(userid, id)) {
 			return ResultUtils.toJson(100, "取消订单成功", "");
 		} else {
@@ -69,9 +82,14 @@ public class OrdersController {
 
 	@RequestMapping("/addOrder")
 	@ResponseBody
-	public Object addOrder(Long AddressId,
+	public Object addOrder(HttpServletRequest request, Long AddressId,
 			@RequestBody List<OrdersDetail> details) {
 		oDao = new OrdersDaoImp();
+		/**** 获取header中的token并取出userid ****/
+		String token = request.getHeader("token");
+		Long userid = (Long) TokenUtils.getValue(token, TokenUtils.getKey(),
+				"userid");
+		/*********************************/
 		Orders orders = new Orders(userid, System.currentTimeMillis() / 1000,
 				0, AddressId);
 		if (oDao.generateOrder(orders, details)) {

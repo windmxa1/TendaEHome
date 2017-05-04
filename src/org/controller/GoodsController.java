@@ -15,6 +15,7 @@ import org.util.ResultUtils;
 import org.view.VGoodsId;
 
 @Controller
+@RequestMapping("/goods")
 public class GoodsController {
 	GoodsDao gDao;
 	Map<String, Object> data;

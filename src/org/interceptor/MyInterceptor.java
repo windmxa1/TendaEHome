@@ -1,6 +1,7 @@
 package org.interceptor;
 
 import java.security.Key;
+import java.util.Calendar;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
+import org.util.TokenUtils;
 
 public class MyInterceptor implements HandlerInterceptor {
 
@@ -27,16 +29,12 @@ public class MyInterceptor implements HandlerInterceptor {
 
 	}
 
-	public boolean preHandle(HttpServletRequest arg0, HttpServletResponse arg1,
-			Object arg2) throws Exception {
+	public boolean preHandle(HttpServletRequest request,
+			HttpServletResponse response, Object object) throws Exception {
 		// TODO Auto-generated method stub
-		Key key = MacProvider.generateKey();
-		String compactJws = Jwts.builder().setSubject("Joe")
-				.signWith(SignatureAlgorithm.HS512, key).compact();
-		String jwtString="";
-		assert Jwts.parser().setSigningKey(key).parseClaimsJws(jwtString).getBody().getSubject().equals("Joe"); //Will throw `SignatureException` if signature validation fails.
-		
-		return true;
+		Key key = TokenUtils.getKey();
+		String token = request.getHeader("token");
+		return TokenUtils.isValid(token, key);
 	}
 
 }
