@@ -37,10 +37,15 @@ public class OrdersController {
 				"userid");
 		/*********************************/
 		List<VOrdersId> list = oDao.getList(userid, start, limit);
-		if (list != null) {
-			data.put("list", list);
-		} else {
+		if (list == null || list.size() == 0) {
 			data.put("list", new ArrayList<>());
+		} else {
+			for (VOrdersId order : list) {
+				List<VOrdersDetailsId> details = oDao.getDetailList(
+						order.getId(), start, limit);
+				order.setList(details);
+			}
+			data.put("list", list);
 		}
 		return ResultUtils.toJson(100, "", data);
 	}

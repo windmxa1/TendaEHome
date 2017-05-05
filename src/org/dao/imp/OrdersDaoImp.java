@@ -24,7 +24,7 @@ public class OrdersDaoImp implements OrdersDao {
 	public List<VOrdersId> getList(Long userid, Integer start, Integer limit) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
-			String sql = "from VOrders where v.id.userid=?";
+			String sql = "from VOrders v where v.id.userid=?";
 			Query query = session.createQuery(sql);
 			query.setParameter(0, userid);
 			if (start == null) {
@@ -129,7 +129,7 @@ public class OrdersDaoImp implements OrdersDao {
 			Integer limit) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
-			String sql = "from VOrdersDetails where v.id.orderId=?";
+			String sql = "from VOrdersDetails v where v.id.orderId=?";
 			Query query = session.createQuery(sql);
 			query.setParameter(0, orderId);
 			if (start == null) {
