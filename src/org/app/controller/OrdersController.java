@@ -1,4 +1,4 @@
-package org.controller;
+package org.app.controller;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,7 @@ import org.view.VOrdersDetailsId;
 import org.view.VOrdersId;
 
 @Controller
-@RequestMapping("/orders")
+@RequestMapping("/app/orders")
 public class OrdersController {
 	OrdersDao oDao;
 	// Long userid;

@@ -1,4 +1,4 @@
-package org.controller;
+package org.app.controller;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,7 +25,7 @@ import org.util.TokenUtils;
 import org.view.VUserId;
 
 @Controller
-@RequestMapping("/user")
+@RequestMapping("/app/user")
 public class UserController {
 	UserDao uDao;
 	UserAddressDao uAddressDao;
@@ -35,7 +35,8 @@ public class UserController {
 
 	@RequestMapping("/login")
 	@ResponseBody
-	public Object login(HttpServletRequest request,String phone, String password) {
+	public Object login(HttpServletRequest request, String phone,
+			String password) {
 		uDao = new UserDaoImp();
 		VUserId u = uDao.getUser(phone, password);
 		if (u != null) {
@@ -43,8 +44,9 @@ public class UserController {
 			// 验证通过并生成token,c为过期时间，暂时用不到
 			Calendar c = Calendar.getInstance();
 			c.add(c.DATE, 14);
-			TokenUtils.rootPath= request.getSession().getServletContext().getRealPath("/");
-			String token = TokenUtils.buildJwt(TokenUtils.getKey(),
+			TokenUtils.rootPath = request.getSession().getServletContext()
+					.getRealPath("/");
+			String token = TokenUtils.buildJwt1(TokenUtils.getKey(),
 					c.getTime(), u.getId());
 			u.setPassword("");
 			data.put("user", u);
@@ -60,6 +62,10 @@ public class UserController {
 	@ResponseBody
 	public Object register(String phone, String password) {
 		uDao = new UserDaoImp();
+		VUserId u = uDao.getUser(phone);
+		if (u != null) {
+			return ResultUtils.toJson(101, "注册失败，该账号已被注册", "");
+		}
 		User user = new User(phone, password, System.currentTimeMillis() / 1000);
 		Long userid = uDao.saveOrUpdate(user);
 		if (userid > 0) {
@@ -70,7 +76,7 @@ public class UserController {
 
 	@RequestMapping("/updateUserInfo")
 	@ResponseBody
-	public Object updateUserInfo(HttpServletRequest request, String password,
+	public Object updateUserInfo(HttpServletRequest request, String password,String newPwd,
 			String nickname) {
 		uDao = new UserDaoImp();
 		/**** 获取header中的token并取出userid ****/
@@ -79,7 +85,10 @@ public class UserController {
 				"userid");
 		/*********************************/
 		if (password != null) {
-			if (uDao.updatePassword(password, userid)) {
+			if(uDao.getUser(userid,password)==null){
+				return ResultUtils.toJson(101, "修改失败,旧密码不正确", "");
+			}
+			if (uDao.updatePassword(newPwd, userid)) {
 				return ResultUtils.toJson(100, "修改成功", "");
 			}
 		}

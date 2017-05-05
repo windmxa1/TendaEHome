@@ -30,6 +30,8 @@
 		<mapping resource="org/view/VOrders.hbm.xml" />
 		<mapping resource="org/view/VUser.hbm.xml" />
 		<mapping resource="org/view/VOrdersDetails.hbm.xml" />
+		<mapping resource="org/model/Admin.hbm.xml" />
+		<mapping resource="org/view/VAdmin.hbm.xml" />
 
 	</session-factory>
 

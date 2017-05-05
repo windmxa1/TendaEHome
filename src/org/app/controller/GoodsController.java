@@ -1,4 +1,4 @@
-package org.controller;
+package org.app.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,7 +15,7 @@ import org.util.ResultUtils;
 import org.view.VGoodsId;
 
 @Controller
-@RequestMapping("/goods")
+@RequestMapping("/app/goods")
 public class GoodsController {
 	GoodsDao gDao;
 	Map<String, Object> data;

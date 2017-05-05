@@ -10,26 +10,14 @@ public class OrdersDetail implements java.io.Serializable {
 
 	private Long id;
 	private Long orderId;
-	private Long goodsId; // 商品编号
-	private Double num;// 已选商品数目
-	private Double prices; // 商品总价
-
-	private String goodsUrl;// 商品图片
-	private String name; // 商品名称
-	private Double price; // 商品单价
-	private String description; // 商品描述
+	private Long goodsId;
+	private Double num;
+	private Double prices;
 
 	// Constructors
 
 	/** default constructor */
 	public OrdersDetail() {
-	}
-
-	public OrdersDetail(Long goodsId, Double num, Double prices) {
-		super();
-		this.goodsId = goodsId;
-		this.num = num;
-		this.prices = prices;
 	}
 
 	/** full constructor */
@@ -39,17 +27,7 @@ public class OrdersDetail implements java.io.Serializable {
 		this.num = num;
 		this.prices = prices;
 	}
-	public OrdersDetail(Long goodsId, Double num, Double prices,
-			String goodsUrl, String name, Double price, String description) {
-		super();
-		this.goodsId = goodsId;
-		this.num = num;
-		this.prices = prices;
-		this.goodsUrl = goodsUrl;
-		this.name = name;
-		this.price = price;
-		this.description = description;
-	}
+
 	// Property accessors
 
 	public Long getId() {
@@ -91,40 +69,5 @@ public class OrdersDetail implements java.io.Serializable {
 	public void setPrices(Double prices) {
 		this.prices = prices;
 	}
-
-	public String getGoodsUrl() {
-		return goodsUrl;
-	}
-
-	public void setGoodsUrl(String goodsUrl) {
-		this.goodsUrl = goodsUrl;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public Double getPrice() {
-		return price;
-	}
-
-	public void setPrice(Double price) {
-		this.price = price;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-
-	
 
 }

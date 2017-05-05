@@ -23,9 +23,9 @@ public class TokenUtils {
 	public static String rootPath;
 
 	/**
-	 * 生成token
+	 * 生成用户token
 	 */
-	public static String buildJwt(Key key, Date exp, Long userid) {
+	public static String buildJwt1(Key key, Date exp, Long userid) {
 		String jwt = Jwts.builder()
 		// .setExpiration(exp)// expTime是过期时间
 				.setIssuedAt(new Date())// 设置当前时间
@@ -33,6 +33,22 @@ public class TokenUtils {
 				.setSubject("authentic")// 设置主题
 				.setAudience("panshi")// 设置用户群
 				.claim("userid", userid)// 该方法是在JWT中加入值为vaule的key字段
+				.signWith(SignatureAlgorithm.HS512, key)// SECRET_KEY是加密算法对应的密钥，这里使用额是HS256加密算法
+				.compact();
+		return jwt;
+	}
+
+	/**
+	 * 生成管理员token
+	 */
+	public static String buildJwt2(Key key, Date exp, Long adminId) {
+		String jwt = Jwts.builder()
+		// .setExpiration(exp)// expTime是过期时间
+				.setIssuedAt(new Date())// 设置当前时间
+				.setIssuer("Marshall")// 设置发行人
+				.setSubject("authentic")// 设置主题
+				.setAudience("panshi")// 设置用户群
+				.claim("adminId", adminId)// 该方法是在JWT中加入值为vaule的key字段
 				.signWith(SignatureAlgorithm.HS512, key)// SECRET_KEY是加密算法对应的密钥，这里使用额是HS256加密算法
 				.compact();
 		return jwt;

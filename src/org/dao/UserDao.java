@@ -1,5 +1,7 @@
 package org.dao;
 
+import java.util.List;
+
 import org.model.User;
 import org.view.VUserId;
 
@@ -7,7 +9,15 @@ public interface UserDao {
 	/**
 	 * 获取用户对象
 	 */
+	public VUserId getUser(String phone);
+	/**
+	 * 获取用户对象
+	 */
 	public VUserId getUser(String phone,String password);
+	/**
+	 * 获取用户对象
+	 */
+	public VUserId getUser(Long userid,String password);
 	/**
 	 * 增加用户
 	 */
@@ -33,4 +43,9 @@ public interface UserDao {
 	 * 获取已用头像
 	 */
 	public String getUsedHead(Long userid);
+	
+	/**
+	 * 获取用户列表
+	 */
+	public List<VUserId> getUsers(Integer start, Integer limit);
 }

@@ -10,6 +10,7 @@
           http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
 
 	<context:component-scan base-package="org.controller"></context:component-scan>
+	<context:component-scan base-package="org.app.controller"></context:component-scan>
 
 	<mvc:annotation-driven />
 	<mvc:resources mapping="/js/**" location="/js/" />
@@ -20,6 +21,9 @@
 	<mvc:interceptors>
 		<mvc:interceptor>
 			<mvc:mapping path="/**" />
+			<mvc:exclude-mapping path="/app/user/login" />
+			<mvc:exclude-mapping path="/app/user/register" />
+			<mvc:exclude-mapping path="/app/goods/**" />
 			<mvc:exclude-mapping path="/user/login" />
 			<mvc:exclude-mapping path="/user/register" />
 			<mvc:exclude-mapping path="/goods/**" />
