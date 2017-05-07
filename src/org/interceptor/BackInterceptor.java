@@ -19,7 +19,7 @@ import org.util.TokenUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class MyInterceptor implements HandlerInterceptor {
+public class BackInterceptor implements HandlerInterceptor {
 
 	public void afterCompletion(HttpServletRequest arg0,
 			HttpServletResponse arg1, Object arg2, Exception arg3)
@@ -43,7 +43,7 @@ public class MyInterceptor implements HandlerInterceptor {
 			return true;
 		} else {
 			Map<String, Object> result = ResultUtils.toJson(400,
-					"您的账户信息已过期或已在其他设备登录，请重新登录", "");
+					"您的账户信息已过期或已在其他客户端登录，请重新登录", "");
 			ObjectMapper objectMapper = new ObjectMapper();
 			String s = objectMapper.writeValueAsString(result);
 			response.getWriter().write(s);

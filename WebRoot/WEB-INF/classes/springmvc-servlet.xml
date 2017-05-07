@@ -20,14 +20,18 @@
 	
 	<mvc:interceptors>
 		<mvc:interceptor>
-			<mvc:mapping path="/**" />
+			<mvc:mapping path="/app/**" />
 			<mvc:exclude-mapping path="/app/user/login" />
 			<mvc:exclude-mapping path="/app/user/register" />
 			<mvc:exclude-mapping path="/app/goods/**" />
-			<mvc:exclude-mapping path="/user/login" />
-			<mvc:exclude-mapping path="/user/register" />
-			<mvc:exclude-mapping path="/goods/**" />
-			<bean class="org.interceptor.MyInterceptor"></bean>
+			<bean class="org.interceptor.AppInterceptor"></bean>
+		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/back/**" />
+			<mvc:exclude-mapping path="/back/user/login" />
+			<mvc:exclude-mapping path="/back/user/register" />
+			<mvc:exclude-mapping path="/back/goods/**" />
+			<bean class="org.interceptor.BackInterceptor"></bean>
 		</mvc:interceptor>
 	</mvc:interceptors>
 

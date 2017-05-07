@@ -25,12 +25,6 @@
             <key-property name="description" type="java.lang.String">
                 <column name="description" length="10" />
             </key-property>
-            <key-property name="state" type="java.lang.Integer">
-                <column name="state" />
-            </key-property>
-            <key-property name="discount" type="java.lang.Double">
-                <column name="discount" precision="11" />
-            </key-property>
             <key-property name="time" type="java.lang.Long">
                 <column name="time" />
             </key-property>
@@ -40,8 +34,17 @@
             <key-property name="catalog" type="java.lang.String">
                 <column name="catalog" length="20" />
             </key-property>
-            <key-property name="count" type="java.math.BigDecimal">
-                <column name="count" precision="20" scale="0" />
+            <key-property name="count" type="java.lang.Double">
+                <column name="count" precision="33" />
+            </key-property>
+            <key-property name="discount" type="java.lang.Double">
+                <column name="discount" precision="11" />
+            </key-property>
+            <key-property name="startDate" type="java.lang.String">
+                <column name="start_date" length="24" />
+            </key-property>
+            <key-property name="endDate" type="java.lang.String">
+                <column name="end_date" length="24" />
             </key-property>
             <key-property name="goodsUrl" type="java.lang.String">
                 <column name="goods_url" length="237" />

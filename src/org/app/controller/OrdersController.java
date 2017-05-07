@@ -19,7 +19,7 @@ import org.util.TokenUtils;
 import org.view.VOrdersDetailsId;
 import org.view.VOrdersId;
 
-@Controller
+@Controller("/app/OrdersController")
 @RequestMapping("/app/orders")
 public class OrdersController {
 	OrdersDao oDao;

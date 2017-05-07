@@ -24,7 +24,10 @@ import org.util.ResultUtils;
 import org.util.TokenUtils;
 import org.view.VUserId;
 
-@Controller
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+@Controller("/app/UserController")
 @RequestMapping("/app/user")
 public class UserController {
 	UserDao uDao;
@@ -38,7 +41,7 @@ public class UserController {
 	public Object login(HttpServletRequest request, String phone,
 			String password) {
 		uDao = new UserDaoImp();
-		VUserId u = uDao.getUser(phone, password);
+		VUserId u = uDao.getVUser(phone, password);
 		if (u != null) {
 			data = new HashMap<String, Object>();
 			// 验证通过并生成token,c为过期时间，暂时用不到
@@ -49,6 +52,13 @@ public class UserController {
 			String token = TokenUtils.buildJwt1(TokenUtils.getKey(),
 					c.getTime(), u.getId());
 			u.setPassword("");
+			ObjectMapper mapper = new ObjectMapper();
+			try {
+				System.out.println(mapper.writeValueAsString(u));
+			} catch (JsonProcessingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			data.put("user", u);
 			data.put("token", token);
 			return ResultUtils.toJson(100, "登录成功", data);
@@ -57,12 +67,13 @@ public class UserController {
 		}
 
 	}
+	
 
 	@RequestMapping("/register")
 	@ResponseBody
 	public Object register(String phone, String password) {
 		uDao = new UserDaoImp();
-		VUserId u = uDao.getUser(phone);
+		User u = uDao.getUser(phone);
 		if (u != null) {
 			return ResultUtils.toJson(101, "注册失败，该账号已被注册", "");
 		}
@@ -166,7 +177,7 @@ public class UserController {
 		if (uAddressDao.saveOrUpdate(userAddress) > 0) {
 			return ResultUtils.toJson(100, "添加成功", "");
 		} else {
-			return ResultUtils.toJson(100, "添加失败", "");
+			return ResultUtils.toJson(101, "添加失败", "");
 		}
 	}
 
@@ -181,7 +192,7 @@ public class UserController {
 		if (uAddressDao.delete(userid, id)) {
 			return ResultUtils.toJson(100, "删除成功", "");
 		} else {
-			return ResultUtils.toJson(100, "删除失败", "");
+			return ResultUtils.toJson(101, "删除失败", "");
 		}
 	}
 
@@ -200,7 +211,25 @@ public class UserController {
 		if (uAddressDao.saveOrUpdate(userAddress) == 0) {
 			return ResultUtils.toJson(100, "修改成功", "");
 		} else {
-			return ResultUtils.toJson(100, "修改失败", "");
+			return ResultUtils.toJson(101, "修改失败", "");
+		}
+	}
+	/**
+	 * 修改默认地址
+	 */
+	@RequestMapping("/updateDefault")
+	@ResponseBody
+	public Object updateDefault(HttpServletRequest request,Long addressid){
+		uAddressDao = new UserAddressDaoImp();
+		/**** 获取header中的token并取出userid ****/
+		String token = request.getHeader("token");
+		Long userid = (Long) TokenUtils.getValue(token, TokenUtils.getKey(),
+				"userid");
+		/*********************************/
+		if (uAddressDao.updateDefault(addressid)) {
+			return ResultUtils.toJson(100, "修改成功", "");
+		} else {
+			return ResultUtils.toJson(101, "修改失败", "");
 		}
 	}
 

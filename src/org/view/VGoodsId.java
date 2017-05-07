@@ -1,7 +1,5 @@
 package org.view;
 
-import java.math.BigDecimal;
-
 /**
  * VGoodsId entity. @author MyEclipse Persistence Tools
  */
@@ -16,12 +14,13 @@ public class VGoodsId implements java.io.Serializable {
 	private String url;
 	private Long catalogId;
 	private String description;
-	private Integer state;
-	private Double discount;
 	private Long time;
 	private String createTime;
 	private String catalog;
-	private BigDecimal count;
+	private Double count;
+	private Double discount;
+	private String startDate;
+	private String endDate;
 	private String goodsUrl;
 	private String origin;
 
@@ -44,21 +43,22 @@ public class VGoodsId implements java.io.Serializable {
 
 	/** full constructor */
 	public VGoodsId(Long goodsId, String name, Double price, String url,
-			Long catalogId, String description, Integer state, Double discount,
-			Long time, String createTime, String catalog, BigDecimal count,
-			String goodsUrl, String origin) {
+			Long catalogId, String description, Long time, String createTime,
+			String catalog, Double count, Double discount, String startDate,
+			String endDate, String goodsUrl, String origin) {
 		this.goodsId = goodsId;
 		this.name = name;
 		this.price = price;
 		this.url = url;
 		this.catalogId = catalogId;
 		this.description = description;
-		this.state = state;
-		this.discount = discount;
 		this.time = time;
 		this.createTime = createTime;
 		this.catalog = catalog;
 		this.count = count;
+		this.discount = discount;
+		this.startDate = startDate;
+		this.endDate = endDate;
 		this.goodsUrl = goodsUrl;
 		this.origin = origin;
 	}
@@ -113,22 +113,6 @@ public class VGoodsId implements java.io.Serializable {
 		this.description = description;
 	}
 
-	public Integer getState() {
-		return this.state;
-	}
-
-	public void setState(Integer state) {
-		this.state = state;
-	}
-
-	public Double getDiscount() {
-		return this.discount;
-	}
-
-	public void setDiscount(Double discount) {
-		this.discount = discount;
-	}
-
 	public Long getTime() {
 		return this.time;
 	}
@@ -153,12 +137,36 @@ public class VGoodsId implements java.io.Serializable {
 		this.catalog = catalog;
 	}
 
-	public BigDecimal getCount() {
+	public Double getCount() {
 		return this.count;
 	}
 
-	public void setCount(BigDecimal count) {
+	public void setCount(Double count) {
 		this.count = count;
+	}
+
+	public Double getDiscount() {
+		return this.discount;
+	}
+
+	public void setDiscount(Double discount) {
+		this.discount = discount;
+	}
+
+	public String getStartDate() {
+		return this.startDate;
+	}
+
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
+	}
+
+	public String getEndDate() {
+		return this.endDate;
+	}
+
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
 	}
 
 	public String getGoodsUrl() {
@@ -206,13 +214,6 @@ public class VGoodsId implements java.io.Serializable {
 						.getDescription() != null
 						&& castOther.getDescription() != null && this
 						.getDescription().equals(castOther.getDescription())))
-				&& ((this.getState() == castOther.getState()) || (this
-						.getState() != null && castOther.getState() != null && this
-						.getState().equals(castOther.getState())))
-				&& ((this.getDiscount() == castOther.getDiscount()) || (this
-						.getDiscount() != null
-						&& castOther.getDiscount() != null && this
-						.getDiscount().equals(castOther.getDiscount())))
 				&& ((this.getTime() == castOther.getTime()) || (this.getTime() != null
 						&& castOther.getTime() != null && this.getTime()
 						.equals(castOther.getTime())))
@@ -226,6 +227,17 @@ public class VGoodsId implements java.io.Serializable {
 				&& ((this.getCount() == castOther.getCount()) || (this
 						.getCount() != null && castOther.getCount() != null && this
 						.getCount().equals(castOther.getCount())))
+				&& ((this.getDiscount() == castOther.getDiscount()) || (this
+						.getDiscount() != null
+						&& castOther.getDiscount() != null && this
+						.getDiscount().equals(castOther.getDiscount())))
+				&& ((this.getStartDate() == castOther.getStartDate()) || (this
+						.getStartDate() != null
+						&& castOther.getStartDate() != null && this
+						.getStartDate().equals(castOther.getStartDate())))
+				&& ((this.getEndDate() == castOther.getEndDate()) || (this
+						.getEndDate() != null && castOther.getEndDate() != null && this
+						.getEndDate().equals(castOther.getEndDate())))
 				&& ((this.getGoodsUrl() == castOther.getGoodsUrl()) || (this
 						.getGoodsUrl() != null
 						&& castOther.getGoodsUrl() != null && this
@@ -253,10 +265,6 @@ public class VGoodsId implements java.io.Serializable {
 				+ (getDescription() == null ? 0 : this.getDescription()
 						.hashCode());
 		result = 37 * result
-				+ (getState() == null ? 0 : this.getState().hashCode());
-		result = 37 * result
-				+ (getDiscount() == null ? 0 : this.getDiscount().hashCode());
-		result = 37 * result
 				+ (getTime() == null ? 0 : this.getTime().hashCode());
 		result = 37
 				* result
@@ -266,6 +274,12 @@ public class VGoodsId implements java.io.Serializable {
 				+ (getCatalog() == null ? 0 : this.getCatalog().hashCode());
 		result = 37 * result
 				+ (getCount() == null ? 0 : this.getCount().hashCode());
+		result = 37 * result
+				+ (getDiscount() == null ? 0 : this.getDiscount().hashCode());
+		result = 37 * result
+				+ (getStartDate() == null ? 0 : this.getStartDate().hashCode());
+		result = 37 * result
+				+ (getEndDate() == null ? 0 : this.getEndDate().hashCode());
 		result = 37 * result
 				+ (getGoodsUrl() == null ? 0 : this.getGoodsUrl().hashCode());
 		result = 37 * result

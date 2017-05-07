@@ -2,10 +2,16 @@ package org.dao;
 
 import java.util.List;
 
+import org.model.Goods;
 import org.model.GoodsCatalog;
+import org.model.UserAddress;
 import org.view.VGoodsId;
 
 public interface GoodsDao {
+	/**
+	 * 获取商品对象
+	 */
+	public Goods getGoods(Long id);
 	/**
 	 * 获取商品列表，按一定的规则，暂定是销量
 	 * 
@@ -36,4 +42,14 @@ public interface GoodsDao {
 	 * 获取指定名称的商品
 	 */
 	public List<VGoodsId> getGoodsByKey(Integer start, Integer limit,String key);
+	/**
+	 * 维护商品信息
+	 */
+	public Long saveOrUpdate(Goods goods);
+
+	/**
+	 * 删除商品 
+	 */
+	public boolean delete(Long id);
+	
 }

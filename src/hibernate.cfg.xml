@@ -32,6 +32,10 @@
 		<mapping resource="org/view/VOrdersDetails.hbm.xml" />
 		<mapping resource="org/model/Admin.hbm.xml" />
 		<mapping resource="org/view/VAdmin.hbm.xml" />
+		<mapping resource="org/view/VUserAddress.hbm.xml" />
+		<mapping resource="org/model/GoodsActivity.hbm.xml" />
+		<mapping resource="org/view/VGoodsActivity.hbm.xml" />
+		<mapping resource="org/view/VGoodsCount.hbm.xml" />
 
 	</session-factory>
 

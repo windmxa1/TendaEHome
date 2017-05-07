@@ -18,7 +18,7 @@ import org.util.TokenUtils;
 import org.view.VAdminId;
 
 @Controller
-@RequestMapping("/admin")
+@RequestMapping("/back/admin")
 public class AdminController {
 	AdminDao aDao;
 	Map<String, Object> data;
@@ -27,7 +27,7 @@ public class AdminController {
 	@ResponseBody
 	public Object login(HttpServletRequest request, String username,
 			String password) {
-		VAdminId a = aDao.getAdmin(username, password);
+		Admin a = aDao.getAdmin(username, password);
 		if (a != null) {
 			data = new HashMap<String, Object>();
 			// 验证通过并生成token,c为过期时间，暂时用不到
@@ -50,7 +50,7 @@ public class AdminController {
 	@ResponseBody
 	public Object register(String username, String password) {
 		aDao = new AdminDaoImp();
-		VAdminId a = aDao.getAdmin(username);
+		Admin a = aDao.getAdmin(username);
 		if (a != null) {
 			return ResultUtils.toJson(101, "注册失败，该账号已被注册", "");
 		}
@@ -64,21 +64,21 @@ public class AdminController {
 		return ResultUtils.toJson(101, "注册失败", "");
 	}
 
-	@RequestMapping("/updateUserInfo")
+	@RequestMapping("/updateAdminInfo")
 	@ResponseBody
 	public Object updateAdminInfo(HttpServletRequest request, String password,
 			String newPwd) {
 		aDao = new AdminDaoImp();
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");
-		Long userid = (Long) TokenUtils.getValue(token, TokenUtils.getKey(),
+		Long adminId = (Long) TokenUtils.getValue(token, TokenUtils.getKey(),
 				"adminId");
 		/*********************************/
 		if (password != null) {
-			if(aDao.getAdmin(userid,password)==null){
+			if(aDao.getAdmin(adminId,password)==null){
 				return ResultUtils.toJson(101, "修改失败,旧密码不正确", "");
 			}
-			if (aDao.updatePassword(newPwd, userid)) {
+			if (aDao.updatePassword(newPwd, adminId)) {
 				return ResultUtils.toJson(100, "修改成功", "");
 			}
 		}

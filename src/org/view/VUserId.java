@@ -16,6 +16,7 @@ public class VUserId implements java.io.Serializable {
 	private String headUrl;
 	private String createTime;
 	private String url;
+	private String address;
 
 	// Constructors
 
@@ -33,7 +34,8 @@ public class VUserId implements java.io.Serializable {
 
 	/** full constructor */
 	public VUserId(Long id, String phone, String password, Long time,
-			String nickname, String headUrl, String createTime, String url) {
+			String nickname, String headUrl, String createTime, String url,
+			String address) {
 		this.id = id;
 		this.phone = phone;
 		this.password = password;
@@ -42,6 +44,7 @@ public class VUserId implements java.io.Serializable {
 		this.headUrl = headUrl;
 		this.createTime = createTime;
 		this.url = url;
+		this.address = address;
 	}
 
 	// Property accessors
@@ -110,6 +113,14 @@ public class VUserId implements java.io.Serializable {
 		this.url = url;
 	}
 
+	public String getAddress() {
+		return this.address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
 	public boolean equals(Object other) {
 		if ((this == other))
 			return true;
@@ -145,7 +156,10 @@ public class VUserId implements java.io.Serializable {
 						.getCreateTime().equals(castOther.getCreateTime())))
 				&& ((this.getUrl() == castOther.getUrl()) || (this.getUrl() != null
 						&& castOther.getUrl() != null && this.getUrl().equals(
-						castOther.getUrl())));
+						castOther.getUrl())))
+				&& ((this.getAddress() == castOther.getAddress()) || (this
+						.getAddress() != null && castOther.getAddress() != null && this
+						.getAddress().equals(castOther.getAddress())));
 	}
 
 	public int hashCode() {
@@ -168,6 +182,8 @@ public class VUserId implements java.io.Serializable {
 						.hashCode());
 		result = 37 * result
 				+ (getUrl() == null ? 0 : this.getUrl().hashCode());
+		result = 37 * result
+				+ (getAddress() == null ? 0 : this.getAddress().hashCode());
 		return result;
 	}
 

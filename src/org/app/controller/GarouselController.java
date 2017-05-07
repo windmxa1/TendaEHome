@@ -4,7 +4,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-@Controller
+@Controller("/app/GarouselController")
+@RequestMapping("/app/garousel")
 public class GarouselController {
 	@RequestMapping("/getGarousel")
 	@ResponseBody

@@ -1,7 +1,5 @@
 package org.view;
 
-import java.util.List;
-
 /**
  * VOrdersId entity. @author MyEclipse Persistence Tools
  */
@@ -13,23 +11,16 @@ public class VOrdersId implements java.io.Serializable {
 	private Long id;
 	private Long userid;
 	private Long time;
+	private Double total;
 	private String createTime;
 	private Integer state;
 	private String status;
 	private String address;
-	private List<VOrdersDetailsId> list;
+
 	// Constructors
 
 	/** default constructor */
 	public VOrdersId() {
-	}
-
-	public List<VOrdersDetailsId> getList() {
-		return list;
-	}
-
-	public void setList(List<VOrdersDetailsId> list) {
-		this.list = list;
 	}
 
 	/** minimal constructor */
@@ -43,11 +34,12 @@ public class VOrdersId implements java.io.Serializable {
 	}
 
 	/** full constructor */
-	public VOrdersId(Long id, Long userid, Long time, String createTime,
-			Integer state, String status, String address) {
+	public VOrdersId(Long id, Long userid, Long time, Double total,
+			String createTime, Integer state, String status, String address) {
 		this.id = id;
 		this.userid = userid;
 		this.time = time;
+		this.total = total;
 		this.createTime = createTime;
 		this.state = state;
 		this.status = status;
@@ -78,6 +70,14 @@ public class VOrdersId implements java.io.Serializable {
 
 	public void setTime(Long time) {
 		this.time = time;
+	}
+
+	public Double getTotal() {
+		return this.total;
+	}
+
+	public void setTotal(Double total) {
+		this.total = total;
 	}
 
 	public String getCreateTime() {
@@ -130,6 +130,9 @@ public class VOrdersId implements java.io.Serializable {
 				&& ((this.getTime() == castOther.getTime()) || (this.getTime() != null
 						&& castOther.getTime() != null && this.getTime()
 						.equals(castOther.getTime())))
+				&& ((this.getTotal() == castOther.getTotal()) || (this
+						.getTotal() != null && castOther.getTotal() != null && this
+						.getTotal().equals(castOther.getTotal())))
 				&& ((this.getCreateTime() == castOther.getCreateTime()) || (this
 						.getCreateTime() != null
 						&& castOther.getCreateTime() != null && this
@@ -153,6 +156,8 @@ public class VOrdersId implements java.io.Serializable {
 				+ (getUserid() == null ? 0 : this.getUserid().hashCode());
 		result = 37 * result
 				+ (getTime() == null ? 0 : this.getTime().hashCode());
+		result = 37 * result
+				+ (getTotal() == null ? 0 : this.getTotal().hashCode());
 		result = 37
 				* result
 				+ (getCreateTime() == null ? 0 : this.getCreateTime()

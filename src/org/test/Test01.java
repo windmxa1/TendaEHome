@@ -39,7 +39,7 @@ public class Test01 {
 		List<OrdersDetail> details = new ArrayList<OrdersDetail>();
 		details.add(detail1);
 		details.add(detail2);
-//		oDao.generateOrder(order, details);
+		oDao.generateOrder(order, details);
 		
 		
 		

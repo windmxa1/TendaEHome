@@ -1,7 +1,5 @@
 package org.model;
 
-import java.math.BigDecimal;
-
 /**
  * Goods entity. @author MyEclipse Persistence Tools
  */
@@ -16,10 +14,7 @@ public class Goods implements java.io.Serializable {
 	private String url;
 	private Long catalogId;
 	private String description;
-	private Integer state;
-	private Double discount;
 	private Long time;
-	private BigDecimal count;
 	private String origin;
 
 	// Constructors
@@ -40,17 +35,13 @@ public class Goods implements java.io.Serializable {
 
 	/** full constructor */
 	public Goods(String name, Double price, String url, Long catalogId,
-			String description, Integer state, Double discount, Long time,
-			BigDecimal count, String origin) {
+			String description, Long time, String origin) {
 		this.name = name;
 		this.price = price;
 		this.url = url;
 		this.catalogId = catalogId;
 		this.description = description;
-		this.state = state;
-		this.discount = discount;
 		this.time = time;
-		this.count = count;
 		this.origin = origin;
 	}
 
@@ -104,36 +95,12 @@ public class Goods implements java.io.Serializable {
 		this.description = description;
 	}
 
-	public Integer getState() {
-		return this.state;
-	}
-
-	public void setState(Integer state) {
-		this.state = state;
-	}
-
-	public Double getDiscount() {
-		return this.discount;
-	}
-
-	public void setDiscount(Double discount) {
-		this.discount = discount;
-	}
-
 	public Long getTime() {
 		return this.time;
 	}
 
 	public void setTime(Long time) {
 		this.time = time;
-	}
-
-	public BigDecimal getCount() {
-		return this.count;
-	}
-
-	public void setCount(BigDecimal count) {
-		this.count = count;
 	}
 
 	public String getOrigin() {

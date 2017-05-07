@@ -13,61 +13,15 @@ import org.view.VAdmin;
 import org.view.VAdminId;
 
 public class AdminDaoImp implements AdminDao {
-	public VAdminId getAdmin(String username) {
+	public Admin getAdmin(String username) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
-			String sql = "from VAdmin v where v.id.username=? ";
+			String sql = "from Admin a where a.username=? ";
 			Query query = session.createQuery(sql);
 			query.setParameter(0, username);
 			query.setMaxResults(1);
-			VAdmin v = (VAdmin) query.uniqueResult();
-			if (v != null) {
-				return v.getId();
-			} else {
-				return null;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		} finally {
-			HibernateSessionFactory.closeSession();
-		}
-	}
-	public VAdminId getAdmin(String username, String password) {
-		try {
-			Session session = HibernateSessionFactory.getSession();
-			String sql = "from VAdmin v where v.id.username=? and v.id.password = ?";
-			Query query = session.createQuery(sql);
-			query.setParameter(0, username);
-			query.setParameter(1, password);
-			query.setMaxResults(1);
-			VAdmin v = (VAdmin) query.uniqueResult();
-			if (v != null) {
-				return v.getId();
-			} else {
-				return null;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		} finally {
-			HibernateSessionFactory.closeSession();
-		}
-	}
-	public VAdminId getAdmin(Long admin, String password) {
-		try {
-			Session session = HibernateSessionFactory.getSession();
-			String sql = "from VAdmin v where v.id.userid=? and v.id.password = ?";
-			Query query = session.createQuery(sql);
-			query.setParameter(0, admin);
-			query.setParameter(1, password);
-			query.setMaxResults(1);
-			VAdmin v = (VAdmin) query.uniqueResult();
-			if (v != null) {
-				return v.getId();
-			} else {
-				return null;
-			}
+			Admin a = (Admin) query.uniqueResult();
+			return a;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -76,7 +30,41 @@ public class AdminDaoImp implements AdminDao {
 		}
 	}
 
-	
+	public Admin getAdmin(String username, String password) {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			String sql = "from Admin a where a.username=? and a.password = ?";
+			Query query = session.createQuery(sql);
+			query.setParameter(0, username);
+			query.setParameter(1, password);
+			query.setMaxResults(1);
+			Admin a = (Admin) query.uniqueResult();
+			return a;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
+	public Admin getAdmin(Long admin, String password) {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			String sql = "from Admin a where a.userid=? and a.password = ?";
+			Query query = session.createQuery(sql);
+			query.setParameter(0, admin);
+			query.setParameter(1, password);
+			query.setMaxResults(1);
+			Admin a = (Admin) query.uniqueResult();
+			return a;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
 
 	@Override
 	public Admin getAdmin(Long id) {
@@ -164,10 +152,11 @@ public class AdminDaoImp implements AdminDao {
 			HibernateSessionFactory.closeSession();
 		}
 	}
+
 	@Override
-	public boolean updatePassword(String password, Long adminId){
+	public boolean updatePassword(String password, Long adminId) {
 		return false;
-		
+
 	}
 
 }

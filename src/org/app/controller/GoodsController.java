@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.util.ResultUtils;
 import org.view.VGoodsId;
 
-@Controller
+@Controller("/app/GoodsController")
 @RequestMapping("/app/goods")
 public class GoodsController {
 	GoodsDao gDao;

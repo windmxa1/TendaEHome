@@ -25,6 +25,7 @@ public class Test02 {
 		Calendar c = Calendar.getInstance();
 		c.add(c.DATE, 20);
 		System.out.println(c.getTime());
+		System.out.println(gDao.getGoodsByKey(null, null, "黄瓜"));
 
 		
 	}

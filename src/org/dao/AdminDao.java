@@ -13,21 +13,21 @@ public interface AdminDao {
 	 * @param password
 	 * @return
 	 */
-	public VAdminId getAdmin(String username);
+	public Admin getAdmin(String username);
 	/**
 	 * 获取单个管理员对象
 	 * @param phone
 	 * @param password
 	 * @return
 	 */
-	public VAdminId getAdmin(Long adminId, String password);
+	public Admin getAdmin(Long adminId, String password);
 	/**
 	 * 获取单个管理员对象
 	 * @param phone
 	 * @param password
 	 * @return
 	 */
-	public VAdminId getAdmin(String username, String password);
+	public Admin getAdmin(String username, String password);
 	/**
 	 * 获取单个管理员对象
 	 * @param id

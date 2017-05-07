@@ -9,15 +9,16 @@ public interface UserDao {
 	/**
 	 * 获取用户对象
 	 */
-	public VUserId getUser(String phone);
+	public User getUser(String phone);
 	/**
 	 * 获取用户对象
 	 */
-	public VUserId getUser(String phone,String password);
+	public User getUser(String phone,String password);
+	public VUserId getVUser(String phone,String password);
 	/**
 	 * 获取用户对象
 	 */
-	public VUserId getUser(Long userid,String password);
+	public User getUser(Long userid,String password);
 	/**
 	 * 增加用户
 	 */
