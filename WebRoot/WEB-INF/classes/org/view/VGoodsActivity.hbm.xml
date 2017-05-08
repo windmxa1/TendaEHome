@@ -28,6 +28,9 @@
             <key-property name="endDate" type="java.lang.String">
                 <column name="end_date" length="24" />
             </key-property>
+            <key-property name="disPrice" type="java.lang.Double">
+                <column name="dis_price" precision="11" />
+            </key-property>
         </composite-id>
     </class>
 </hibernate-mapping>

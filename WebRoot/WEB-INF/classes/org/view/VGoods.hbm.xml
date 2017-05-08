@@ -37,8 +37,8 @@
             <key-property name="count" type="java.lang.Double">
                 <column name="count" precision="33" />
             </key-property>
-            <key-property name="discount" type="java.lang.Double">
-                <column name="discount" precision="11" />
+            <key-property name="disPrice" type="java.lang.Double">
+                <column name="dis_price" precision="11" />
             </key-property>
             <key-property name="startDate" type="java.lang.String">
                 <column name="start_date" length="24" />

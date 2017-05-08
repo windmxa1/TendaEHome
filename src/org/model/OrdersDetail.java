@@ -10,10 +10,19 @@ public class OrdersDetail implements java.io.Serializable {
 
 	private Long id;
 	private Long orderId;
-	private Long goodsId;
-	private Double num;
-	private Double prices;
+	private Long goodsId; // 商品编号
+	private Double num;// 已选商品数目
+	private Double prices; // 商品总价
+	
+	private String goodsUrl;// 商品图片
+	private String name; // 商品名称
+	private Double price; // 商品单价
+	private String description; // 商品描述
 
+
+//	private Double total; //数目num*price=总价
+
+	public boolean isSelect;	//CheckBox的选中状态
 	// Constructors
 
 	/** default constructor */
@@ -68,6 +77,46 @@ public class OrdersDetail implements java.io.Serializable {
 
 	public void setPrices(Double prices) {
 		this.prices = prices;
+	}
+
+	public String getGoodsUrl() {
+		return goodsUrl;
+	}
+
+	public void setGoodsUrl(String goodsUrl) {
+		this.goodsUrl = goodsUrl;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Double getPrice() {
+		return price;
+	}
+
+	public void setPrice(Double price) {
+		this.price = price;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public boolean isSelect() {
+		return isSelect;
+	}
+
+	public void setSelect(boolean isSelect) {
+		this.isSelect = isSelect;
 	}
 
 }

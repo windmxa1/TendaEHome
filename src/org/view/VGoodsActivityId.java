@@ -15,6 +15,7 @@ public class VGoodsActivityId implements java.io.Serializable {
 	private Double discount;
 	private String startDate;
 	private String endDate;
+	private Double disPrice;
 
 	// Constructors
 
@@ -32,7 +33,8 @@ public class VGoodsActivityId implements java.io.Serializable {
 
 	/** full constructor */
 	public VGoodsActivityId(Long id, Long goodsId, Long startTime,
-			Long endTime, Double discount, String startDate, String endDate) {
+			Long endTime, Double discount, String startDate, String endDate,
+			Double disPrice) {
 		this.id = id;
 		this.goodsId = goodsId;
 		this.startTime = startTime;
@@ -40,6 +42,7 @@ public class VGoodsActivityId implements java.io.Serializable {
 		this.discount = discount;
 		this.startDate = startDate;
 		this.endDate = endDate;
+		this.disPrice = disPrice;
 	}
 
 	// Property accessors
@@ -100,6 +103,14 @@ public class VGoodsActivityId implements java.io.Serializable {
 		this.endDate = endDate;
 	}
 
+	public Double getDisPrice() {
+		return this.disPrice;
+	}
+
+	public void setDisPrice(Double disPrice) {
+		this.disPrice = disPrice;
+	}
+
 	public boolean equals(Object other) {
 		if ((this == other))
 			return true;
@@ -132,7 +143,11 @@ public class VGoodsActivityId implements java.io.Serializable {
 						.getStartDate().equals(castOther.getStartDate())))
 				&& ((this.getEndDate() == castOther.getEndDate()) || (this
 						.getEndDate() != null && castOther.getEndDate() != null && this
-						.getEndDate().equals(castOther.getEndDate())));
+						.getEndDate().equals(castOther.getEndDate())))
+				&& ((this.getDisPrice() == castOther.getDisPrice()) || (this
+						.getDisPrice() != null
+						&& castOther.getDisPrice() != null && this
+						.getDisPrice().equals(castOther.getDisPrice())));
 	}
 
 	public int hashCode() {
@@ -151,6 +166,8 @@ public class VGoodsActivityId implements java.io.Serializable {
 				+ (getStartDate() == null ? 0 : this.getStartDate().hashCode());
 		result = 37 * result
 				+ (getEndDate() == null ? 0 : this.getEndDate().hashCode());
+		result = 37 * result
+				+ (getDisPrice() == null ? 0 : this.getDisPrice().hashCode());
 		return result;
 	}
 

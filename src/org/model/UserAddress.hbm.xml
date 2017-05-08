@@ -24,5 +24,8 @@
         <property name="default_" type="java.lang.Short">
             <column name="default" />
         </property>
+        <property name="tel" type="java.lang.String">
+            <column name="tel" length="20" not-null="true" />
+        </property>
     </class>
 </hibernate-mapping>

@@ -36,20 +36,19 @@ public class AppInterceptor implements HandlerInterceptor {
 
 	public boolean preHandle(HttpServletRequest request,
 			HttpServletResponse response, Object object) throws Exception {
-		// TODO Auto-generated method stub
-		Key key = TokenUtils.getKey();
-		String token = request.getHeader("token");
-		if (TokenUtils.isValid(token, key)) {
-			return true;
-		} else {
-			Map<String, Object> result = ResultUtils.toJson(400,
-					"您的账户信息已过期或已在其他客户端登录，请重新登录", "");
-			ObjectMapper objectMapper = new ObjectMapper();
-			String s = objectMapper.writeValueAsString(result);
-			response.getWriter().write(s);
-			return false;
-		}
-		// return TokenUtils.isValid(token, key);
+//		Key key = TokenUtils.getKey();
+//		String token = request.getHeader("token");
+//		if (TokenUtils.isValid(token, key)) {
+//			return true;
+//		} else {
+//			Map<String, Object> result = ResultUtils.toJson(400,
+//					"您的账户信息已过期或已在其他客户端登录，请重新登录", "");
+//			ObjectMapper objectMapper = new ObjectMapper();
+//			String s = objectMapper.writeValueAsString(result);
+//			response.getWriter().write(s);
+//			return false;
+//		}
+		return true;
 	}
 
 }

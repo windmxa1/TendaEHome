@@ -67,7 +67,6 @@ public class UserController {
 		}
 
 	}
-	
 
 	@RequestMapping("/register")
 	@ResponseBody
@@ -87,8 +86,8 @@ public class UserController {
 
 	@RequestMapping("/updateUserInfo")
 	@ResponseBody
-	public Object updateUserInfo(HttpServletRequest request, String password,String newPwd,
-			String nickname) {
+	public Object updateUserInfo(HttpServletRequest request, String password,
+			String newPwd, String nickname) {
 		uDao = new UserDaoImp();
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");
@@ -96,7 +95,7 @@ public class UserController {
 				"userid");
 		/*********************************/
 		if (password != null) {
-			if(uDao.getUser(userid,password)==null){
+			if (uDao.getUser(userid, password) == null) {
 				return ResultUtils.toJson(101, "修改失败,旧密码不正确", "");
 			}
 			if (uDao.updatePassword(newPwd, userid)) {
@@ -154,8 +153,9 @@ public class UserController {
 		uAddressDao = new UserAddressDaoImp();
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");
-		Long userid = (Long) TokenUtils.getValue(token, TokenUtils.getKey(),
-				"userid");
+//		System.out.println(token);
+		Long userid = Long.parseLong(TokenUtils.getValue(token,
+				TokenUtils.getKey(), "userid")+"");
 		/*********************************/
 		List<UserAddress> list = uAddressDao.getList(userid);
 		data = new HashMap<String, Object>();
@@ -166,14 +166,15 @@ public class UserController {
 	@RequestMapping("/insertAddress")
 	@ResponseBody
 	public Object insertAddress(HttpServletRequest request, String address,
-			String recevier) {
+			String recevier, String tel) {
 		uAddressDao = new UserAddressDaoImp();
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");
 		Long userid = (Long) TokenUtils.getValue(token, TokenUtils.getKey(),
 				"userid");
 		/*********************************/
-		UserAddress userAddress = new UserAddress(userid, address, recevier);
+		UserAddress userAddress = new UserAddress(userid, address, recevier,
+				tel);
 		if (uAddressDao.saveOrUpdate(userAddress) > 0) {
 			return ResultUtils.toJson(100, "添加成功", "");
 		} else {
@@ -199,14 +200,15 @@ public class UserController {
 	@RequestMapping("/updateAddress")
 	@ResponseBody
 	public Object updateAddress(HttpServletRequest request, Long id,
-			String address, String recevier) {
+			String address, String recevier, String tel) {
 		uAddressDao = new UserAddressDaoImp();
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");
 		Long userid = (Long) TokenUtils.getValue(token, TokenUtils.getKey(),
 				"userid");
 		/*********************************/
-		UserAddress userAddress = new UserAddress(userid, address, recevier);
+		UserAddress userAddress = new UserAddress(userid, address, recevier,
+				tel);
 		userAddress.setId(id);
 		if (uAddressDao.saveOrUpdate(userAddress) == 0) {
 			return ResultUtils.toJson(100, "修改成功", "");
@@ -214,19 +216,20 @@ public class UserController {
 			return ResultUtils.toJson(101, "修改失败", "");
 		}
 	}
+
 	/**
 	 * 修改默认地址
 	 */
 	@RequestMapping("/updateDefault")
 	@ResponseBody
-	public Object updateDefault(HttpServletRequest request,Long addressid){
+	public Object updateDefault(HttpServletRequest request, Long id) {
 		uAddressDao = new UserAddressDaoImp();
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");
 		Long userid = (Long) TokenUtils.getValue(token, TokenUtils.getKey(),
 				"userid");
 		/*********************************/
-		if (uAddressDao.updateDefault(addressid)) {
+		if (uAddressDao.updateDefault(id)) {
 			return ResultUtils.toJson(100, "修改成功", "");
 		} else {
 			return ResultUtils.toJson(101, "修改失败", "");

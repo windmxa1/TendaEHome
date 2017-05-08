@@ -13,6 +13,7 @@ public class UserAddress implements java.io.Serializable {
 	private String address;
 	private String receiver;
 	private Short default_;
+	private String tel;
 
 	// Constructors
 
@@ -21,19 +22,21 @@ public class UserAddress implements java.io.Serializable {
 	}
 
 	/** minimal constructor */
-	public UserAddress(Long userid, String address, String receiver) {
+	public UserAddress(Long userid, String address, String receiver, String tel) {
 		this.userid = userid;
 		this.address = address;
 		this.receiver = receiver;
+		this.tel = tel;
 	}
 
 	/** full constructor */
 	public UserAddress(Long userid, String address, String receiver,
-			Short default_) {
+			Short default_, String tel) {
 		this.userid = userid;
 		this.address = address;
 		this.receiver = receiver;
 		this.default_ = default_;
+		this.tel = tel;
 	}
 
 	// Property accessors
@@ -76,6 +79,14 @@ public class UserAddress implements java.io.Serializable {
 
 	public void setDefault_(Short default_) {
 		this.default_ = default_;
+	}
+
+	public String getTel() {
+		return this.tel;
+	}
+
+	public void setTel(String tel) {
+		this.tel = tel;
 	}
 
 }

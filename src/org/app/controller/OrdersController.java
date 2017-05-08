@@ -1,11 +1,13 @@
 package org.app.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.bean.MapBean;
 import org.dao.OrdersDao;
 import org.dao.imp.OrdersDaoImp;
 import org.model.Orders;
@@ -14,10 +16,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.util.JsonUtils;
 import org.util.ResultUtils;
 import org.util.TokenUtils;
 import org.view.VOrdersDetailsId;
 import org.view.VOrdersId;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller("/app/OrdersController")
 @RequestMapping("/app/orders")
@@ -65,8 +73,10 @@ public class OrdersController {
 
 	@RequestMapping("/test")
 	@ResponseBody
-	public Object test(HttpServletRequest request) {
-		return null;
+	public Object test(HttpServletRequest request, Long addressId) {
+		System.out.println(addressId);
+		
+		return ResultUtils.toJson(100, "", data);
 	}
 
 	@RequestMapping("/cancelOrder")
@@ -87,17 +97,38 @@ public class OrdersController {
 
 	@RequestMapping("/addOrder")
 	@ResponseBody
-	public Object addOrder(HttpServletRequest request, Long AddressId,
-			@RequestBody List<OrdersDetail> details) {
+	public Object addOrder(HttpServletRequest request,Long addressId,
+			String details) {
+		System.out.println(request.getAttribute("AddressId"));
+		System.out.println(request.getAttribute("details"));
 		oDao = new OrdersDaoImp();
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");
-		Long userid = (Long) TokenUtils.getValue(token, TokenUtils.getKey(),
-				"userid");
+		Long userid = Long.parseLong(""
+				+ TokenUtils.getValue(token, TokenUtils.getKey(), "userid"));
+		System.out.println("userid:"+userid);
+		
 		/*********************************/
 		Orders orders = new Orders(userid, System.currentTimeMillis() / 1000,
-				0, AddressId);
-		if (oDao.generateOrder(orders, details)) {
+				0, addressId);
+		ObjectMapper mapper = JsonUtils.getMapperInstance();
+		JavaType javaType = JsonUtils.getCollectionType(ArrayList.class,
+				OrdersDetail.class);
+		List<OrdersDetail> details2 = null;
+		try {
+			System.out.println(mapper);
+			details2 = mapper.readValue(details, javaType);
+		} catch (JsonParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if (oDao.generateOrder(orders, details2)) {
 			return ResultUtils.toJson(100, "生成订单成功", "");
 		} else {
 			return ResultUtils.toJson(101, "生成订单失败", "");

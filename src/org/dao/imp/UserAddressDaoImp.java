@@ -57,7 +57,7 @@ public class UserAddressDaoImp implements UserAddressDao {
 			String sql = "from UserAddress where userid= ?";
 			Query query = session.createQuery(sql);
 			query.setParameter(0, userid);
-			List<UserAddress> list = (List<UserAddress>) query.uniqueResult();
+			List<UserAddress> list = (List<UserAddress>) query.list();
 			return list;
 		} catch (Exception e) {
 			e.printStackTrace();

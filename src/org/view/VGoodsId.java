@@ -8,21 +8,21 @@ public class VGoodsId implements java.io.Serializable {
 
 	// Fields
 
-	private Long goodsId;
-	private String name;
-	private Double price;
-	private String url;
-	private Long catalogId;
-	private String description;
-	private Long time;
-	private String createTime;
-	private String catalog;
-	private Double count;
-	private Double discount;
-	private String startDate;
-	private String endDate;
-	private String goodsUrl;
-	private String origin;
+	private Long goodsId;	//商品编号
+	private String name;	//商品名
+	private Double price;	//商品价格
+	private String url;		
+	private Long catalogId;		
+	private String description;	//商品描述
+	private Long time;			
+	private String createTime;	//上架时间
+	private String catalog;		//目录
+	private Double count;		//已售
+	private Double disPrice;	//折扣价格
+	private String startDate;	//折扣起始时间
+	private String endDate;		//折扣结束时间
+	private String goodsUrl;	//商品图片地址
+	private String origin;		//商品原产地
 
 	// Constructors
 
@@ -44,7 +44,7 @@ public class VGoodsId implements java.io.Serializable {
 	/** full constructor */
 	public VGoodsId(Long goodsId, String name, Double price, String url,
 			Long catalogId, String description, Long time, String createTime,
-			String catalog, Double count, Double discount, String startDate,
+			String catalog, Double count, Double disPrice, String startDate,
 			String endDate, String goodsUrl, String origin) {
 		this.goodsId = goodsId;
 		this.name = name;
@@ -56,7 +56,7 @@ public class VGoodsId implements java.io.Serializable {
 		this.createTime = createTime;
 		this.catalog = catalog;
 		this.count = count;
-		this.discount = discount;
+		this.disPrice = disPrice;
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.goodsUrl = goodsUrl;
@@ -145,12 +145,12 @@ public class VGoodsId implements java.io.Serializable {
 		this.count = count;
 	}
 
-	public Double getDiscount() {
-		return this.discount;
+	public Double getDisPrice() {
+		return this.disPrice;
 	}
 
-	public void setDiscount(Double discount) {
-		this.discount = discount;
+	public void setDisPrice(Double disPrice) {
+		this.disPrice = disPrice;
 	}
 
 	public String getStartDate() {
@@ -227,10 +227,10 @@ public class VGoodsId implements java.io.Serializable {
 				&& ((this.getCount() == castOther.getCount()) || (this
 						.getCount() != null && castOther.getCount() != null && this
 						.getCount().equals(castOther.getCount())))
-				&& ((this.getDiscount() == castOther.getDiscount()) || (this
-						.getDiscount() != null
-						&& castOther.getDiscount() != null && this
-						.getDiscount().equals(castOther.getDiscount())))
+				&& ((this.getDisPrice() == castOther.getDisPrice()) || (this
+						.getDisPrice() != null
+						&& castOther.getDisPrice() != null && this
+						.getDisPrice().equals(castOther.getDisPrice())))
 				&& ((this.getStartDate() == castOther.getStartDate()) || (this
 						.getStartDate() != null
 						&& castOther.getStartDate() != null && this
@@ -275,7 +275,7 @@ public class VGoodsId implements java.io.Serializable {
 		result = 37 * result
 				+ (getCount() == null ? 0 : this.getCount().hashCode());
 		result = 37 * result
-				+ (getDiscount() == null ? 0 : this.getDiscount().hashCode());
+				+ (getDisPrice() == null ? 0 : this.getDisPrice().hashCode());
 		result = 37 * result
 				+ (getStartDate() == null ? 0 : this.getStartDate().hashCode());
 		result = 37 * result

@@ -1,5 +1,7 @@
 package org.view;
 
+import java.util.List;
+
 /**
  * VOrdersId entity. @author MyEclipse Persistence Tools
  */
@@ -16,7 +18,7 @@ public class VOrdersId implements java.io.Serializable {
 	private Integer state;
 	private String status;
 	private String address;
-
+	private List<VOrdersDetailsId> list;
 	// Constructors
 
 	/** default constructor */
@@ -110,6 +112,14 @@ public class VOrdersId implements java.io.Serializable {
 
 	public void setAddress(String address) {
 		this.address = address;
+	}
+
+	public List<VOrdersDetailsId> getList() {
+		return list;
+	}
+
+	public void setList(List<VOrdersDetailsId> list) {
+		this.list = list;
 	}
 
 	public boolean equals(Object other) {
