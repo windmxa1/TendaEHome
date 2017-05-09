@@ -91,8 +91,8 @@ public class UserController {
 		uDao = new UserDaoImp();
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");
-		Long userid = (Long) TokenUtils.getValue(token, TokenUtils.getKey(),
-				"userid");
+		Long userid = Long.parseLong(""
+				+ TokenUtils.getValue(token, TokenUtils.getKey(), "userid"));
 		/*********************************/
 		if (password != null) {
 			if (uDao.getUser(userid, password) == null) {
@@ -130,8 +130,8 @@ public class UserController {
 		uDao = new UserDaoImp();
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");
-		Long userid = (Long) TokenUtils.getValue(token, TokenUtils.getKey(),
-				"userid");
+		Long userid = Long.parseLong(""
+				+ TokenUtils.getValue(token, TokenUtils.getKey(), "userid"));
 		/*********************************/
 		String usedHead = uDao.getUsedHead(userid);
 		if (usedHead != null) {
@@ -170,8 +170,8 @@ public class UserController {
 		uAddressDao = new UserAddressDaoImp();
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");
-		Long userid = (Long) TokenUtils.getValue(token, TokenUtils.getKey(),
-				"userid");
+		Long userid = Long.parseLong(""
+				+ TokenUtils.getValue(token, TokenUtils.getKey(), "userid"));
 		/*********************************/
 		UserAddress userAddress = new UserAddress(userid, address, recevier,
 				tel);
@@ -187,8 +187,8 @@ public class UserController {
 	public Object deleteAddress(HttpServletRequest request, Long id) {
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");
-		Long userid = (Long) TokenUtils.getValue(token, TokenUtils.getKey(),
-				"userid");
+		Long userid = Long.parseLong(""
+				+ TokenUtils.getValue(token, TokenUtils.getKey(), "userid"));
 		/*********************************/
 		if (uAddressDao.delete(userid, id)) {
 			return ResultUtils.toJson(100, "删除成功", "");
@@ -204,8 +204,8 @@ public class UserController {
 		uAddressDao = new UserAddressDaoImp();
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");
-		Long userid = (Long) TokenUtils.getValue(token, TokenUtils.getKey(),
-				"userid");
+		Long userid = Long.parseLong(""
+				+ TokenUtils.getValue(token, TokenUtils.getKey(), "userid"));
 		/*********************************/
 		UserAddress userAddress = new UserAddress(userid, address, recevier,
 				tel);
@@ -226,8 +226,8 @@ public class UserController {
 		uAddressDao = new UserAddressDaoImp();
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");
-		Long userid = (Long) TokenUtils.getValue(token, TokenUtils.getKey(),
-				"userid");
+		Long userid = Long.parseLong(""
+				+ TokenUtils.getValue(token, TokenUtils.getKey(), "userid"));
 		/*********************************/
 		if (uAddressDao.updateDefault(id)) {
 			return ResultUtils.toJson(100, "修改成功", "");

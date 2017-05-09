@@ -7,4 +7,5 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/back/garousel")
 public class GarouselController {
+	
 }

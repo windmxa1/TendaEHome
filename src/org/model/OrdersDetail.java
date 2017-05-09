@@ -13,16 +13,12 @@ public class OrdersDetail implements java.io.Serializable {
 	private Long goodsId; // 商品编号
 	private Double num;// 已选商品数目
 	private Double prices; // 商品总价
-	
 	private String goodsUrl;// 商品图片
 	private String name; // 商品名称
 	private Double price; // 商品单价
 	private String description; // 商品描述
+	public boolean isSelect; // CheckBox的选中状态
 
-
-//	private Double total; //数目num*price=总价
-
-	public boolean isSelect;	//CheckBox的选中状态
 	// Constructors
 
 	/** default constructor */

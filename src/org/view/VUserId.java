@@ -1,5 +1,7 @@
 package org.view;
 
+import java.math.BigDecimal;
+
 /**
  * VUserId entity. @author MyEclipse Persistence Tools
  */
@@ -17,6 +19,7 @@ public class VUserId implements java.io.Serializable {
 	private String createTime;
 	private String url;
 	private String address;
+	private BigDecimal addressId;
 
 	// Constructors
 
@@ -35,7 +38,7 @@ public class VUserId implements java.io.Serializable {
 	/** full constructor */
 	public VUserId(Long id, String phone, String password, Long time,
 			String nickname, String headUrl, String createTime, String url,
-			String address) {
+			String address, BigDecimal addressId) {
 		this.id = id;
 		this.phone = phone;
 		this.password = password;
@@ -45,6 +48,7 @@ public class VUserId implements java.io.Serializable {
 		this.createTime = createTime;
 		this.url = url;
 		this.address = address;
+		this.addressId = addressId;
 	}
 
 	// Property accessors
@@ -121,6 +125,14 @@ public class VUserId implements java.io.Serializable {
 		this.address = address;
 	}
 
+	public BigDecimal getAddressId() {
+		return this.addressId;
+	}
+
+	public void setAddressId(BigDecimal addressId) {
+		this.addressId = addressId;
+	}
+
 	public boolean equals(Object other) {
 		if ((this == other))
 			return true;
@@ -159,7 +171,11 @@ public class VUserId implements java.io.Serializable {
 						castOther.getUrl())))
 				&& ((this.getAddress() == castOther.getAddress()) || (this
 						.getAddress() != null && castOther.getAddress() != null && this
-						.getAddress().equals(castOther.getAddress())));
+						.getAddress().equals(castOther.getAddress())))
+				&& ((this.getAddressId() == castOther.getAddressId()) || (this
+						.getAddressId() != null
+						&& castOther.getAddressId() != null && this
+						.getAddressId().equals(castOther.getAddressId())));
 	}
 
 	public int hashCode() {
@@ -184,6 +200,8 @@ public class VUserId implements java.io.Serializable {
 				+ (getUrl() == null ? 0 : this.getUrl().hashCode());
 		result = 37 * result
 				+ (getAddress() == null ? 0 : this.getAddress().hashCode());
+		result = 37 * result
+				+ (getAddressId() == null ? 0 : this.getAddressId().hashCode());
 		return result;
 	}
 

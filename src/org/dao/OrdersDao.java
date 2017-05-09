@@ -10,7 +10,7 @@ import org.view.VOrdersId;
 public interface OrdersDao {
 
 	/**
-	 * 获取订单列表
+	 * 获取单个用户的订单列表
 	 */
 	public List<VOrdersId> getList(Long userid, Integer start, Integer limit);
 
@@ -31,4 +31,12 @@ public interface OrdersDao {
 	 */
 	public boolean cancel(Long userid,Long id);
 	
+	/**
+	 * 根据状态获取订单列表,0取消订单,1未支付，2已支付未发货，3发货未签收，4发货已签收
+	 */
+	public List<VOrdersId> getListByState(Integer start, Integer limit,Integer state);
+	/**
+	 * 修改订单状态
+	 */
+	public boolean updateOrder(Long id,Integer state);
 }

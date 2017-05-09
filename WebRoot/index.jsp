@@ -24,14 +24,13 @@
 <script type="text/javascript">
 	$(function() {
 		$("#btn").click(function() {
-			var json1 = {
-				"addressId" : 2
-			};
+			var json1 = "{\"addressId\" : 2}";
 			$.ajax({
 				type : "post",
-				url : "app/orders/test",
+				url : "app/orders/test1",
 				data: json1,
 				dataType: "json",
+				contentType : 'application/json;charset=utf-8',
 				async : false,
 				cache : false,
 				success : function(data) {

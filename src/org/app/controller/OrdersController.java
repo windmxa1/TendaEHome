@@ -13,8 +13,11 @@ import org.dao.imp.OrdersDaoImp;
 import org.model.Orders;
 import org.model.OrdersDetail;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.util.JsonUtils;
 import org.util.ResultUtils;
@@ -41,8 +44,8 @@ public class OrdersController {
 		oDao = new OrdersDaoImp();
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");
-		Long userid = (Long) TokenUtils.getValue(token, TokenUtils.getKey(),
-				"userid");
+		Long userid = Long.parseLong(""
+				+ TokenUtils.getValue(token, TokenUtils.getKey(), "userid"));
 		/*********************************/
 		List<VOrdersId> list = oDao.getList(userid, start, limit);
 		if (list == null || list.size() == 0) {
@@ -71,11 +74,17 @@ public class OrdersController {
 		return ResultUtils.toJson(100, "", data);
 	}
 
-	@RequestMapping("/test")
+	@RequestMapping(value="/test",method = RequestMethod.POST)
 	@ResponseBody
-	public Object test(HttpServletRequest request, Long addressId) {
+	public Object test(HttpServletRequest request, @RequestParam Long addressId,@RequestParam String details) {
 		System.out.println(addressId);
-		
+		System.out.println(details);
+		return ResultUtils.toJson(100, "", data);
+	}
+	@RequestMapping(value="/test1",method = RequestMethod.POST)
+	@ResponseBody
+	public Object test1(HttpServletRequest request, @RequestParam Object addressId) {
+		System.out.println(addressId);
 		return ResultUtils.toJson(100, "", data);
 	}
 
@@ -85,8 +94,8 @@ public class OrdersController {
 		oDao = new OrdersDaoImp();
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");
-		Long userid = (Long) TokenUtils.getValue(token, TokenUtils.getKey(),
-				"userid");
+		Long userid = Long.parseLong(""
+				+ TokenUtils.getValue(token, TokenUtils.getKey(), "userid"));
 		/*********************************/
 		if (oDao.cancel(userid, id)) {
 			return ResultUtils.toJson(100, "取消订单成功", "");
@@ -99,8 +108,6 @@ public class OrdersController {
 	@ResponseBody
 	public Object addOrder(HttpServletRequest request,Long addressId,
 			String details) {
-		System.out.println(request.getAttribute("AddressId"));
-		System.out.println(request.getAttribute("details"));
 		oDao = new OrdersDaoImp();
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");

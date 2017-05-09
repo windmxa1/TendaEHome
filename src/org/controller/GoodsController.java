@@ -151,5 +151,17 @@ public class GoodsController {
 		return ResultUtils.toJson(101, "修改失败", "");
 	}
 	
+	@RequestMapping("/SearchByCatalog")
+	@ResponseBody
+	public Object SearchByCatalog(){
+		gDao = new GoodsDaoImp();
+		data = new HashMap<>();
+		
+		
+		return ResultUtils.toJson(100, "", "");
+	}
+		
+	
+
 
 }

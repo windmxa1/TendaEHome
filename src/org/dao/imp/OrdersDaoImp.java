@@ -24,7 +24,7 @@ public class OrdersDaoImp implements OrdersDao {
 	public List<VOrdersId> getList(Long userid, Integer start, Integer limit) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
-			String sql = "from VOrders v where v.id.userid=?";
+			String sql = "from VOrders v where v.id.userid=? order by desc";
 			Query query = session.createQuery(sql);
 			query.setParameter(0, userid);
 			if (start == null) {
@@ -129,7 +129,7 @@ public class OrdersDaoImp implements OrdersDao {
 			Integer limit) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
-			String sql = "from VOrdersDetails v where v.id.orderId=?";
+			String sql = "from VOrdersDetails v where v.id.orderId=? order by time desc";
 			Query query = session.createQuery(sql);
 			query.setParameter(0, orderId);
 			if (start == null) {
@@ -149,6 +149,59 @@ public class OrdersDaoImp implements OrdersDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
+	@Override
+	public List<VOrdersId> getListByState(Integer start, Integer limit,
+			Integer state) {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			String sql = "from VOrders v where v.id.state=? order by time desc";
+			Query query = session.createQuery(sql);
+			if (state == null) {
+				state = 2;
+			}
+			query.setParameter(0, state);
+			if (start == null) {
+				start = 0;
+			}
+			if (limit == null) {
+				limit = 15;
+			}
+			query.setFirstResult(start);
+			query.setMaxResults(limit);
+			List<VOrders> vOrders = query.list();
+			List<VOrdersId> list = new ArrayList<VOrdersId>();
+			for (VOrders v : vOrders) {
+				list.add(v.getId());
+			}
+			return list;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
+	@Override
+	public boolean updateOrder(Long id, Integer state) {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			Transaction ts = session.beginTransaction();
+			String sql = "update Orders set state=? where id = ?";
+			Query query = session.createQuery(sql);
+			query.setParameter(0, state);
+			query.setParameter(1, id);
+			query.executeUpdate();
+			ts.commit();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
 		} finally {
 			HibernateSessionFactory.closeSession();
 		}

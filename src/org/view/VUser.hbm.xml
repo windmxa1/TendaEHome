@@ -32,7 +32,10 @@
                 <column name="url" length="237" />
             </key-property>
             <key-property name="address" type="java.lang.String">
-                <column name="address" length="221" />
+                <column name="address" length="242" />
+            </key-property>
+            <key-property name="addressId" type="java.math.BigDecimal">
+                <column name="address_id" precision="20" scale="0" />
             </key-property>
         </composite-id>
     </class>

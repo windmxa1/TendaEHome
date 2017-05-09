@@ -10,8 +10,11 @@
             <key-property name="userid" type="java.lang.Long">
                 <column name="userid" />
             </key-property>
+            <key-property name="id" type="java.lang.Long">
+                <column name="id" />
+            </key-property>
             <key-property name="address" type="java.lang.String">
-                <column name="address" length="221" />
+                <column name="address" length="242" />
             </key-property>
         </composite-id>
     </class>

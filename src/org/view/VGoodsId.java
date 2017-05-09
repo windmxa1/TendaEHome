@@ -8,21 +8,21 @@ public class VGoodsId implements java.io.Serializable {
 
 	// Fields
 
-	private Long goodsId;	//商品编号
-	private String name;	//商品名
-	private Double price;	//商品价格
-	private String url;		
-	private Long catalogId;		
-	private String description;	//商品描述
-	private Long time;			
-	private String createTime;	//上架时间
-	private String catalog;		//目录
-	private Double count;		//已售
-	private Double disPrice;	//折扣价格
-	private String startDate;	//折扣起始时间
-	private String endDate;		//折扣结束时间
-	private String goodsUrl;	//商品图片地址
-	private String origin;		//商品原产地
+	private Long goodsId;
+	private String name;
+	private Double price;
+	private String url;
+	private Long catalogId;
+	private String description;
+	private Long time;
+	private String createTime;
+	private String catalog;
+	private Double count;
+	private Double disPrice;
+	private String startDate;
+	private String endDate;
+	private String goodsUrl;
+	private String origin;
 
 	// Constructors
 
