@@ -2,13 +2,16 @@ package org.app.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.bean.MapBean;
+import org.dao.GoodsDao;
 import org.dao.OrdersDao;
+import org.dao.imp.GoodsDaoImp;
 import org.dao.imp.OrdersDaoImp;
 import org.model.Orders;
 import org.model.OrdersDetail;
@@ -47,14 +50,16 @@ public class OrdersController {
 		Long userid = Long.parseLong(""
 				+ TokenUtils.getValue(token, TokenUtils.getKey(), "userid"));
 		/*********************************/
+		System.out.println(userid);
 		List<VOrdersId> list = oDao.getList(userid, start, limit);
+		data = new HashMap<String, Object>();
 		if (list == null || list.size() == 0) {
 			data.put("list", new ArrayList<>());
 		} else {
 			for (VOrdersId order : list) {
 				List<VOrdersDetailsId> details = oDao.getDetailList(
 						order.getId(), start, limit);
-				order.setList(details);
+				order.setDetails(details);
 			}
 			data.put("list", list);
 		}
@@ -66,6 +71,7 @@ public class OrdersController {
 	public Object getOrdersDetailList(Long orderId, Integer start, Integer limit) {
 		oDao = new OrdersDaoImp();
 		List<VOrdersDetailsId> list = oDao.getDetailList(orderId, start, limit);
+		data = new HashMap<>();
 		if (list != null) {
 			data.put("list", list);
 		} else {
@@ -74,16 +80,40 @@ public class OrdersController {
 		return ResultUtils.toJson(100, "", data);
 	}
 
-	@RequestMapping(value="/test",method = RequestMethod.POST)
+	@RequestMapping("/getOrders")
 	@ResponseBody
-	public Object test(HttpServletRequest request, @RequestParam Long addressId,@RequestParam String details) {
+	public Object getOrders(HttpServletRequest request, Integer start,
+			Integer limit) {
+		oDao = new OrdersDaoImp();
+		/**** 获取header中的token并取出userid ****/
+		String token = request.getHeader("token");
+		Long userid = Long.parseLong(""
+				+ TokenUtils.getValue(token, TokenUtils.getKey(), "userid"));
+		/*********************************/
+		System.out.println(userid);
+		List<VOrdersId> list = oDao.getList(userid, start, limit);
+		data = new HashMap<String, Object>();
+		if (list == null || list.size() == 0) {
+			data.put("list", new ArrayList<>());
+		} else {
+			data.put("list", list);
+		}
+		return ResultUtils.toJson(100, "", data);
+	}
+
+	@RequestMapping(value = "/test", method = RequestMethod.POST)
+	@ResponseBody
+	public Object test(HttpServletRequest request,
+			@RequestParam Long addressId, @RequestParam String details) {
 		System.out.println(addressId);
 		System.out.println(details);
 		return ResultUtils.toJson(100, "", data);
 	}
-	@RequestMapping(value="/test1",method = RequestMethod.POST)
+
+	@RequestMapping(value = "/test1", method = RequestMethod.POST)
 	@ResponseBody
-	public Object test1(HttpServletRequest request, @RequestParam Object addressId) {
+	public Object test1(HttpServletRequest request,
+			@RequestParam Object addressId) {
 		System.out.println(addressId);
 		return ResultUtils.toJson(100, "", data);
 	}
@@ -106,15 +136,16 @@ public class OrdersController {
 
 	@RequestMapping("/addOrder")
 	@ResponseBody
-	public Object addOrder(HttpServletRequest request,Long addressId,
+	public Object addOrder(HttpServletRequest request, Long addressId,
 			String details) {
 		oDao = new OrdersDaoImp();
+		GoodsDao gDao = new GoodsDaoImp();
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");
 		Long userid = Long.parseLong(""
 				+ TokenUtils.getValue(token, TokenUtils.getKey(), "userid"));
-		System.out.println("userid:"+userid);
-		
+		System.out.println("userid:" + userid);
+
 		/*********************************/
 		Orders orders = new Orders(userid, System.currentTimeMillis() / 1000,
 				0, addressId);
@@ -125,14 +156,18 @@ public class OrdersController {
 		try {
 			System.out.println(mapper);
 			details2 = mapper.readValue(details, javaType);
+			// List<Long> ids = new ArrayList<>();
+			// for(OrdersDetail detail:details2){
+			// ids.add(detail.getGoodsId());
+			// }
+			// if(gDao.validate(ids)){
+			// return ResultUtils.toJson(101, "生成订单失败，该订单中存在已下架商品:", "");
+			// }
 		} catch (JsonParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		if (oDao.generateOrder(orders, details2)) {

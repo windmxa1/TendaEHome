@@ -18,7 +18,7 @@ public class VOrdersId implements java.io.Serializable {
 	private Integer state;
 	private String status;
 	private String address;
-	private List<VOrdersDetailsId> list;
+	private List<VOrdersDetailsId> details;
 	// Constructors
 
 	/** default constructor */
@@ -114,12 +114,12 @@ public class VOrdersId implements java.io.Serializable {
 		this.address = address;
 	}
 
-	public List<VOrdersDetailsId> getList() {
-		return list;
+	public List<VOrdersDetailsId> getDetails() {
+		return details;
 	}
 
-	public void setList(List<VOrdersDetailsId> list) {
-		this.list = list;
+	public void setDetails(List<VOrdersDetailsId> details) {
+		this.details = details;
 	}
 
 	public boolean equals(Object other) {

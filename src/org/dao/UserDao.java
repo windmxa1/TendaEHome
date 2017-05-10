@@ -15,6 +15,7 @@ public interface UserDao {
 	 */
 	public User getUser(String phone,String password);
 	public VUserId getVUser(String phone,String password);
+	public VUserId getVUser(Long id);
 	/**
 	 * 获取用户对象
 	 */

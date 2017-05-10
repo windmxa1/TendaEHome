@@ -1,6 +1,7 @@
 package org.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +33,7 @@ public class OrdersController {
 	public Object getOrdersList(HttpServletRequest request, Integer start,
 			Integer limit,Integer state) {
 		oDao = new OrdersDaoImp();
+		data = new HashMap<String, Object>();
 		List<VOrdersId> list = oDao.getListByState(start, limit,state);
 		if (list == null || list.size() == 0) {
 			data.put("list", new ArrayList<>());
@@ -39,7 +41,7 @@ public class OrdersController {
 			for (VOrdersId order : list) {
 				List<VOrdersDetailsId> details = oDao.getDetailList(
 						order.getId(), start, limit);
-				order.setList(details);
+				order.setDetails(details);
 			}
 			data.put("list", list);
 		}
@@ -51,9 +53,9 @@ public class OrdersController {
 	public Object updateOrder(HttpServletRequest request,Long id,Integer state){
 		oDao = new OrdersDaoImp();
 		if(oDao.updateOrder(id, state)){
-			return ResultUtils.toJson(100, "", data);
+			return ResultUtils.toJson(100, "", "");
 		}else {
-			return ResultUtils.toJson(101, "修改失败", data);
+			return ResultUtils.toJson(101, "修改失败", "");
 		}
 	}
 	

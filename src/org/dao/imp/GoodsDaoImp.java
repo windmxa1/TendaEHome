@@ -1,6 +1,7 @@
 package org.dao.imp;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.dao.GoodsDao;
@@ -62,7 +63,7 @@ public class GoodsDaoImp implements GoodsDao {
 	public List<VGoodsId> getDiscounts(Integer start, Integer limit) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
-			String sql = "from VGoods v where v.id.state=1 order by v.id.count desc";
+			String sql = "from VGoods v where now() between v.id.startDate and v.id.endDate order by v.id.count desc";
 			Query query = session.createQuery(sql);
 			if (start == null) {
 				start = 0;
@@ -75,6 +76,7 @@ public class GoodsDaoImp implements GoodsDao {
 			List<VGoods> vGoods = query.list();
 			List<VGoodsId> list = new ArrayList<VGoodsId>();
 			for (VGoods v : vGoods) {
+				System.out.println(11);
 				list.add(v.getId());
 			}
 			return list;
@@ -223,6 +225,35 @@ public class GoodsDaoImp implements GoodsDao {
 			query.executeUpdate();
 			ts.commit();
 			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
+	@Override
+	public boolean validate(List<Long> ids) {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			String sql = "";
+			for (int i = 0; i < ids.size(); i++) {
+				if (i == 0) {
+					sql = "where id=?";
+				} else {
+					sql = sql + " or id=?";
+				}
+			}
+			Query query = session.createQuery("select id from Goods "
+					+ sql);
+			for (int i = 0; i < ids.size(); i++) {
+				query.setParameter(i, ids.get(i));
+			}
+			List<Long> list = query.list();
+			
+			return true;
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;

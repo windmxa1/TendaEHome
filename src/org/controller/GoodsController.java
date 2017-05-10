@@ -14,6 +14,7 @@ import org.model.Goods;
 import org.model.GoodsCatalog;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.util.ResultUtils;
 import org.view.VGoodsId;
@@ -86,7 +87,7 @@ public class GoodsController {
 
 	@RequestMapping("/delCatalog")
 	@ResponseBody
-	public Object delCatalog(Long id) {
+	public Object delCatalog(@RequestParam Long id) {
 		gcDao = new GoodsCatalogDaoImp();
 		if (gcDao.delete(id)) {
 			return ResultUtils.toJson(100, "删除成功", "");
@@ -96,7 +97,7 @@ public class GoodsController {
 
 	@RequestMapping("/updateCatalog")
 	@ResponseBody
-	public Object updateCatalog(Long id, String catalog) {
+	public Object updateCatalog(@RequestParam Long id,@RequestParam String catalog) {
 		gcDao = new GoodsCatalogDaoImp();
 		GoodsCatalog goodsCatalog = new GoodsCatalog(catalog);
 		goodsCatalog.setId(id);
@@ -150,18 +151,20 @@ public class GoodsController {
 		}
 		return ResultUtils.toJson(101, "修改失败", "");
 	}
-	
-	@RequestMapping("/SearchByCatalog")
-	@ResponseBody
-	public Object SearchByCatalog(){
-		gDao = new GoodsDaoImp();
-		data = new HashMap<>();
-		
-		
-		return ResultUtils.toJson(100, "", "");
-	}
-		
-	
 
+	// 获取目录对应的商品列表
+	@RequestMapping("/getCataGoods")
+	@ResponseBody
+	public Object getCataGoods(Integer start, Integer limit, Long catalogId) {
+		gDao = new GoodsDaoImp();
+		data = new HashMap<String, Object>();
+		List<VGoodsId> list = gDao.getCataGoods(start, limit, catalogId);
+		if (list != null) {
+			data.put("list", list);
+		} else {
+			data.put("list", new ArrayList<>());
+		}
+		return ResultUtils.toJson(100, "", data);
+	}
 
 }

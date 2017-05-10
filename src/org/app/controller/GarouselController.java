@@ -7,10 +7,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller("/app/GarouselController")
 @RequestMapping("/app/garousel")
 public class GarouselController {
-	@RequestMapping("/getGarousel")
+	@RequestMapping("/getGarouselCatalog")
 	@ResponseBody
-	public Object getGarousel() {
+	public Object getGarouselCatalog() {
 		
 		return null;
 	}
+	@RequestMapping("/getGarouselList")
+	@ResponseBody
+	public Object getGarouselList(Integer id) {
+		
+		return id;
+	}
+	
 }

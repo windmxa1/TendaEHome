@@ -51,5 +51,9 @@ public interface GoodsDao {
 	 * 删除商品 
 	 */
 	public boolean delete(Long id);
+	/**
+	 * 校验商品是否存在
+	 */
+	public boolean validate(List<Long> ids);
 	
 }

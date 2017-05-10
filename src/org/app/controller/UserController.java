@@ -51,21 +51,71 @@ public class UserController {
 					.getRealPath("/");
 			String token = TokenUtils.buildJwt1(TokenUtils.getKey(),
 					c.getTime(), u.getId());
-			u.setPassword("");
-			ObjectMapper mapper = new ObjectMapper();
-			try {
-				System.out.println(mapper.writeValueAsString(u));
-			} catch (JsonProcessingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			data.put("user", u);
+			// ObjectMapper mapper = new ObjectMapper();
 			data.put("token", token);
 			return ResultUtils.toJson(100, "登录成功", data);
 		} else {
 			return ResultUtils.toJson(101, "登录失败", "");
 		}
 
+	}
+
+	@RequestMapping("/getUserInfo")
+	@ResponseBody
+	public Object getUserInfo(HttpServletRequest request) {
+		/**** 获取header中的token并取出userid ****/
+		String token = request.getHeader("token");
+		Long userid = Long.parseLong(""
+				+ TokenUtils.getValue(token, TokenUtils.getKey(), "userid"));
+		/*********************************/
+		data = new HashMap<String, Object>();
+		VUserId u = uDao.getVUser(userid);
+		if (u == null) {
+			return ResultUtils.toJson(101, "系统错误，请重试", data);
+		}
+		u.setPassword("");
+		data.put("user", u);
+		return ResultUtils.toJson(100, "", data);
+
+	}
+
+	@RequestMapping("/phoneVerify")
+	@ResponseBody
+	public Object phoneVerify(HttpServletRequest request, String phone) {
+		uDao = new UserDaoImp();
+		TokenUtils.rootPath = request.getSession().getServletContext()
+				.getRealPath("/");
+		User u = uDao.getUser(phone);
+		if (u != null) {
+			data = new HashMap<String, Object>();
+			// 验证通过并生成token,c为过期时间，暂时用不到
+			Calendar c = Calendar.getInstance();
+			c.add(c.DATE, 14);
+			TokenUtils.rootPath = request.getSession().getServletContext()
+					.getRealPath("/");
+			String token = TokenUtils.buildJwt1(TokenUtils.getKey(),
+					c.getTime(), u.getId());
+			data.put("token", token);
+			return ResultUtils.toJson(101, "该手机号已注册", data);
+		} else {
+			return ResultUtils.toJson(100, "该手机号还未注册", "");
+		}
+	}
+
+	@RequestMapping("/updatePassword")
+	@ResponseBody
+	public Object updatePassword(HttpServletRequest request, String newPwd) {
+		uDao = new UserDaoImp();
+		/**** 获取header中的token并取出userid ****/
+		String token = request.getHeader("token");
+		Long userid = Long.parseLong(""
+				+ TokenUtils.getValue(token, TokenUtils.getKey(), "userid"));
+		/*********************************/
+		if (uDao.updatePassword(newPwd, userid)) {
+			return ResultUtils.toJson(100, "修改成功", "");
+		} else {
+			return ResultUtils.toJson(101, "修改失败", "");
+		}
 	}
 
 	@RequestMapping("/register")
@@ -153,9 +203,10 @@ public class UserController {
 		uAddressDao = new UserAddressDaoImp();
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");
-//		System.out.println(token);
+		// System.out.println(token);
 		Long userid = Long.parseLong(TokenUtils.getValue(token,
-				TokenUtils.getKey(), "userid")+"");
+				TokenUtils.getKey(), "userid")
+				+ "");
 		/*********************************/
 		List<UserAddress> list = uAddressDao.getList(userid);
 		data = new HashMap<String, Object>();

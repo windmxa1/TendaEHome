@@ -24,7 +24,7 @@ public class OrdersDaoImp implements OrdersDao {
 	public List<VOrdersId> getList(Long userid, Integer start, Integer limit) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
-			String sql = "from VOrders v where v.id.userid=? order by desc";
+			String sql = "from VOrders v where v.id.userid=? order by v.id.time desc";
 			Query query = session.createQuery(sql);
 			query.setParameter(0, userid);
 			if (start == null) {
@@ -73,8 +73,10 @@ public class OrdersDaoImp implements OrdersDao {
 		try {
 			Session session = HibernateSessionFactory.getSession();
 			Transaction ts = session.beginTransaction();
-			String sql = "update Orders set state=-1 where userid=? and id = ? ";
+			String sql = "update Orders set state=0 where userid=? and id = ? ";
 			Query query = session.createQuery(sql);
+			query.setParameter(0, userid);
+			query.setParameter(1, id);
 			query.executeUpdate();
 			ts.commit();
 			return true;
@@ -129,7 +131,7 @@ public class OrdersDaoImp implements OrdersDao {
 			Integer limit) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
-			String sql = "from VOrdersDetails v where v.id.orderId=? order by time desc";
+			String sql = "from VOrdersDetails v where v.id.orderId=? ";
 			Query query = session.createQuery(sql);
 			query.setParameter(0, orderId);
 			if (start == null) {
@@ -159,7 +161,7 @@ public class OrdersDaoImp implements OrdersDao {
 			Integer state) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
-			String sql = "from VOrders v where v.id.state=? order by time desc";
+			String sql = "from VOrders v where v.id.state=? order by v.id.time desc";
 			Query query = session.createQuery(sql);
 			if (state == null) {
 				state = 2;

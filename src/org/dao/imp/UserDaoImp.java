@@ -57,7 +57,28 @@ public class UserDaoImp implements UserDao {
 			query.setParameter(1, password);
 			query.setMaxResults(1);
 			VUser u = (VUser) query.uniqueResult();
-			if (u.getId() != null) {
+			if (u != null) {
+				return u.getId();
+			} else {
+				return null;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
+	public VUserId getVUser(Long id) {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			String sql = "from VUser u where u.id.id=? ";
+			Query query = session.createQuery(sql);
+			query.setParameter(0, id);
+			query.setMaxResults(1);
+			VUser u = (VUser) query.uniqueResult();
+			if (u!= null) {
 				return u.getId();
 			} else {
 				return null;
@@ -135,6 +156,27 @@ public class UserDaoImp implements UserDao {
 			Query query = session.createQuery(sql);
 			query.setParameter(0, password);
 			query.setParameter(1, userid);
+			query.executeUpdate();
+
+			ts.commit();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
+	public boolean updatePassword(String password, String phone) {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			Transaction ts = session.beginTransaction();
+
+			String sql = "update from User set password=? where phone=?";
+			Query query = session.createQuery(sql);
+			query.setParameter(0, password);
+			query.setParameter(1, phone);
 			query.executeUpdate();
 
 			ts.commit();

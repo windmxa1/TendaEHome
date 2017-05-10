@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50535
 File Encoding         : 65001
 
-Date: 2017-05-07 18:41:58
+Date: 2017-05-10 19:56:00
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -31,6 +31,42 @@ CREATE TABLE `admin` (
 -- Records of admin
 -- ----------------------------
 INSERT INTO `admin` VALUES ('1', '1', '12', '1478000000');
+
+-- ----------------------------
+-- Table structure for `garousel`
+-- ----------------------------
+DROP TABLE IF EXISTS `garousel`;
+CREATE TABLE `garousel` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `title` varchar(30) NOT NULL,
+  `url` varchar(200) NOT NULL,
+  `catalog_id` bigint(20) NOT NULL,
+  `hyperlink` varchar(200) DEFAULT '',
+  `create_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of garousel
+-- ----------------------------
+INSERT INTO `garousel` VALUES ('1', '哈哈', '', '1', '', '2017-05-10 16:58:12');
+INSERT INTO `garousel` VALUES ('2', '阿斯达', ' ', '2', '', '2017-05-10 17:01:45');
+
+-- ----------------------------
+-- Table structure for `garousel_catalog`
+-- ----------------------------
+DROP TABLE IF EXISTS `garousel_catalog`;
+CREATE TABLE `garousel_catalog` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `garousel_catalog` varchar(20) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of garousel_catalog
+-- ----------------------------
+INSERT INTO `garousel_catalog` VALUES ('1', '首页轮播图');
+INSERT INTO `garousel_catalog` VALUES ('2', '一米菜园轮播图');
 
 -- ----------------------------
 -- Table structure for `goods`
@@ -71,8 +107,8 @@ CREATE TABLE `goods_activity` (
 -- ----------------------------
 -- Records of goods_activity
 -- ----------------------------
-INSERT INTO `goods_activity` VALUES ('1', '1', '0', '1496764800', '0.50');
-INSERT INTO `goods_activity` VALUES ('2', '2', '0', '1494149999', '1.00');
+INSERT INTO `goods_activity` VALUES ('1', '1', '0', '1496764800', '0.12');
+INSERT INTO `goods_activity` VALUES ('2', '2', '0', '1494309600', '1.00');
 
 -- ----------------------------
 -- Table structure for `goods_catalog`
@@ -99,16 +135,19 @@ CREATE TABLE `orders` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `userid` bigint(20) NOT NULL,
   `time` bigint(11) NOT NULL,
-  `state` int(11) NOT NULL DEFAULT '0' COMMENT '0未支付，1已支付未发货，2发货未签收，3发货已签收',
+  `state` int(11) NOT NULL DEFAULT '1' COMMENT '0取消订单,1未支付，2已支付未发货，3发货未签收，4发货已签收',
   `address_id` bigint(20) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of orders
 -- ----------------------------
 INSERT INTO `orders` VALUES ('1', '1', '1494135144', '2', '1');
 INSERT INTO `orders` VALUES ('2', '1', '1494136308', '2', '2');
+INSERT INTO `orders` VALUES ('3', '1', '1494314099', '0', '1');
+INSERT INTO `orders` VALUES ('4', '1', '1494314196', '1', '1');
+INSERT INTO `orders` VALUES ('5', '1', '1494314516', '1', '1');
 
 -- ----------------------------
 -- Table structure for `orders_detail`
@@ -121,7 +160,7 @@ CREATE TABLE `orders_detail` (
   `num` decimal(11,2) NOT NULL,
   `prices` decimal(11,2) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of orders_detail
@@ -131,6 +170,12 @@ INSERT INTO `orders_detail` VALUES ('2', '1', '2', '12.00', '1.00');
 INSERT INTO `orders_detail` VALUES ('3', '2', '1', '76.00', '1.00');
 INSERT INTO `orders_detail` VALUES ('4', '2', '2', '5.00', '1.00');
 INSERT INTO `orders_detail` VALUES ('5', '2', '3', '55.00', '1.00');
+INSERT INTO `orders_detail` VALUES ('6', '3', '2', '3.00', '24.60');
+INSERT INTO `orders_detail` VALUES ('7', '3', '3', '3.00', '19.50');
+INSERT INTO `orders_detail` VALUES ('8', '4', '2', '3.00', '24.60');
+INSERT INTO `orders_detail` VALUES ('9', '4', '3', '3.00', '19.50');
+INSERT INTO `orders_detail` VALUES ('10', '5', '2', '3.00', '24.60');
+INSERT INTO `orders_detail` VALUES ('11', '5', '3', '3.00', '19.50');
 
 -- ----------------------------
 -- Table structure for `user`
@@ -144,13 +189,15 @@ CREATE TABLE `user` (
   `nickname` varchar(20) DEFAULT '',
   `head_url` varchar(200) DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES ('1', '13590440185', '123456', '0', '', 'upload/image/12312839sdasd.jpg');
+INSERT INTO `user` VALUES ('1', '13590440184', '123456789', '0', '', 'upload/image/12312839sdasd.jpg');
 INSERT INTO `user` VALUES ('2', '13156464658', '123456', '0', '', 'upload/image/12312839sdasd.jpg');
+INSERT INTO `user` VALUES ('3', '13148700419', '1234567', '1494401572', '', '');
+INSERT INTO `user` VALUES ('4', '13590440185', '123456', '0', '', '');
 
 -- ----------------------------
 -- Table structure for `user_address`
@@ -162,14 +209,19 @@ CREATE TABLE `user_address` (
   `address` varchar(200) NOT NULL,
   `receiver` varchar(20) NOT NULL COMMENT '收件人',
   `default` tinyint(4) DEFAULT '0',
+  `tel` varchar(20) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of user_address
 -- ----------------------------
-INSERT INTO `user_address` VALUES ('1', '1', 'xx路xx号', '小马', '1');
-INSERT INTO `user_address` VALUES ('2', '2', '2路2号', '小李', '1');
+INSERT INTO `user_address` VALUES ('1', '1', 'x路x号', '小马', '0', '13590440185');
+INSERT INTO `user_address` VALUES ('2', '2', '2路2号', '小李', '1', '13714515160');
+INSERT INTO `user_address` VALUES ('3', '1', 'xxx', '哈哈', '0', '13113131313');
+INSERT INTO `user_address` VALUES ('4', '1', 'fff', '哈啊', '1', '13848456412');
+INSERT INTO `user_address` VALUES ('5', '1', '行行行行想', '收件人1号', '0', 'teltelteltel');
+INSERT INTO `user_address` VALUES ('6', '1', '行行行行想', '收件人1号', '0', 'teltelteltel');
 
 -- ----------------------------
 -- View structure for `v_admin`
@@ -178,16 +230,22 @@ DROP VIEW IF EXISTS `v_admin`;
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_admin` AS select `a`.`id` AS `id`,`a`.`username` AS `username`,`a`.`password` AS `password`,`a`.`time` AS `time`,date_format(from_unixtime(`a`.`time`),'%Y-%m-%d %H:%i:%S') AS `create_time` from `admin` `a` ;
 
 -- ----------------------------
+-- View structure for `v_garousel`
+-- ----------------------------
+DROP VIEW IF EXISTS `v_garousel`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_garousel` AS select `g`.`id` AS `id`,`g`.`title` AS `title`,`g`.`url` AS `url`,`g`.`catalog_id` AS `catalog_id`,`g`.`hyperlink` AS `hyperlink`,`g`.`create_time` AS `create_time`,(select `gc`.`garousel_catalog` from `garousel_catalog` `gc` where (`gc`.`id` = `g`.`catalog_id`)) AS `catalog`,concat('http://192.168.1.150:8080/TendaEHome/',`g`.`url`) AS `gerousel_url` from `garousel` `g` ;
+
+-- ----------------------------
 -- View structure for `v_goods`
 -- ----------------------------
 DROP VIEW IF EXISTS `v_goods`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_goods` AS select `g`.`id` AS `goods_id`,`g`.`name` AS `name`,`g`.`price` AS `price`,`g`.`url` AS `url`,`g`.`catalog_id` AS `catalog_id`,`g`.`description` AS `description`,`g`.`time` AS `time`,date_format(from_unixtime(`g`.`time`),'%Y-%m-%d %H:%i:%S') AS `create_time`,(select `gc`.`catalog` from `goods_catalog` `gc` where (`g`.`catalog_id` = `gc`.`id`)) AS `catalog`,coalesce(`vgc`.`count`,0) AS `count`,coalesce(`ga`.`discount`,1) AS `discount`,coalesce(`ga`.`start_date`,'') AS `start_date`,coalesce(`ga`.`end_date`,'') AS `end_date`,concat('http://192.168.1.150:8080/TendaEHome/',`g`.`url`) AS `goods_url`,`g`.`origin` AS `origin` from ((`goods` `g` left join `v_goods_count` `vgc` on((`vgc`.`goods_id` = `g`.`id`))) left join `v_goods_activity` `ga` on((`g`.`id` = `ga`.`goods_id`))) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_goods` AS select `g`.`id` AS `goods_id`,`g`.`name` AS `name`,`g`.`price` AS `price`,`g`.`url` AS `url`,`g`.`catalog_id` AS `catalog_id`,`g`.`description` AS `description`,`g`.`time` AS `time`,date_format(from_unixtime(`g`.`time`),'%Y-%m-%d %H:%i:%S') AS `create_time`,(select `gc`.`catalog` from `goods_catalog` `gc` where (`g`.`catalog_id` = `gc`.`id`)) AS `catalog`,coalesce(`vgc`.`count`,0) AS `count`,coalesce(`ga`.`dis_price`,0) AS `dis_price`,coalesce(`ga`.`start_date`,'') AS `start_date`,coalesce(`ga`.`end_date`,'') AS `end_date`,concat('http://192.168.1.150:8080/TendaEHome/',`g`.`url`) AS `goods_url`,`g`.`origin` AS `origin` from ((`goods` `g` left join `v_goods_count` `vgc` on((`vgc`.`goods_id` = `g`.`id`))) left join `v_goods_activity` `ga` on((`g`.`id` = `ga`.`goods_id`))) ;
 
 -- ----------------------------
 -- View structure for `v_goods_activity`
 -- ----------------------------
 DROP VIEW IF EXISTS `v_goods_activity`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_goods_activity` AS select `ga`.`id` AS `id`,`ga`.`goods_id` AS `goods_id`,`ga`.`start_time` AS `start_time`,`ga`.`end_time` AS `end_time`,`ga`.`discount` AS `discount`,date_format(from_unixtime(`ga`.`start_time`),'%Y-%m-%d %H:%i:%S') AS `start_date`,date_format(from_unixtime(`ga`.`end_time`),'%Y-%m-%d %H:%i:%S') AS `end_date` from `goods_activity` `ga` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_goods_activity` AS select `ga`.`id` AS `id`,`ga`.`goods_id` AS `goods_id`,`ga`.`start_time` AS `start_time`,`ga`.`end_time` AS `end_time`,`ga`.`discount` AS `discount`,date_format(from_unixtime(`ga`.`start_time`),'%Y-%m-%d %H:%i:%S') AS `start_date`,date_format(from_unixtime(`ga`.`end_time`),'%Y-%m-%d %H:%i:%S') AS `end_date`,cast((`ga`.`discount` * `g`.`price`) as decimal(11,2)) AS `dis_price` from (`goods_activity` `ga` join `goods` `g`) where ((unix_timestamp(now()) between `ga`.`start_time` and (`ga`.`end_time` + 86400)) and (`g`.`id` = `ga`.`goods_id`) and ((`ga`.`end_time` + 86400) <> unix_timestamp(now()))) ;
 
 -- ----------------------------
 -- View structure for `v_goods_count`
@@ -211,10 +269,10 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- View structure for `v_user`
 -- ----------------------------
 DROP VIEW IF EXISTS `v_user`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_user` AS select `u`.`id` AS `id`,`u`.`phone` AS `phone`,`u`.`password` AS `password`,`u`.`time` AS `time`,`u`.`nickname` AS `nickname`,`u`.`head_url` AS `head_url`,date_format(from_unixtime(`u`.`time`),'%Y-%m-%d %H:%i:%S') AS `create_time`,concat('http://192.168.1.150:8080/TendaEHome/',`u`.`head_url`) AS `url`,coalesce(`ua`.`address`,'') AS `address` from (`user` `u` left join `v_user_address` `ua` on((`ua`.`userid` = `u`.`id`))) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_user` AS select `u`.`id` AS `id`,`u`.`phone` AS `phone`,`u`.`password` AS `password`,`u`.`time` AS `time`,`u`.`nickname` AS `nickname`,`u`.`head_url` AS `head_url`,date_format(from_unixtime(`u`.`time`),'%Y-%m-%d %H:%i:%S') AS `create_time`,concat('http://192.168.1.150:8080/TendaEHome/',`u`.`head_url`) AS `url`,coalesce(`ua`.`address`,'') AS `address`,coalesce(`ua`.`id`,0) AS `address_id` from (`user` `u` left join `v_user_address` `ua` on((`ua`.`userid` = `u`.`id`))) ;
 
 -- ----------------------------
 -- View structure for `v_user_address`
 -- ----------------------------
 DROP VIEW IF EXISTS `v_user_address`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_user_address` AS select `u`.`id` AS `userid`,concat(`ua`.`receiver`,' ',`ua`.`address`) AS `address` from (`user_address` `ua` join `user` `u`) where ((`u`.`id` = `ua`.`userid`) and (`ua`.`default` = 1)) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_user_address` AS select `u`.`id` AS `userid`,`ua`.`id` AS `id`,concat(`ua`.`receiver`,' ',`ua`.`tel`,' ',`ua`.`address`) AS `address` from (`user_address` `ua` join `user` `u`) where ((`u`.`id` = `ua`.`userid`) and (`ua`.`default` = 1)) ;
