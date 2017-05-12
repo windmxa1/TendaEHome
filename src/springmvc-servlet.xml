@@ -27,8 +27,8 @@
 		</mvc:interceptor>
 		<mvc:interceptor>
 			<mvc:mapping path="/back/**" />
-			<mvc:exclude-mapping path="/back/user/login" />
-			<mvc:exclude-mapping path="/back/user/register" />
+			<mvc:exclude-mapping path="/back/admin/login" />
+			<mvc:exclude-mapping path="/back/admin/register" />
 			<mvc:exclude-mapping path="/back/goods/**" />
 			<bean class="org.interceptor.BackInterceptor"></bean>
 		</mvc:interceptor>

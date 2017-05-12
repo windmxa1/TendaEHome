@@ -22,10 +22,13 @@
             </column>
         </property>
         <property name="default_" type="java.lang.Short">
-            <column name="default" />
+            <column name="default_" />
         </property>
         <property name="tel" type="java.lang.String">
             <column name="tel" length="20" not-null="true" />
+        </property>
+        <property name="sex" type="java.lang.String">
+            <column name="sex" length="20" not-null="true" />
         </property>
     </class>
 </hibernate-mapping>

@@ -217,15 +217,16 @@ public class UserController {
 	@RequestMapping("/insertAddress")
 	@ResponseBody
 	public Object insertAddress(HttpServletRequest request, String address,
-			String recevier, String tel) {
+			String receiver, String tel,String sex) {
 		uAddressDao = new UserAddressDaoImp();
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");
 		Long userid = Long.parseLong(""
 				+ TokenUtils.getValue(token, TokenUtils.getKey(), "userid"));
 		/*********************************/
-		UserAddress userAddress = new UserAddress(userid, address, recevier,
-				tel);
+		UserAddress userAddress = new UserAddress(userid, address, receiver,
+				tel,sex);
+		
 		if (uAddressDao.saveOrUpdate(userAddress) > 0) {
 			return ResultUtils.toJson(100, "添加成功", "");
 		} else {
@@ -251,15 +252,15 @@ public class UserController {
 	@RequestMapping("/updateAddress")
 	@ResponseBody
 	public Object updateAddress(HttpServletRequest request, Long id,
-			String address, String recevier, String tel) {
+			String address, String receiver, String tel,String sex) {
 		uAddressDao = new UserAddressDaoImp();
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");
 		Long userid = Long.parseLong(""
 				+ TokenUtils.getValue(token, TokenUtils.getKey(), "userid"));
 		/*********************************/
-		UserAddress userAddress = new UserAddress(userid, address, recevier,
-				tel);
+		UserAddress userAddress = new UserAddress(userid, address, receiver,
+				tel,sex);
 		userAddress.setId(id);
 		if (uAddressDao.saveOrUpdate(userAddress) == 0) {
 			return ResultUtils.toJson(100, "修改成功", "");
@@ -273,14 +274,15 @@ public class UserController {
 	 */
 	@RequestMapping("/updateDefault")
 	@ResponseBody
-	public Object updateDefault(HttpServletRequest request, Long id) {
+	public Object updateDefault(HttpServletRequest request, Long id,Boolean default_) {
 		uAddressDao = new UserAddressDaoImp();
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");
 		Long userid = Long.parseLong(""
 				+ TokenUtils.getValue(token, TokenUtils.getKey(), "userid"));
 		/*********************************/
-		if (uAddressDao.updateDefault(id)) {
+		System.out.println(default_);
+		if (uAddressDao.updateDefault(id,default_)) {
 			return ResultUtils.toJson(100, "修改成功", "");
 		} else {
 			return ResultUtils.toJson(101, "修改失败", "");

@@ -19,6 +19,7 @@ public class VOrdersId implements java.io.Serializable {
 	private String status;
 	private String address;
 	private List<VOrdersDetailsId> details;
+
 	// Constructors
 
 	/** default constructor */

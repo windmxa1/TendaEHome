@@ -23,16 +23,39 @@
 <script type="text/javascript" src="js/jquery.min.js"></script>
 <script type="text/javascript">
 	$(function() {
+		var token = "";
+		var user = {
+			username : 1,
+			password : 12
+		};
+		$.ajax({
+			type : "post",
+			url : "back/admin/login",
+			data : user,
+			dataType : "json",
+			contentType : 'application/json;charset=utf-8',
+			async : false,
+			cache : false,
+			success : function(data) {
+				alert(data);
+			},
+			error : function(data) {
+				alert("error");
+			}
+		});
 		$("#btn").click(function() {
 			var json1 = "{\"addressId\" : 2}";
 			$.ajax({
 				type : "post",
-				url : "app/orders/test1",
-				data: json1,
-				dataType: "json",
+				url : "back/user/getUserList",
+				data : json1,
+				dataType : "json",
 				contentType : 'application/json;charset=utf-8',
 				async : false,
 				cache : false,
+				beforeSend : function(request) {
+					request.setRequestHeader("token", "Chenxizhang");
+				},
 				success : function(data) {
 					alert("12");
 				},

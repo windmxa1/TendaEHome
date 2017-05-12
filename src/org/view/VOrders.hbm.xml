@@ -29,7 +29,7 @@
                 <column name="status" length="8" />
             </key-property>
             <key-property name="address" type="java.lang.String">
-                <column name="address" length="221" />
+                <column name="address" length="263" />
             </key-property>
         </composite-id>
     </class>

@@ -22,5 +22,5 @@ public interface UserAddressDao {
 	/**
 	 * 修改默认地址
 	 */
-	public boolean updateDefault(Long id);
+	public boolean updateDefault(Long id,Boolean default_);
 }

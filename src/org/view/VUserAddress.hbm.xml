@@ -14,7 +14,7 @@
                 <column name="id" />
             </key-property>
             <key-property name="address" type="java.lang.String">
-                <column name="address" length="242" />
+                <column name="address" length="263" />
             </key-property>
         </composite-id>
     </class>

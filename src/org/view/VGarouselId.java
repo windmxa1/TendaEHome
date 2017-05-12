@@ -13,7 +13,7 @@ public class VGarouselId implements java.io.Serializable {
 	private Long id;
 	private String title;
 	private String url;
-	private Long catalogId;
+	private Integer catalogId;
 	private String hyperlink;
 	private Timestamp createTime;
 	private String catalog;
@@ -26,7 +26,7 @@ public class VGarouselId implements java.io.Serializable {
 	}
 
 	/** minimal constructor */
-	public VGarouselId(Long id, String title, String url, Long catalogId,
+	public VGarouselId(Long id, String title, String url, Integer catalogId,
 			Timestamp createTime) {
 		this.id = id;
 		this.title = title;
@@ -36,7 +36,7 @@ public class VGarouselId implements java.io.Serializable {
 	}
 
 	/** full constructor */
-	public VGarouselId(Long id, String title, String url, Long catalogId,
+	public VGarouselId(Long id, String title, String url, Integer catalogId,
 			String hyperlink, Timestamp createTime, String catalog,
 			String gerouselUrl) {
 		this.id = id;
@@ -75,11 +75,11 @@ public class VGarouselId implements java.io.Serializable {
 		this.url = url;
 	}
 
-	public Long getCatalogId() {
+	public Integer getCatalogId() {
 		return this.catalogId;
 	}
 
-	public void setCatalogId(Long catalogId) {
+	public void setCatalogId(Integer catalogId) {
 		this.catalogId = catalogId;
 	}
 

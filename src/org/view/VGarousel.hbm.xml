@@ -16,7 +16,7 @@
             <key-property name="url" type="java.lang.String">
                 <column name="url" length="200" />
             </key-property>
-            <key-property name="catalogId" type="java.lang.Long">
+            <key-property name="catalogId" type="java.lang.Integer">
                 <column name="catalog_id" />
             </key-property>
             <key-property name="hyperlink" type="java.lang.String">

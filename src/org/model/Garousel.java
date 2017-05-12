@@ -13,7 +13,7 @@ public class Garousel implements java.io.Serializable {
 	private Long id;
 	private String title;
 	private String url;
-	private Long catalogId;
+	private Integer catalogId;
 	private String hyperlink;
 	private Timestamp createTime;
 
@@ -24,17 +24,22 @@ public class Garousel implements java.io.Serializable {
 	}
 
 	/** minimal constructor */
-	public Garousel(String title, String url, Long catalogId,
-			Timestamp createTime) {
+	public Garousel(String title, String url, Integer catalogId) {
 		this.title = title;
 		this.url = url;
 		this.catalogId = catalogId;
-		this.createTime = createTime;
 	}
-
+	public Garousel(String title, String url, Integer catalogId,
+			String hyperlink) {
+		super();
+		this.title = title;
+		this.url = url;
+		this.catalogId = catalogId;
+		this.hyperlink = hyperlink;
+	}
 	/** full constructor */
-	public Garousel(String title, String url, Long catalogId, String hyperlink,
-			Timestamp createTime) {
+	public Garousel(String title, String url, Integer catalogId,
+			String hyperlink, Timestamp createTime) {
 		this.title = title;
 		this.url = url;
 		this.catalogId = catalogId;
@@ -68,11 +73,11 @@ public class Garousel implements java.io.Serializable {
 		this.url = url;
 	}
 
-	public Long getCatalogId() {
+	public Integer getCatalogId() {
 		return this.catalogId;
 	}
 
-	public void setCatalogId(Long catalogId) {
+	public void setCatalogId(Integer catalogId) {
 		this.catalogId = catalogId;
 	}
 
@@ -91,5 +96,7 @@ public class Garousel implements java.io.Serializable {
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
 	}
+
+	
 
 }

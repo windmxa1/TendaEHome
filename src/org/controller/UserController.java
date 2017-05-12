@@ -28,11 +28,6 @@ public class UserController {
 	public Object getUserList(HttpServletRequest request, Integer start,
 			Integer limit) {
 		uDao = new UserDaoImp();
-		/**** 获取header中的token并取出userid ****/
-		String token = request.getHeader("token");
-		Long adminId = (Long) TokenUtils.getValue(token, TokenUtils.getKey(),
-				"adminId");
-		/*********************************/
 		List<VUserId> list = uDao.getUsers(start, limit);
 		data = new HashMap<String, Object>();
 		data.put("list", list);

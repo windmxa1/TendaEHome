@@ -9,7 +9,11 @@ public interface GarouselDao {
 	/**
 	 * 获取轮播图列表,按目录分组
 	 */
-	public List<VGarouselId> getList();
+	public List<VGarouselId> getList(Integer start,Integer limit);
+	/**
+	 * 获取轮播图列表，按目录ID
+	 */
+	public List<VGarouselId> getListByCatalog(Integer catalogId);
 	/**
 	 * 维护轮播图
 	 * @param garousel

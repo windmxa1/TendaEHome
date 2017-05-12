@@ -8,7 +8,7 @@ public interface GarouselCatalogDao {
 	/**
 	 * 获取轮播图目录
 	 */
-	public List<GarouselCatalog> getCatalog();
+	public List<GarouselCatalog> getCatalog(Integer start, Integer limit);
 
 	/**
 	 * 维护轮播图目录

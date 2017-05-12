@@ -68,17 +68,24 @@ public class UserAddressDaoImp implements UserAddressDao {
 	}
 
 	@Override
-	public boolean updateDefault(Long id) {
+	public boolean updateDefault(Long id, Boolean default_) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
 			Transaction ts = session.beginTransaction();
-			String sql = "update from UserAddress set default=0";
-			Query query = session.createQuery(sql);
-			query.executeUpdate();
-			String sql2 = "update from UserAddress set default=1 where id=?";
-			Query query2 = session.createQuery(sql2);
-			query2.setParameter(0, id);
-			query2.executeUpdate();
+			if (default_) {
+				String sql = "update from UserAddress set default_=0";
+				Query query = session.createQuery(sql);
+				query.executeUpdate();
+				String sql2 = "update from UserAddress set default_=1 where id=?";
+				Query query2 = session.createQuery(sql2);
+				query2.setParameter(0, id);
+				query2.executeUpdate();
+			} else {
+				String sql = "update from UserAddress set default_=0 where id=?";
+				Query query = session.createQuery(sql);
+				query.setParameter(0, id);
+				query.executeUpdate();
+			}
 			ts.commit();
 			return true;
 		} catch (Exception e) {

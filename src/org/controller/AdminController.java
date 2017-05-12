@@ -27,6 +27,7 @@ public class AdminController {
 	@ResponseBody
 	public Object login(HttpServletRequest request, String username,
 			String password) {
+		aDao = new AdminDaoImp();
 		Admin a = aDao.getAdmin(username, password);
 		if (a != null) {
 			data = new HashMap<String, Object>();
