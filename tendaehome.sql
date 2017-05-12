@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50535
 File Encoding         : 65001
 
-Date: 2017-05-10 19:56:00
+Date: 2017-05-12 18:51:13
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -40,17 +40,23 @@ CREATE TABLE `garousel` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(30) NOT NULL,
   `url` varchar(200) NOT NULL,
-  `catalog_id` bigint(20) NOT NULL,
+  `catalog_id` int(11) NOT NULL,
   `hyperlink` varchar(200) DEFAULT '',
-  `create_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
+  `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of garousel
 -- ----------------------------
 INSERT INTO `garousel` VALUES ('1', '哈哈', '', '1', '', '2017-05-10 16:58:12');
 INSERT INTO `garousel` VALUES ('2', '阿斯达', ' ', '2', '', '2017-05-10 17:01:45');
+INSERT INTO `garousel` VALUES ('5', '', '', '1', '', '2017-05-12 14:48:23');
+INSERT INTO `garousel` VALUES ('6', '', '', '1', '', '2017-05-12 14:48:32');
+INSERT INTO `garousel` VALUES ('7', '', '', '1', '', '2017-05-12 15:08:29');
+INSERT INTO `garousel` VALUES ('8', '', '', '1', '', '2017-05-12 15:10:11');
+INSERT INTO `garousel` VALUES ('9', '', '', '1', '', '2017-05-12 15:10:23');
+INSERT INTO `garousel` VALUES ('10', '', '', '1', '', '2017-05-12 15:20:19');
 
 -- ----------------------------
 -- Table structure for `garousel_catalog`
@@ -82,7 +88,7 @@ CREATE TABLE `goods` (
   `time` bigint(11) NOT NULL,
   `origin` varchar(20) DEFAULT '' COMMENT '源产地',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of goods
@@ -90,6 +96,7 @@ CREATE TABLE `goods` (
 INSERT INTO `goods` VALUES ('1', '白菜', '5.40', 'upload/goods/cabbage.jpg', '2', ' ', '0', '');
 INSERT INTO `goods` VALUES ('2', '黄瓜', '8.20', 'upload/goods/cucumber.jpg', '2', '', '0', '');
 INSERT INTO `goods` VALUES ('3', '西红柿', '6.50', 'upload/goods/tomato.jpg', '2', ' ', '0', '');
+INSERT INTO `goods` VALUES ('4', 'asda', '64.00', 'asda', '1', '', '0', '');
 
 -- ----------------------------
 -- Table structure for `goods_activity`
@@ -118,7 +125,7 @@ CREATE TABLE `goods_catalog` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `catalog` varchar(20) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of goods_catalog
@@ -208,20 +215,25 @@ CREATE TABLE `user_address` (
   `userid` bigint(20) NOT NULL,
   `address` varchar(200) NOT NULL,
   `receiver` varchar(20) NOT NULL COMMENT '收件人',
-  `default` tinyint(4) DEFAULT '0',
+  `default_` tinyint(4) DEFAULT '0',
   `tel` varchar(20) NOT NULL,
+  `sex` varchar(20) NOT NULL DEFAULT '先生',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of user_address
 -- ----------------------------
-INSERT INTO `user_address` VALUES ('1', '1', 'x路x号', '小马', '0', '13590440185');
-INSERT INTO `user_address` VALUES ('2', '2', '2路2号', '小李', '1', '13714515160');
-INSERT INTO `user_address` VALUES ('3', '1', 'xxx', '哈哈', '0', '13113131313');
-INSERT INTO `user_address` VALUES ('4', '1', 'fff', '哈啊', '1', '13848456412');
-INSERT INTO `user_address` VALUES ('5', '1', '行行行行想', '收件人1号', '0', 'teltelteltel');
-INSERT INTO `user_address` VALUES ('6', '1', '行行行行想', '收件人1号', '0', 'teltelteltel');
+INSERT INTO `user_address` VALUES ('1', '1', 'x路x号', '小马', '0', '13590440185', '先生');
+INSERT INTO `user_address` VALUES ('2', '2', '2路2号', '小李', '0', '13714515160', '先生');
+INSERT INTO `user_address` VALUES ('3', '1', 'xxx', '哈哈', '0', '13113131313', '先生');
+INSERT INTO `user_address` VALUES ('4', '1', 'fff', '哈啊', '0', '13848456412', '先生');
+INSERT INTO `user_address` VALUES ('5', '1', '行行行行想', '收件人1号', '0', 'teltelteltel', '先生');
+INSERT INTO `user_address` VALUES ('6', '1', '行行行行想', '收件人1号', '0', 'teltelteltel', '先生');
+INSERT INTO `user_address` VALUES ('8', '4', '', '', '0', '', '先生');
+INSERT INTO `user_address` VALUES ('11', '4', '', '', '0', '', '先生');
+INSERT INTO `user_address` VALUES ('16', '3', 'xXXCCDD', 'xiaolong', '0', '13148700419', '先生');
+INSERT INTO `user_address` VALUES ('18', '3', 'asdfasdf', 'asdfjkasdjf', '1', '13148700419', '先生');
 
 -- ----------------------------
 -- View structure for `v_admin`
@@ -257,7 +269,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- View structure for `v_orders`
 -- ----------------------------
 DROP VIEW IF EXISTS `v_orders`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_orders` AS select `o`.`id` AS `id`,`o`.`userid` AS `userid`,`o`.`time` AS `time`,(select sum(`od`.`prices`) from `orders_detail` `od` where (`od`.`order_id` = `o`.`id`) group by `od`.`order_id`) AS `total`,date_format(from_unixtime(`o`.`time`),'%Y-%m-%d %H:%i:%S') AS `create_time`,`o`.`state` AS `state`,(case `o`.`state` when 0 then '取消订单' when 1 then '未付款' when 2 then '已付款，未发货' when 3 then '已发货，未签收' else '已签收，订单完成' end) AS `status`,(select concat(`ua`.`receiver`,' ',`ua`.`address`) from `user_address` `ua` where (`ua`.`id` = `o`.`address_id`)) AS `address` from `orders` `o` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_orders` AS select `o`.`id` AS `id`,`o`.`userid` AS `userid`,`o`.`time` AS `time`,(select sum(`od`.`prices`) from `orders_detail` `od` where (`od`.`order_id` = `o`.`id`) group by `od`.`order_id`) AS `total`,date_format(from_unixtime(`o`.`time`),'%Y-%m-%d %H:%i:%S') AS `create_time`,`o`.`state` AS `state`,(case `o`.`state` when 0 then '取消订单' when 1 then '未付款' when 2 then '已付款，未发货' when 3 then '已发货，未签收' else '已签收，订单完成' end) AS `status`,(select concat(`ua`.`receiver`,' ',`ua`.`sex`,' ',`ua`.`tel`,' ',`ua`.`address`) from `user_address` `ua` where (`ua`.`id` = `o`.`address_id`)) AS `address` from `orders` `o` ;
 
 -- ----------------------------
 -- View structure for `v_orders_details`
@@ -275,4 +287,4 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- View structure for `v_user_address`
 -- ----------------------------
 DROP VIEW IF EXISTS `v_user_address`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_user_address` AS select `u`.`id` AS `userid`,`ua`.`id` AS `id`,concat(`ua`.`receiver`,' ',`ua`.`tel`,' ',`ua`.`address`) AS `address` from (`user_address` `ua` join `user` `u`) where ((`u`.`id` = `ua`.`userid`) and (`ua`.`default` = 1)) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_user_address` AS select `u`.`id` AS `userid`,`ua`.`id` AS `id`,concat(`ua`.`receiver`,' ',`ua`.`sex`,' ',`ua`.`tel`,' ',`ua`.`address`) AS `address` from (`user_address` `ua` join `user` `u`) where ((`u`.`id` = `ua`.`userid`) and (`ua`.`default_` = 1)) ;
