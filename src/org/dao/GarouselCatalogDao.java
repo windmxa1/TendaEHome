@@ -13,7 +13,7 @@ public interface GarouselCatalogDao {
 	/**
 	 * 维护轮播图目录
 	 */
-	public Long saveOrUpdate(GarouselCatalog gCatalog);
+	public Integer saveOrUpdate(GarouselCatalog gCatalog);
 	
 	/**
 	 * 删除轮播图目录

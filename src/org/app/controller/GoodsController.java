@@ -34,6 +34,20 @@ public class GoodsController {
 		}
 		return ResultUtils.toJson(100, "", data);
 	}
+	// 获取销量最高的10个商品
+	@RequestMapping("/getBestSell")
+	@ResponseBody
+	public Object getGoodsList() {
+		gDao = new GoodsDaoImp();
+		data = new HashMap<String, Object>();
+		List<VGoodsId> list = gDao.getList(0, 10);
+		if (list != null) {
+			data.put("list", list);
+		} else {
+			data.put("list", new ArrayList<>());
+		}
+		return ResultUtils.toJson(100, "", data);
+	}
 
 	// 获取折扣商品信息
 	@RequestMapping("/getDiscounts")

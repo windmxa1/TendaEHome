@@ -54,6 +54,11 @@ public class GoodsCatalogDaoImp implements GoodsCatalogDao {
 			Query query = session.createQuery(sql);
 			query.setParameter(0, id);
 			query.executeUpdate();
+			
+			String sql2 = "delete from Goods where catalogId=?";
+			Query query2 = session.createQuery(sql2);
+			query2.setParameter(0, id);
+			query2.executeUpdate();
 			ts.commit();
 			return true;
 		} catch (Exception e) {

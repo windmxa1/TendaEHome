@@ -145,6 +145,9 @@ public class GoodsDaoImp implements GoodsDao {
 			if (limit == null) {
 				limit = 15;
 			}
+			if(catalogId==null){
+				catalogId = 1L;
+			}
 			query.setFirstResult(start);
 			query.setMaxResults(limit);
 			query.setParameter(0, catalogId);

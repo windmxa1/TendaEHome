@@ -53,10 +53,17 @@ public class OrdersController {
 	public Object updateOrder(HttpServletRequest request,Long id,Integer state){
 		oDao = new OrdersDaoImp();
 		if(oDao.updateOrder(id, state)){
-			return ResultUtils.toJson(100, "", "");
+			return ResultUtils.toJson(100, "修改成功", "");
 		}else {
 			return ResultUtils.toJson(101, "修改失败", "");
 		}
 	}
+	@RequestMapping("deleteOrder")
+	@ResponseBody
+	public Object deleteOrder(Long id){
+		
+		return id;
+	}
+	
 	
 }

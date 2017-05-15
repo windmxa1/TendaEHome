@@ -22,14 +22,17 @@
             <key-property name="hyperlink" type="java.lang.String">
                 <column name="hyperlink" length="200" />
             </key-property>
-            <key-property name="createTime" type="java.sql.Timestamp">
-                <column name="create_time" length="19" />
+            <key-property name="time" type="java.lang.Long">
+                <column name="time" />
             </key-property>
             <key-property name="catalog" type="java.lang.String">
                 <column name="catalog" length="20" />
             </key-property>
             <key-property name="gerouselUrl" type="java.lang.String">
                 <column name="gerousel_url" length="237" />
+            </key-property>
+            <key-property name="createTime" type="java.lang.String">
+                <column name="create_time" length="24" />
             </key-property>
         </composite-id>
     </class>

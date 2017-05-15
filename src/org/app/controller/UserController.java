@@ -24,8 +24,6 @@ import org.util.ResultUtils;
 import org.util.TokenUtils;
 import org.view.VUserId;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller("/app/UserController")
 @RequestMapping("/app/user")
@@ -49,6 +47,7 @@ public class UserController {
 			c.add(c.DATE, 14);
 			TokenUtils.rootPath = request.getSession().getServletContext()
 					.getRealPath("/");
+//			System.out.println(TokenUtils.rootPath);
 			String token = TokenUtils.buildJwt1(TokenUtils.getKey(),
 					c.getTime(), u.getId());
 			// ObjectMapper mapper = new ObjectMapper();

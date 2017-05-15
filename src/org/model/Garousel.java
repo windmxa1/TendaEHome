@@ -1,7 +1,5 @@
 package org.model;
 
-import java.sql.Timestamp;
-
 /**
  * Garousel entity. @author MyEclipse Persistence Tools
  */
@@ -15,7 +13,7 @@ public class Garousel implements java.io.Serializable {
 	private String url;
 	private Integer catalogId;
 	private String hyperlink;
-	private Timestamp createTime;
+	private Long time;
 
 	// Constructors
 
@@ -29,22 +27,15 @@ public class Garousel implements java.io.Serializable {
 		this.url = url;
 		this.catalogId = catalogId;
 	}
-	public Garousel(String title, String url, Integer catalogId,
-			String hyperlink) {
-		super();
-		this.title = title;
-		this.url = url;
-		this.catalogId = catalogId;
-		this.hyperlink = hyperlink;
-	}
+
 	/** full constructor */
 	public Garousel(String title, String url, Integer catalogId,
-			String hyperlink, Timestamp createTime) {
+			String hyperlink, Long time) {
 		this.title = title;
 		this.url = url;
 		this.catalogId = catalogId;
 		this.hyperlink = hyperlink;
-		this.createTime = createTime;
+		this.time = time;
 	}
 
 	// Property accessors
@@ -89,14 +80,12 @@ public class Garousel implements java.io.Serializable {
 		this.hyperlink = hyperlink;
 	}
 
-	public Timestamp getCreateTime() {
-		return this.createTime;
+	public Long getTime() {
+		return this.time;
 	}
 
-	public void setCreateTime(Timestamp createTime) {
-		this.createTime = createTime;
+	public void setTime(Long time) {
+		this.time = time;
 	}
-
-	
 
 }

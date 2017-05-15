@@ -1,7 +1,5 @@
 package org.view;
 
-import java.sql.Timestamp;
-
 /**
  * VGarouselId entity. @author MyEclipse Persistence Tools
  */
@@ -15,9 +13,10 @@ public class VGarouselId implements java.io.Serializable {
 	private String url;
 	private Integer catalogId;
 	private String hyperlink;
-	private Timestamp createTime;
+	private Long time;
 	private String catalog;
 	private String gerouselUrl;
+	private String createTime;
 
 	// Constructors
 
@@ -26,27 +25,26 @@ public class VGarouselId implements java.io.Serializable {
 	}
 
 	/** minimal constructor */
-	public VGarouselId(Long id, String title, String url, Integer catalogId,
-			Timestamp createTime) {
+	public VGarouselId(Long id, String title, String url, Integer catalogId) {
 		this.id = id;
 		this.title = title;
 		this.url = url;
 		this.catalogId = catalogId;
-		this.createTime = createTime;
 	}
 
 	/** full constructor */
 	public VGarouselId(Long id, String title, String url, Integer catalogId,
-			String hyperlink, Timestamp createTime, String catalog,
-			String gerouselUrl) {
+			String hyperlink, Long time, String catalog, String gerouselUrl,
+			String createTime) {
 		this.id = id;
 		this.title = title;
 		this.url = url;
 		this.catalogId = catalogId;
 		this.hyperlink = hyperlink;
-		this.createTime = createTime;
+		this.time = time;
 		this.catalog = catalog;
 		this.gerouselUrl = gerouselUrl;
+		this.createTime = createTime;
 	}
 
 	// Property accessors
@@ -91,12 +89,12 @@ public class VGarouselId implements java.io.Serializable {
 		this.hyperlink = hyperlink;
 	}
 
-	public Timestamp getCreateTime() {
-		return this.createTime;
+	public Long getTime() {
+		return this.time;
 	}
 
-	public void setCreateTime(Timestamp createTime) {
-		this.createTime = createTime;
+	public void setTime(Long time) {
+		this.time = time;
 	}
 
 	public String getCatalog() {
@@ -113,6 +111,14 @@ public class VGarouselId implements java.io.Serializable {
 
 	public void setGerouselUrl(String gerouselUrl) {
 		this.gerouselUrl = gerouselUrl;
+	}
+
+	public String getCreateTime() {
+		return this.createTime;
+	}
+
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
 	}
 
 	public boolean equals(Object other) {
@@ -141,17 +147,20 @@ public class VGarouselId implements java.io.Serializable {
 						.getHyperlink() != null
 						&& castOther.getHyperlink() != null && this
 						.getHyperlink().equals(castOther.getHyperlink())))
-				&& ((this.getCreateTime() == castOther.getCreateTime()) || (this
-						.getCreateTime() != null
-						&& castOther.getCreateTime() != null && this
-						.getCreateTime().equals(castOther.getCreateTime())))
+				&& ((this.getTime() == castOther.getTime()) || (this.getTime() != null
+						&& castOther.getTime() != null && this.getTime()
+						.equals(castOther.getTime())))
 				&& ((this.getCatalog() == castOther.getCatalog()) || (this
 						.getCatalog() != null && castOther.getCatalog() != null && this
 						.getCatalog().equals(castOther.getCatalog())))
 				&& ((this.getGerouselUrl() == castOther.getGerouselUrl()) || (this
 						.getGerouselUrl() != null
 						&& castOther.getGerouselUrl() != null && this
-						.getGerouselUrl().equals(castOther.getGerouselUrl())));
+						.getGerouselUrl().equals(castOther.getGerouselUrl())))
+				&& ((this.getCreateTime() == castOther.getCreateTime()) || (this
+						.getCreateTime() != null
+						&& castOther.getCreateTime() != null && this
+						.getCreateTime().equals(castOther.getCreateTime())));
 	}
 
 	public int hashCode() {
@@ -166,15 +175,17 @@ public class VGarouselId implements java.io.Serializable {
 				+ (getCatalogId() == null ? 0 : this.getCatalogId().hashCode());
 		result = 37 * result
 				+ (getHyperlink() == null ? 0 : this.getHyperlink().hashCode());
-		result = 37
-				* result
-				+ (getCreateTime() == null ? 0 : this.getCreateTime()
-						.hashCode());
+		result = 37 * result
+				+ (getTime() == null ? 0 : this.getTime().hashCode());
 		result = 37 * result
 				+ (getCatalog() == null ? 0 : this.getCatalog().hashCode());
 		result = 37
 				* result
 				+ (getGerouselUrl() == null ? 0 : this.getGerouselUrl()
+						.hashCode());
+		result = 37
+				* result
+				+ (getCreateTime() == null ? 0 : this.getCreateTime()
 						.hashCode());
 		return result;
 	}

@@ -23,8 +23,8 @@ public class GarouselCatalogDaoImp implements GarouselCatalogDao {
 			if (limit == null) {
 				limit = 15;
 			}
-			query.setMaxResults(start);
-			query.setFirstResult(limit);
+			query.setMaxResults(limit);
+			query.setFirstResult(start);
 			List<GarouselCatalog> list = query.list();
 			return list;
 		} catch (Exception e) {
@@ -36,21 +36,21 @@ public class GarouselCatalogDaoImp implements GarouselCatalogDao {
 	}
 
 	@Override
-	public Long saveOrUpdate(GarouselCatalog gCatalog) {
-		Long id = 0L;
+	public Integer saveOrUpdate(GarouselCatalog gCatalog) {
+		Integer id = 0;
 		try {
 			Session session = HibernateSessionFactory.getSession();
 			Transaction ts = session.beginTransaction();
 			if (gCatalog.getId() != null) {
 				session.update(gCatalog);
 			} else {
-				id = (Long) session.save(gCatalog);
+				id = (Integer) session.save(gCatalog);
 			}
 			ts.commit();
 			return id;
 		} catch (Exception e) {
 			e.printStackTrace();
-			return -1L;
+			return -1;
 		} finally {
 			HibernateSessionFactory.closeSession();
 		}
@@ -65,6 +65,11 @@ public class GarouselCatalogDaoImp implements GarouselCatalogDao {
 			Query query = session.createQuery(sql);
 			query.setParameter(0, id);
 			query.executeUpdate();
+
+			String sql2 = "delete from Garousel where catalogId=?";
+			Query query2 = session.createQuery(sql2);
+			query2.setParameter(0, id);
+			query2.executeUpdate();
 			ts.commit();
 			return true;
 		} catch (Exception e) {

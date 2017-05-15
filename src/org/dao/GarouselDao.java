@@ -7,6 +7,10 @@ import org.view.VGarouselId;
 
 public interface GarouselDao {
 	/**
+	 *	获取指定轮播图 
+	 */
+	public VGarouselId getGarousel(Long id);
+	/**
 	 * 获取轮播图列表,按目录分组
 	 */
 	public List<VGarouselId> getList(Integer start,Integer limit);

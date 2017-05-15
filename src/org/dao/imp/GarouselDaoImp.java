@@ -13,12 +13,28 @@ import org.view.VGarousel;
 import org.view.VGarouselId;
 
 public class GarouselDaoImp implements GarouselDao {
-
+	@Override
+	public VGarouselId getGarousel(Long id){
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			String sql = "from VGarousel v where v.id.id=?";
+			Query query = session.createQuery(sql);
+			query.setParameter(0, id);
+			query.setMaxResults(1);
+			VGarousel garousel = (VGarousel) query.uniqueResult();
+			return garousel.getId();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
 	@Override
 	public List<VGarouselId> getList(Integer start, Integer limit) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
-			String sql = "from VGarousel v group by v.id.catalogId";
+			String sql = "from VGarousel v order by v.id.catalogId";
 			Query query = session.createQuery(sql);
 			if (start == null) {
 				start = 0;
@@ -26,8 +42,8 @@ public class GarouselDaoImp implements GarouselDao {
 			if (limit == null) {
 				limit = 15;
 			}
-			query.setMaxResults(start);
-			query.setFirstResult(limit);
+			query.setFirstResult(start);
+			query.setMaxResults(limit);
 			List<VGarousel> vGarousel = query.list();
 			List<VGarouselId> list = new ArrayList<VGarouselId>();
 			for (VGarousel v : vGarousel) {

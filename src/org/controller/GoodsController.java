@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.util.ResultUtils;
+import org.view.VGarouselId;
 import org.view.VGoodsId;
 
 @Controller
@@ -157,10 +158,33 @@ public class GoodsController {
 
 	@RequestMapping("/updateGoods")
 	@ResponseBody
-	public Object updateGoods(Long id, String name, Double price, String url,
-			Long catalogId, String description, String origin) {
-		gDao = new GoodsDaoImp();
+	public Object updateGoods(HttpServletRequest request, Long id, String name,
+			Double price,
+			@RequestParam(required = false) CommonsMultipartFile file,
+			Long catalogId, String description, String origin)
+			throws IllegalStateException, IOException {
 		Long time = System.currentTimeMillis() / 1000;
+		gDao = new GoodsDaoImp();
+		String url = "";
+		if (file.getOriginalFilename().equals("")) {
+			Goods g = gDao.getGoods(id);
+			if (g != null) {
+				url = g.getUrl();
+			} else {
+				return ResultUtils.toJson(101, "修改失败", "原纪录不存在");
+			}
+		} else {
+			String path = request.getSession().getServletContext()
+					.getRealPath("/upload/goods/");
+			String filename = time + "_" + file.getOriginalFilename();
+
+			String filePath = path + filename;
+			File newFile = new File(filePath);
+			// 通过CommonsMultipartFile的方法直接写文件（注意这个时候）
+			file.transferTo(newFile);
+			url = "upload/goods/" + filename;
+		}
+
 		Goods goods = new Goods(name, price, url, catalogId, description, time,
 				origin);
 		goods.setId(id);
@@ -184,7 +208,5 @@ public class GoodsController {
 		}
 		return ResultUtils.toJson(100, "", data);
 	}
-	
-	
 
 }
