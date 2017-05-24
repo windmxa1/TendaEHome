@@ -24,22 +24,18 @@ public class BackInterceptor implements HandlerInterceptor {
 	public void afterCompletion(HttpServletRequest arg0,
 			HttpServletResponse arg1, Object arg2, Exception arg3)
 			throws Exception {
-		// TODO Auto-generated method stub
 
 	}
 
 	public void postHandle(HttpServletRequest arg0, HttpServletResponse arg1,
 			Object arg2, ModelAndView arg3) throws Exception {
-		// TODO Auto-generated method stub
 
 	}
 
 	public boolean preHandle(HttpServletRequest request,
 			HttpServletResponse response, Object object) throws Exception {
-		// TODO Auto-generated method stub
 		Key key = TokenUtils.getKey();
 		String token = request.getHeader("token");
-		System.out.println(token);
 		if (TokenUtils.isValid(token, key)) {
 			return true;
 		} else {
@@ -51,7 +47,6 @@ public class BackInterceptor implements HandlerInterceptor {
 			response.getWriter().write(s);
 			return false;
 		}
-		// return TokenUtils.isValid(token, key);
 	}
 
 }

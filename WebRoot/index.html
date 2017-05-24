@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>index.html</title>
+
+<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+<meta http-equiv="description" content="this is my page">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+<!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="css/bootstrap.min.css" type="text/css"></link>
+
+<script type="text/javascript">
+	$(function() {
+		var token = "";
+		var user = {
+			username : 1,
+			password : 12
+		};
+		$.ajax({
+			type : "post",
+			url : "back/admin/login",
+			data : user,
+			dataType : "json",
+			//contentType : 'application/json;charset=utf-8',
+			async : false,
+			cache : false,
+			success : function(data) {
+				token = data.data.token;
+				console.log(token);
+			},
+			error : function(data) {
+				alert("error");
+			}
+		});
+		$("#btn1").click(function() {
+			var xml ="<xml><appid><![CDATA[wx2421b1c4370ec43b]]></appid><attach><![CDATA[支付测试]]></attach><bank_type><![CDATA[CFT]]></bank_type><fee_type><![CDATA[CNY]]></fee_type><is_subscribe><![CDATA[Y]]></is_subscribe><mch_id><![CDATA[10000100]]></mch_id><nonce_str><![CDATA[5d2b6c2a8db53831f7eda20af46e531c]]></nonce_str><openid><![CDATA[oUpF8uMEb4qRXf22hE3X68TekukE]]></openid><out_trade_no><![CDATA[1409811653]]></out_trade_no><result_code><![CDATA[SUCCESS]]></result_code><return_code><![CDATA[SUCCESS]]></return_code><sign><![CDATA[B552ED6B279343CB493C5DD0D78AB241]]></sign><sub_mch_id><![CDATA[10000100]]></sub_mch_id><time_end><![CDATA[20140903131540]]></time_end><total_fee>1</total_fee><trade_type><![CDATA[JSAPI]]></trade_type><transaction_id><![CDATA[1004400740201409030005092168]]></transaction_id></xml>";
+			$.ajax({
+				type : "post",
+				url : "back/orders/notifyWxPay",
+				headers : {
+					"token" : token
+				},
+				data : xml,								
+				contentType :"text/xml; charset=utf-8",
+				dataType : "xml",
+				success : function(data) {
+					//console.log(JSON.stringify(data));
+					console.log(data);					
+				},
+				error : function(data) {
+					alert("error");
+				}
+			});
+		});
+	});
+</script>
+</head>
+<body>
+	<div class="container">
+		<input type="button" value="postXml" id="btn1">
+	</div>
+</body>
+</html>

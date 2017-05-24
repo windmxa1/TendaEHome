@@ -37,6 +37,7 @@
 	<mapping resource="org/model/Garousel.hbm.xml" />
 	<mapping resource="org/model/GarouselCatalog.hbm.xml" />
 	<mapping resource="org/view/VGarousel.hbm.xml" />
+	<mapping resource="org/model/Tv.hbm.xml" />
 
 </session-factory>
 

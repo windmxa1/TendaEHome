@@ -22,4 +22,5 @@ public class ResultUtils {
 		result.put("data", data);
 		return result;
 	}
+	public final static String ERROR="<?xml version=\"1.0\" encoding=\"UTF-8\"?><xml><return_msg>校验失败，请重试</return_msg><return_code>FAIL</return_code></xml>";
 }

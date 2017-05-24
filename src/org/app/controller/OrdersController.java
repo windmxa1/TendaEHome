@@ -8,16 +8,11 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.bean.MapBean;
-import org.dao.GoodsDao;
 import org.dao.OrdersDao;
-import org.dao.imp.GoodsDaoImp;
 import org.dao.imp.OrdersDaoImp;
 import org.model.Orders;
 import org.model.OrdersDetail;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,6 +20,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.util.JsonUtils;
 import org.util.ResultUtils;
 import org.util.TokenUtils;
+import org.util.Utils;
+import org.util.WXAPI;
 import org.view.VOrdersDetailsId;
 import org.view.VOrdersId;
 
@@ -50,7 +47,6 @@ public class OrdersController {
 		Long userid = Long.parseLong(""
 				+ TokenUtils.getValue(token, TokenUtils.getKey(), "userid"));
 		/*********************************/
-		System.out.println(userid);
 		List<VOrdersId> list = oDao.getList(userid, start, limit);
 		data = new HashMap<String, Object>();
 		if (list == null || list.size() == 0) {
@@ -58,7 +54,7 @@ public class OrdersController {
 		} else {
 			for (VOrdersId order : list) {
 				List<VOrdersDetailsId> details = oDao.getDetailList(
-						order.getId(), start, limit);
+						order.getId(), 0, -1);
 				order.setDetails(details);
 			}
 			data.put("list", list);
@@ -137,32 +133,23 @@ public class OrdersController {
 	@RequestMapping("/addOrder")
 	@ResponseBody
 	public Object addOrder(HttpServletRequest request, Long addressId,
-			String details) {
+			String details, Double total) {
 		oDao = new OrdersDaoImp();
-		GoodsDao gDao = new GoodsDaoImp();
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");
 		Long userid = Long.parseLong(""
 				+ TokenUtils.getValue(token, TokenUtils.getKey(), "userid"));
 		System.out.println("userid:" + userid);
-
+		Long time = System.currentTimeMillis();
+		String orderNum = time + Utils.ran6();
 		/*********************************/
-		Orders orders = new Orders(userid, System.currentTimeMillis() / 1000,
-				0, addressId);
+		Orders orders = new Orders(userid, time / 1000, 0, addressId, orderNum);
 		ObjectMapper mapper = JsonUtils.getMapperInstance();
 		JavaType javaType = JsonUtils.getCollectionType(ArrayList.class,
 				OrdersDetail.class);
 		List<OrdersDetail> details2 = null;
 		try {
-			System.out.println(mapper);
 			details2 = mapper.readValue(details, javaType);
-			// List<Long> ids = new ArrayList<>();
-			// for(OrdersDetail detail:details2){
-			// ids.add(detail.getGoodsId());
-			// }
-			// if(gDao.validate(ids)){
-			// return ResultUtils.toJson(101, "生成订单失败，该订单中存在已下架商品:", "");
-			// }
 		} catch (JsonParseException e) {
 			e.printStackTrace();
 		} catch (JsonMappingException e) {
@@ -171,9 +158,18 @@ public class OrdersController {
 			e.printStackTrace();
 		}
 		if (oDao.generateOrder(orders, details2)) {
-			return ResultUtils.toJson(100, "生成订单成功", "");
+			String clientIp = request.getRemoteAddr();
+			//订单总价不能包含小数，单位为分，因此乘100并转整型
+			Integer fee = (int)(total*100);
+			data = WXAPI.doPay(orderNum, fee, clientIp);
+			if (data == null) {
+				return ResultUtils.toJson(101, "生成订单失败，请重试", "");
+			}
+			data.put("orderNum", orderNum);
+			return ResultUtils.toJson(100, "生成订单成功", data);
 		} else {
-			return ResultUtils.toJson(101, "生成订单失败", "");
+			return ResultUtils.toJson(101, "生成订单失败，请重试", "");
 		}
 	}
+	
 }

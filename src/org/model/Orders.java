@@ -13,6 +13,7 @@ public class Orders implements java.io.Serializable {
 	private Long time;
 	private Integer state;
 	private Long addressId;
+	private String orderNum;
 
 	// Constructors
 
@@ -21,11 +22,13 @@ public class Orders implements java.io.Serializable {
 	}
 
 	/** full constructor */
-	public Orders(Long userid, Long time, Integer state, Long addressId) {
+	public Orders(Long userid, Long time, Integer state, Long addressId,
+			String orderNum) {
 		this.userid = userid;
 		this.time = time;
 		this.state = state;
 		this.addressId = addressId;
+		this.orderNum = orderNum;
 	}
 
 	// Property accessors
@@ -68,6 +71,14 @@ public class Orders implements java.io.Serializable {
 
 	public void setAddressId(Long addressId) {
 		this.addressId = addressId;
+	}
+
+	public String getOrderNum() {
+		return this.orderNum;
+	}
+
+	public void setOrderNum(String orderNum) {
+		this.orderNum = orderNum;
 	}
 
 }

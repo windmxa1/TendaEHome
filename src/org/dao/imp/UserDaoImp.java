@@ -84,7 +84,7 @@ public class UserDaoImp implements UserDao {
 				return null;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 			return null;
 		} finally {
 			HibernateSessionFactory.closeSession();

@@ -13,13 +13,13 @@ public class VOrdersId implements java.io.Serializable {
 	private Long id;
 	private Long userid;
 	private Long time;
+	private String orderNum;
 	private Double total;
 	private String createTime;
 	private Integer state;
 	private String status;
 	private String address;
 	private List<VOrdersDetailsId> details;
-
 	// Constructors
 
 	/** default constructor */
@@ -27,21 +27,24 @@ public class VOrdersId implements java.io.Serializable {
 	}
 
 	/** minimal constructor */
-	public VOrdersId(Long id, Long userid, Long time, Integer state,
-			String status) {
+	public VOrdersId(Long id, Long userid, Long time, String orderNum,
+			Integer state, String status) {
 		this.id = id;
 		this.userid = userid;
 		this.time = time;
+		this.orderNum = orderNum;
 		this.state = state;
 		this.status = status;
 	}
 
 	/** full constructor */
-	public VOrdersId(Long id, Long userid, Long time, Double total,
-			String createTime, Integer state, String status, String address) {
+	public VOrdersId(Long id, Long userid, Long time, String orderNum,
+			Double total, String createTime, Integer state, String status,
+			String address) {
 		this.id = id;
 		this.userid = userid;
 		this.time = time;
+		this.orderNum = orderNum;
 		this.total = total;
 		this.createTime = createTime;
 		this.state = state;
@@ -73,6 +76,14 @@ public class VOrdersId implements java.io.Serializable {
 
 	public void setTime(Long time) {
 		this.time = time;
+	}
+
+	public String getOrderNum() {
+		return this.orderNum;
+	}
+
+	public void setOrderNum(String orderNum) {
+		this.orderNum = orderNum;
 	}
 
 	public Double getTotal() {
@@ -141,6 +152,10 @@ public class VOrdersId implements java.io.Serializable {
 				&& ((this.getTime() == castOther.getTime()) || (this.getTime() != null
 						&& castOther.getTime() != null && this.getTime()
 						.equals(castOther.getTime())))
+				&& ((this.getOrderNum() == castOther.getOrderNum()) || (this
+						.getOrderNum() != null
+						&& castOther.getOrderNum() != null && this
+						.getOrderNum().equals(castOther.getOrderNum())))
 				&& ((this.getTotal() == castOther.getTotal()) || (this
 						.getTotal() != null && castOther.getTotal() != null && this
 						.getTotal().equals(castOther.getTotal())))
@@ -167,6 +182,8 @@ public class VOrdersId implements java.io.Serializable {
 				+ (getUserid() == null ? 0 : this.getUserid().hashCode());
 		result = 37 * result
 				+ (getTime() == null ? 0 : this.getTime().hashCode());
+		result = 37 * result
+				+ (getOrderNum() == null ? 0 : this.getOrderNum().hashCode());
 		result = 37 * result
 				+ (getTotal() == null ? 0 : this.getTotal().hashCode());
 		result = 37

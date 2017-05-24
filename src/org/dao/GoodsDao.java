@@ -45,8 +45,8 @@ public interface GoodsDao {
 	/**
 	 * 维护商品信息
 	 */
-	public Long saveOrUpdate(Goods goods);
-
+	public Long saveOrUpdate(Goods goods);	
+	
 	/**
 	 * 删除商品 
 	 */

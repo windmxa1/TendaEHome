@@ -38,7 +38,7 @@ public class AppInterceptor implements HandlerInterceptor {
 			HttpServletResponse response, Object object) throws Exception {
 		Key key = TokenUtils.getKey();
 		String token = request.getHeader("token");
-		System.out.println(token);
+//		System.out.println(token);
 		if (TokenUtils.isValid(token, key)) {
 			return true;
 		} else {

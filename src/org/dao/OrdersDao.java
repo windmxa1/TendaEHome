@@ -13,7 +13,12 @@ public interface OrdersDao {
 	 * 获取单个用户的订单列表
 	 */
 	public List<VOrdersId> getList(Long userid, Integer start, Integer limit);
-
+	
+	/**
+	 * 获取单个订单
+	 */
+	public VOrdersId getOrder(String orderNum);
+	
 	/**
 	 * 获取订单详情列表
 	 */
@@ -23,7 +28,10 @@ public interface OrdersDao {
 	 * 增加订单
 	 */
 	public Long saveOrUpdate(Orders orders);
-	public Long saveOrUpdate(OrdersDetail ordersDetail);
+//	public Long saveOrUpdate(OrdersDetail ordersDetail);
+	/**
+	 * 生成订单
+	 */
 	public boolean generateOrder(Orders orders,List<OrdersDetail> details);
 
 	/**
@@ -39,4 +47,19 @@ public interface OrdersDao {
 	 * 修改订单状态
 	 */
 	public boolean updateOrder(Long id,Integer state);
+	/**
+	 * 修改订单状态
+	 * @param orderNum
+	 * @param state
+	 * @return
+	 */
+	public boolean updateOrder(String orderNum,Integer state);
+	/**
+	 * 删除订单,仅允许删除被取消的订单
+	 */
+	public int deleteOrder(Long id);
+	/**
+	 * 获取订单总价
+	 */
+	public Double getTotal(String orderNum);
 }

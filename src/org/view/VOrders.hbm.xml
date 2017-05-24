@@ -16,6 +16,9 @@
             <key-property name="time" type="java.lang.Long">
                 <column name="time" />
             </key-property>
+            <key-property name="orderNum" type="java.lang.String">
+                <column name="order_num" length="20" />
+            </key-property>
             <key-property name="total" type="java.lang.Double">
                 <column name="total" precision="33" />
             </key-property>

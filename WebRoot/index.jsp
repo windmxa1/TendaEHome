@@ -228,7 +228,7 @@
 		});
 		$("#btn9").click(function() {
 			var json1 = {
-				id :3,
+				id : 3,
 				catalog : "啊实打asdasdf"
 			};
 			$.ajax({
@@ -293,6 +293,7 @@
 		});
 		$("#btn12").click(function() {
 			var form = new FormData(document.getElementById("garousel2"));
+			form.append("","");
 			$.ajax({
 				type : "post",
 				url : "back/garousel/addGarousel",
@@ -303,6 +304,46 @@
 				processData : false,
 				contentType : false,
 				dataType : "json",
+				success : function(data) {
+					console.log(JSON.stringify(data));
+				},
+				error : function(data) {
+					alert("error");
+
+				}
+			});
+		});
+		$("#btn13").click(function() {
+			$.ajax({
+				type : "post",
+				url : "app/user/getUserInfo",
+				data : {},
+				dataType : "json",
+				headers : {
+					"token" : token
+				},
+				async : false,
+				cache : false,
+				success : function(data) {
+					console.log(JSON.stringify(data));
+				},
+				error : function(data) {
+					alert("error");
+				}
+			});
+		});
+		$("#btn14").click(function() {
+			var json = {orderNum:1465};
+			$.ajax({
+				type : "post",
+				url : "back/orders/getOrderByOrderNum",
+				data : json,
+				dataType : "json",
+				headers : {
+					"token" : token
+				},
+				async : false,
+				cache : false,
 				success : function(data) {
 					console.log(JSON.stringify(data));
 				},
@@ -340,6 +381,8 @@
 	<input type="button" id="btn9" value="updateCatalog">
 	<br>
 	<input type="button" id="btn10" value="deleteCatalog">
+	<input type="button" id="btn13" value="getUserInfo">
+	<input type="button" id="btn14" value="getOrderByOrderNum">
 	<br>
 	<div class="container">
 		<form action="" id="garousel1">
@@ -350,12 +393,13 @@
 			</div>
 			id<br /> <input class="form-control" type="text" name="id" /> <br />
 			标题<br /> <input class="form-control" type="text" name="title" /> <br />
-			目录<br /> <select class="form-control" name="catalogId" >
+			目录<br /> <select class="form-control" name="catalogId">
 				<option value="1">首页轮播图</option>
 				<option value="2">一米菜园轮播图</option>
 			</select> <br />
 			<div class="form-group">
-				<label>外链</label><br /> <input type="text" name="hyperlink" id="hyperlink">
+				<label>外链</label><br /> <input type="text" name="hyperlink"
+					id="hyperlink">
 			</div>
 			<input type="button" id="btn11" value="提交">
 		</form>
@@ -368,12 +412,13 @@
 				<p class="help-block">请上传轮播图图片</p>
 			</div>
 			标题<br /> <input class="form-control" type="text" name="title" /> <br />
-			目录<br /> <select class="form-control" name="catalogId" >
+			目录<br /> <select class="form-control" name="catalogId">
 				<option value="1">首页轮播图</option>
 				<option value="2">一米菜园轮播图</option>
 			</select> <br />
 			<div class="form-group">
-				<label>外链</label><br /> <input type="text" name="hyperlink" id="hyperlink">
+				<label>外链</label><br /> <input type="text" name="hyperlink"
+					id="hyperlink">
 			</div>
 			<input type="button" id="btn12" value="提交">
 		</form>

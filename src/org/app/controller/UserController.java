@@ -24,7 +24,6 @@ import org.util.ResultUtils;
 import org.util.TokenUtils;
 import org.view.VUserId;
 
-
 @Controller("/app/UserController")
 @RequestMapping("/app/user")
 public class UserController {
@@ -45,9 +44,6 @@ public class UserController {
 			// 验证通过并生成token,c为过期时间，暂时用不到
 			Calendar c = Calendar.getInstance();
 			c.add(c.DATE, 14);
-			TokenUtils.rootPath = request.getSession().getServletContext()
-					.getRealPath("/");
-//			System.out.println(TokenUtils.rootPath);
 			String token = TokenUtils.buildJwt1(TokenUtils.getKey(),
 					c.getTime(), u.getId());
 			// ObjectMapper mapper = new ObjectMapper();
@@ -56,12 +52,12 @@ public class UserController {
 		} else {
 			return ResultUtils.toJson(101, "登录失败", "");
 		}
-
 	}
 
 	@RequestMapping("/getUserInfo")
 	@ResponseBody
 	public Object getUserInfo(HttpServletRequest request) {
+		uDao = new UserDaoImp();
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");
 		Long userid = Long.parseLong(""
@@ -82,16 +78,12 @@ public class UserController {
 	@ResponseBody
 	public Object phoneVerify(HttpServletRequest request, String phone) {
 		uDao = new UserDaoImp();
-		TokenUtils.rootPath = request.getSession().getServletContext()
-				.getRealPath("/");
 		User u = uDao.getUser(phone);
 		if (u != null) {
 			data = new HashMap<String, Object>();
 			// 验证通过并生成token,c为过期时间，暂时用不到
 			Calendar c = Calendar.getInstance();
 			c.add(c.DATE, 14);
-			TokenUtils.rootPath = request.getSession().getServletContext()
-					.getRealPath("/");
 			String token = TokenUtils.buildJwt1(TokenUtils.getKey(),
 					c.getTime(), u.getId());
 			data.put("token", token);
@@ -165,15 +157,15 @@ public class UserController {
 			HttpServletRequest request) throws IllegalStateException,
 			IOException {
 		String path = request.getSession().getServletContext()
-				.getRealPath("/upload/headphoto/");
+				.getRealPath("/upload/headimg/");
 		String filename = (System.currentTimeMillis() / 1000) + "_"
 				+ file.getOriginalFilename();
-		String filePath = path + filename;
+		String filePath = path + File.separator + filename;
 		File newFile = new File(filePath);
 		// 通过CommonsMultipartFile的方法直接写文件（注意这个时候）
 		file.transferTo(newFile);
 
-		String url = "upload/headphoto/" + filename;
+		String url = "upload/headimg/" + filename;
 
 		// 删除之前的头像
 		uDao = new UserDaoImp();
@@ -188,7 +180,7 @@ public class UserController {
 					.getRealPath("/")
 					+ usedHead);
 			if (f.exists()) {
-				return f.delete();
+				f.delete();
 			}
 		}
 		// 更新头像
@@ -216,7 +208,7 @@ public class UserController {
 	@RequestMapping("/insertAddress")
 	@ResponseBody
 	public Object insertAddress(HttpServletRequest request, String address,
-			String receiver, String tel,String sex) {
+			String receiver, String tel, String sex) {
 		uAddressDao = new UserAddressDaoImp();
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");
@@ -224,8 +216,8 @@ public class UserController {
 				+ TokenUtils.getValue(token, TokenUtils.getKey(), "userid"));
 		/*********************************/
 		UserAddress userAddress = new UserAddress(userid, address, receiver,
-				tel,sex);
-		
+				tel, sex);
+
 		if (uAddressDao.saveOrUpdate(userAddress) > 0) {
 			return ResultUtils.toJson(100, "添加成功", "");
 		} else {
@@ -251,15 +243,17 @@ public class UserController {
 	@RequestMapping("/updateAddress")
 	@ResponseBody
 	public Object updateAddress(HttpServletRequest request, Long id,
-			String address, String receiver, String tel,String sex) {
+			String address, String receiver, String tel, String sex,
+			Short default_) {
 		uAddressDao = new UserAddressDaoImp();
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");
 		Long userid = Long.parseLong(""
 				+ TokenUtils.getValue(token, TokenUtils.getKey(), "userid"));
 		/*********************************/
+		// System.out.println(default_);
 		UserAddress userAddress = new UserAddress(userid, address, receiver,
-				tel,sex);
+				default_, tel, sex);
 		userAddress.setId(id);
 		if (uAddressDao.saveOrUpdate(userAddress) == 0) {
 			return ResultUtils.toJson(100, "修改成功", "");
@@ -273,15 +267,16 @@ public class UserController {
 	 */
 	@RequestMapping("/updateDefault")
 	@ResponseBody
-	public Object updateDefault(HttpServletRequest request, Long id,Boolean default_) {
+	public Object updateDefault(HttpServletRequest request, Long id,
+			Boolean default_) {
 		uAddressDao = new UserAddressDaoImp();
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");
 		Long userid = Long.parseLong(""
 				+ TokenUtils.getValue(token, TokenUtils.getKey(), "userid"));
 		/*********************************/
-		System.out.println(default_);
-		if (uAddressDao.updateDefault(id,default_)) {
+		// System.out.println(default_);
+		if (uAddressDao.updateDefault(id, default_)) {
 			return ResultUtils.toJson(100, "修改成功", "");
 		} else {
 			return ResultUtils.toJson(101, "修改失败", "");

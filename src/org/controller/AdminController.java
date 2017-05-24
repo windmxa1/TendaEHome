@@ -34,8 +34,6 @@ public class AdminController {
 			// 验证通过并生成token,c为过期时间，暂时用不到
 			Calendar c = Calendar.getInstance();
 			c.add(c.DATE, 14);
-			TokenUtils.rootPath = request.getSession().getServletContext()
-					.getRealPath("/");
 			String token = TokenUtils.buildJwt2(TokenUtils.getKey(),
 					c.getTime(), a.getId());
 			a.setPassword("");
@@ -76,14 +74,14 @@ public class AdminController {
 				"adminId");
 		/*********************************/
 		if (password != null) {
-			if(aDao.getAdmin(adminId,password)==null){
+			if (aDao.getAdmin(adminId, password) == null) {
 				return ResultUtils.toJson(101, "修改失败,旧密码不正确", "");
 			}
 			if (aDao.updatePassword(newPwd, adminId)) {
 				return ResultUtils.toJson(100, "修改成功", "");
 			}
 		}
-		
+
 		return ResultUtils.toJson(101, "修改失败", "");
 
 	}

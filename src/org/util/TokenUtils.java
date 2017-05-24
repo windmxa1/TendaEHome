@@ -12,12 +12,7 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.security.Key;
-import java.util.Calendar;
 import java.util.Date;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.beans.factory.annotation.Autowired;
 
 public class TokenUtils {
 	public static String rootPath;
@@ -66,7 +61,8 @@ public class TokenUtils {
 			Jwts.parser().setSigningKey(key).parseClaimsJws(token.trim());
 			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			// e.printStackTrace();
+			System.out.println("验证不通过");
 			return false;
 		}
 	}
@@ -93,13 +89,14 @@ public class TokenUtils {
 		File file = new File(rootPath + "key.txt");
 		try {
 			if (file.exists()) {
+//				System.out.println("key文件存在");
 				ObjectInputStream ois = new ObjectInputStream(
 						new FileInputStream(file));
 				Key key = (Key) ois.readObject();
 				ois.close();
-
 				return key;
 			} else {
+//				System.out.println("key文件不存在，重新生成");
 				file.createNewFile();
 				Key key = MacProvider.generateKey(SignatureAlgorithm.HS512);
 				ObjectOutputStream oo = new ObjectOutputStream(

@@ -1,8 +1,5 @@
 package org.test;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.dao.AdminDao;
 import org.dao.GarouselCatalogDao;
 import org.dao.GarouselDao;
@@ -17,15 +14,8 @@ import org.dao.imp.GoodsDaoImp;
 import org.dao.imp.OrdersDaoImp;
 import org.dao.imp.UserAddressDaoImp;
 import org.dao.imp.UserDaoImp;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.model.GarouselCatalog;
-import org.model.UserAddress;
-import org.util.HibernateSessionFactory;
 import org.util.JsonUtils;
-import org.view.VGarousel;
-import org.view.VGarouselId;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -40,9 +30,17 @@ public class Test02 {
 	final static GarouselCatalogDao GC_DAO = new GarouselCatalogDaoImp();
 	final static ObjectMapper mapper = JsonUtils.getMapperInstance();
 	
-	public static void main(String[] args) throws JsonProcessingException {
+	public static void main(String[] args) throws JsonProcessingException, InterruptedException {
 		GarouselCatalog gCatalog = new GarouselCatalog("asdas");
-		gCatalog.setId(4);
-		GC_DAO.saveOrUpdate(gCatalog);
+		gCatalog.setId(5);
+//		GC_DAO.saveOrUpdate(gCatalog);
+		Long time = System.currentTimeMillis();
+		System.out.println(oDao.getOrder("0132"));
+//		Thread.sleep(5*1000);
+		System.out.println(System.currentTimeMillis()-time);
+		time = System.currentTimeMillis();
+		System.out.println(gDao.getGoods(3L));
+//		System.out.println(oDao.getTotal("0132"));
+		System.out.println(System.currentTimeMillis()-time);
 	}
 }

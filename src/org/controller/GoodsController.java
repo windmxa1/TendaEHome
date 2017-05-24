@@ -126,7 +126,7 @@ public class GoodsController {
 				.getRealPath("/upload/goods/");
 		String filename = (System.currentTimeMillis() / 1000) + "_"
 				+ file.getOriginalFilename();
-		String filePath = path + filename;
+		String filePath = path + File.separator + filename;
 		File newFile = new File(filePath);
 		// 通过CommonsMultipartFile的方法直接写文件（注意这个时候）
 		file.transferTo(newFile);
@@ -178,13 +178,22 @@ public class GoodsController {
 					.getRealPath("/upload/goods/");
 			String filename = time + "_" + file.getOriginalFilename();
 
-			String filePath = path + filename;
+			String filePath = path + File.separator + filename;
 			File newFile = new File(filePath);
 			// 通过CommonsMultipartFile的方法直接写文件（注意这个时候）
 			file.transferTo(newFile);
 			url = "upload/goods/" + filename;
 		}
-
+		//删除之前上传的商品图片
+		Goods g = gDao.getGoods(id);
+		if (g != null) {
+			File f = new File(request.getSession().getServletContext()
+					.getRealPath("/")
+					+ g.getUrl());
+			if (f.exists()) {
+				f.delete();
+			}
+		}
 		Goods goods = new Goods(name, price, url, catalogId, description, time,
 				origin);
 		goods.setId(id);
