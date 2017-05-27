@@ -25,8 +25,8 @@
 	$(function() {
 		var token = "";
 		var user = {
-			username : 1,
-			password : 12
+			username : 22,
+			password : hex_md5("22")
 		};
 		$.ajax({
 			type : "post",
@@ -357,7 +357,7 @@
 </script>
 <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css"></link>
 <script type="text/javascript" src="js/bootstrap.min.js"></script>
-</head>
+<script type="text/javascript" src="js/md5.js"></script></head>
 
 <body>
 	<input type="button" id="btn" value="getUserList">

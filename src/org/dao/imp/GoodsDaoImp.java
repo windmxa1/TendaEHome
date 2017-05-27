@@ -265,4 +265,71 @@ public class GoodsDaoImp implements GoodsDao {
 		}
 	}
 
+	@Override
+	public Long getCount() {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			String sql = "select count(id) from Goods";
+			Query query = session.createQuery(sql);
+			query.setMaxResults(1);
+			Long a = (Long) query.uniqueResult();
+			return a;
+		} catch (Exception e) {
+			return 0L;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
+	@Override
+	public Long getCountByCatalog(Long catalogId) {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			String sql = "select count(id) from Goods where catalogId=?";
+			Query query = session.createQuery(sql);
+			query.setParameter(0, catalogId);
+			query.setMaxResults(1);
+			Long a = (Long) query.uniqueResult();
+			return a;
+		} catch (Exception e) {
+			return 0L;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
+	@Override
+	public Long getCountByKey(String key) {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			String sql = "select count(v.id.id) from VGoods v where v.id.catalogId in (select id from GoodsCatalog where catalog like ? ) or v.id.name like ?";
+			Query query = session.createQuery(sql);
+			query.setParameter(0, "%" + key + "%");
+			query.setParameter(1, "%" + key + "%");
+			query.setMaxResults(1);
+			Long a = (Long) query.uniqueResult();
+			return a;
+		} catch (Exception e) {
+			return 0L;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
+	@Override
+	public Long getCatalogCount() {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			String sql = "select count(id) from GoodsCatalog";
+			Query query = session.createQuery(sql);
+			query.setMaxResults(1);
+			Long a = (Long) query.uniqueResult();
+			return a;
+		} catch (Exception e) {
+			return 0L;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
 }

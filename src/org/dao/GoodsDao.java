@@ -18,7 +18,11 @@ public interface GoodsDao {
 	 * @return
 	 */
 	public List<VGoodsId> getList(Integer start, Integer limit);
-
+	/**
+	 * 获取商品总数
+	 */
+	public Long getCount();
+	public Long getCountByCatalog(Long catalogId);
 	/**
 	 * 获取折扣商品列表
 	 */
@@ -33,6 +37,10 @@ public interface GoodsDao {
 	 * 获取目录列表
 	 */
 	public List<GoodsCatalog> getCatalog();
+	/**
+	 * 获取目录总数
+	 */
+	public Long getCatalogCount();
 
 	/**
 	 * 获取目录对应的商品列表
@@ -42,6 +50,10 @@ public interface GoodsDao {
 	 * 获取指定名称的商品
 	 */
 	public List<VGoodsId> getGoodsByKey(Integer start, Integer limit,String key);
+	/**
+	 * 获取指定名称的商品总数
+	 */
+	public Long getCountByKey(String key);
 	/**
 	 * 维护商品信息
 	 */

@@ -295,4 +295,20 @@ public class OrdersDaoImp implements OrdersDao {
 		}
 	}
 
+	@Override
+	public Long getCountByState(Integer state) {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			String sql = "select count(id) from Orders where state=?";
+			Query query = session.createQuery(sql);
+			query.setParameter(0, state);
+			Long a = (Long) query.uniqueResult();
+			return a;
+		} catch (Exception e) {
+			return 0L;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
 }

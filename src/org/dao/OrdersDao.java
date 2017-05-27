@@ -44,6 +44,10 @@ public interface OrdersDao {
 	 */
 	public List<VOrdersId> getListByState(Integer start, Integer limit,Integer state);
 	/**
+	 * 根据状态获取订单总数
+	 */
+	public Long getCountByState(Integer state);
+	/**
 	 * 修改订单状态
 	 */
 	public boolean updateOrder(Long id,Integer state);

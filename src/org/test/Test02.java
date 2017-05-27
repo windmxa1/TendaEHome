@@ -42,5 +42,6 @@ public class Test02 {
 		System.out.println(gDao.getGoods(3L));
 //		System.out.println(oDao.getTotal("0132"));
 		System.out.println(System.currentTimeMillis()-time);
+		System.out.println(oDao.getCountByState(2));
 	}
 }

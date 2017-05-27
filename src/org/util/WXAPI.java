@@ -38,7 +38,7 @@ public class WXAPI {
 	/**
 	 * 发送支付请求获取预付单号
 	 */
-	public static Map<String, Object> doPay(String out_trade_no,
+	public static LinkedHashMap<String, Object> doPay(String out_trade_no,
 			Integer total_fee, String spbill_create_ip) {
 		// 随机字符串
 		String nonce_str = UUID.randomUUID().toString().trim().replace("-", "");
@@ -59,7 +59,7 @@ public class WXAPI {
 					String nonceStr = UUID.randomUUID().toString().trim()
 							.replace("-", "");
 					String Package = "Sign=WXPay";
-					String partnerId = root.elementText("partnerId");
+					String partnerId = root.elementText("mch_id");
 					String prepayId = root.elementText("prepayId");
 					String timeStamp = System.currentTimeMillis() / 1000 + "";
 					
@@ -90,7 +90,7 @@ public class WXAPI {
 	 * @param requestString
 	 * @return
 	 */
-	private static String connect(String pathUrl, String requestString) {
+	private static  String connect(String pathUrl, String requestString) {
 		// 建立连接
 		URL url;
 		try {
@@ -155,7 +155,7 @@ public class WXAPI {
 	}
 
 	/**
-	 * 将数据格式化成xml字符串
+	 * 将数据格式化成xml字符串，只用于转换微信统一下单接口的参数
 	 * 
 	 * @param nonce_str
 	 * @param out_trade_no

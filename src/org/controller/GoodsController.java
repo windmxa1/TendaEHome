@@ -41,6 +41,7 @@ public class GoodsController {
 		List<VGoodsId> list = gDao.getList(start, limit);
 		if (list != null) {
 			data.put("list", list);
+			data.put("total", gDao.getCount());
 		} else {
 			data.put("list", new ArrayList<>());
 		}
@@ -56,6 +57,7 @@ public class GoodsController {
 		List<VGoodsId> list = gDao.getGoodsByKey(start, limit, key);
 		if (list != null) {
 			data.put("list", list);
+			data.put("total", gDao.getCountByKey(key));
 		} else {
 			data.put("list", new ArrayList<>());
 		}
@@ -71,6 +73,7 @@ public class GoodsController {
 		List<GoodsCatalog> list = gDao.getCatalog();
 		if (list != null) {
 			data.put("list", list);
+			data.put("total", gDao.getCatalogCount());
 		} else {
 			data.put("list", new ArrayList<>());
 		}
@@ -184,7 +187,7 @@ public class GoodsController {
 			file.transferTo(newFile);
 			url = "upload/goods/" + filename;
 		}
-		//删除之前上传的商品图片
+		// 删除之前上传的商品图片
 		Goods g = gDao.getGoods(id);
 		if (g != null) {
 			File f = new File(request.getSession().getServletContext()
@@ -212,6 +215,7 @@ public class GoodsController {
 		List<VGoodsId> list = gDao.getCataGoods(start, limit, catalogId);
 		if (list != null) {
 			data.put("list", list);
+			data.put("total", gDao.getCountByCatalog(catalogId));
 		} else {
 			data.put("list", new ArrayList<>());
 		}

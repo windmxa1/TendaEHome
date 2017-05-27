@@ -60,6 +60,7 @@ public class OrdersController {
 				order.setDetails(details);
 			}
 			data.put("list", list);
+			data.put("total", oDao.getCountByState(state));
 		}
 		return ResultUtils.toJson(100, "", data);
 	}

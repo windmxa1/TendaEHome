@@ -133,7 +133,7 @@ public class OrdersController {
 	@RequestMapping("/addOrder")
 	@ResponseBody
 	public Object addOrder(HttpServletRequest request, Long addressId,
-			String details, Double total) {
+			String details) {
 		oDao = new OrdersDaoImp();
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");
@@ -159,17 +159,20 @@ public class OrdersController {
 		}
 		if (oDao.generateOrder(orders, details2)) {
 			String clientIp = request.getRemoteAddr();
-			//订单总价不能包含小数，单位为分，因此乘100并转整型
-			Integer fee = (int)(total*100);
+			// 订单总价不能包含小数，单位为分，因此乘100并转整型
+			// 不使用APP端传递的总价是为了防止数据被恶意修改导致无法匹配
+			Double total = oDao.getTotal(orderNum);
+			Integer fee = (int) (total * 100);
 			data = WXAPI.doPay(orderNum, fee, clientIp);
 			if (data == null) {
+				System.out.println("data==null");
 				return ResultUtils.toJson(101, "生成订单失败，请重试", "");
 			}
-			data.put("orderNum", orderNum);
+			// data.put("orderNum", orderNum);
 			return ResultUtils.toJson(100, "生成订单成功", data);
 		} else {
 			return ResultUtils.toJson(101, "生成订单失败，请重试", "");
 		}
 	}
-	
+
 }
