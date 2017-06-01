@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.io.FileUtils;
 import org.dao.GoodsCatalogDao;
 import org.dao.GoodsDao;
 import org.dao.imp.GoodsCatalogDaoImp;
@@ -96,9 +97,18 @@ public class GoodsController {
 
 	@RequestMapping("/delCatalog")
 	@ResponseBody
-	public Object delCatalog(@RequestParam Long id) {
+	public Object delCatalog(HttpServletRequest request, @RequestParam Long id) {
 		gcDao = new GoodsCatalogDaoImp();
 		if (gcDao.delete(id)) {
+			try {
+				File file = new File(request.getSession().getServletContext()
+						.getRealPath("/upload/goods/")
+						+ File.separator + id + File.separator);
+				System.out.println(file.getAbsolutePath());
+				FileUtils.deleteDirectory(file);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			return ResultUtils.toJson(100, "删除成功", "");
 		}
 		return ResultUtils.toJson(101, "添加失败", "");
@@ -129,7 +139,8 @@ public class GoodsController {
 				.getRealPath("/upload/goods/");
 		String filename = (System.currentTimeMillis() / 1000) + "_"
 				+ file.getOriginalFilename();
-		String filePath = path + File.separator + filename;
+		String filePath = path + File.separator + catalogId + File.separator
+				+ filename;
 		File newFile = new File(filePath);
 		// 通过CommonsMultipartFile的方法直接写文件（注意这个时候）
 		file.transferTo(newFile);
@@ -151,8 +162,18 @@ public class GoodsController {
 
 	@RequestMapping("/deleteGoods")
 	@ResponseBody
-	public Object deleteGoods(Long id) {
+	public Object deleteGoods(HttpServletRequest request, Long id) {
 		gDao = new GoodsDaoImp();
+		// 删除之前上传的商品图片
+		Goods g = gDao.getGoods(id);
+		if (g != null) {
+			File f = new File(request.getSession().getServletContext()
+					.getRealPath("/")
+					+ g.getUrl());
+			if (f.exists()) {
+				f.delete();
+			}
+		}
 		if (gDao.delete(id)) {
 			return ResultUtils.toJson(100, "删除成功", "");
 		}
@@ -181,7 +202,8 @@ public class GoodsController {
 					.getRealPath("/upload/goods/");
 			String filename = time + "_" + file.getOriginalFilename();
 
-			String filePath = path + File.separator + filename;
+			String filePath = path + File.separator + catalogId
+					+ File.separator + filename;
 			File newFile = new File(filePath);
 			// 通过CommonsMultipartFile的方法直接写文件（注意这个时候）
 			file.transferTo(newFile);

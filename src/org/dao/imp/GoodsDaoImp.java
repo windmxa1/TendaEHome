@@ -30,7 +30,23 @@ public class GoodsDaoImp implements GoodsDao {
 		} finally {
 			HibernateSessionFactory.closeSession();
 		}
+	}
 
+	public Goods getGoods(Long id, Long time) {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			String sql = "from Goods g where id=? and time=?";
+			Query query = session.createQuery(sql);
+			query.setParameter(0, id);
+			query.setMaxResults(1);
+			Goods goods = (Goods) query.uniqueResult();
+			return goods;
+		} catch (Exception e) {
+			// e.printStackTrace();
+			return null;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
 	}
 
 	public List<VGoodsId> getList(Integer start, Integer limit) {
@@ -145,7 +161,7 @@ public class GoodsDaoImp implements GoodsDao {
 			if (limit == null) {
 				limit = 15;
 			}
-			if(catalogId==null){
+			if (catalogId == null) {
 				catalogId = 1L;
 			}
 			query.setFirstResult(start);
@@ -248,15 +264,14 @@ public class GoodsDaoImp implements GoodsDao {
 					sql = sql + " or id=?";
 				}
 			}
-			Query query = session.createQuery("select id from Goods "
-					+ sql);
+			Query query = session.createQuery("select id from Goods " + sql);
 			for (int i = 0; i < ids.size(); i++) {
 				query.setParameter(i, ids.get(i));
 			}
 			List<Long> list = query.list();
-			
+
 			return true;
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;

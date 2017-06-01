@@ -54,13 +54,23 @@ public class OrdersController {
 		if (list == null || list.size() == 0) {
 			data.put("list", new ArrayList<>());
 		} else {
-			for (VOrdersId order : list) {
-				List<VOrdersDetailsId> details = oDao.getDetailList(
-						order.getId(), start, limit);
-				order.setDetails(details);
-			}
 			data.put("list", list);
 			data.put("total", oDao.getCountByState(state));
+		}
+		return ResultUtils.toJson(100, "", data);
+	}
+
+	@RequestMapping("/getOrdersDetails")
+	@ResponseBody
+	public Object getOrdersDetails(Long orderId, Integer start, Integer limit) {
+		oDao = new OrdersDaoImp();
+		data = new HashMap<>();
+		List<VOrdersDetailsId> list = oDao.getDetailList(orderId, start, limit);
+		if (list == null || list.size() == 0) {
+			data.put("list", new ArrayList<>());
+		} else {
+			data.put("list", list);
+			data.put("total", oDao.getDetailsCount(orderId));
 		}
 		return ResultUtils.toJson(100, "", data);
 	}
@@ -118,7 +128,7 @@ public class OrdersController {
 				if (xml.getResult_code().equals("SUCCESS")) {// 交易成功
 					boolean checkSign = WXAPI.makeSign(map).equals(
 							xml.getSign());// 验签防止第三方篡改数据
-					if (checkSign && oDao.updateOrder(xml.getOut_trade_no(), 2)) {//验签成功且修改成功返回SUCCESS
+					if (checkSign && oDao.updateOrder(xml.getOut_trade_no(), 2)) {// 验签成功且修改成功返回SUCCESS
 						return new WXRETURN("SUCCESS", "");
 					}
 				}

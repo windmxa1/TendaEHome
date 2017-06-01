@@ -96,4 +96,22 @@ public class UserAddressDaoImp implements UserAddressDao {
 		}
 	}
 
+	@Override
+	public UserAddress getDefaultAddress(Long userid) {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			String sql = "from UserAddress where userid= ? and default_=1";
+			Query query = session.createQuery(sql);
+			query.setParameter(0, userid);
+			query.setMaxResults(1);
+			UserAddress userAddress = (UserAddress) query.uniqueResult();
+			return userAddress;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
 }

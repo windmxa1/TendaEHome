@@ -13,6 +13,10 @@ public interface GoodsDao {
 	 */
 	public Goods getGoods(Long id);
 	/**
+	 * 获取商品对象，用于检测商品信息是否被修改
+	 */
+	public Goods getGoods(Long id,Long time);
+	/**
 	 * 获取商品列表，按一定的规则，暂定是销量
 	 * 
 	 * @return

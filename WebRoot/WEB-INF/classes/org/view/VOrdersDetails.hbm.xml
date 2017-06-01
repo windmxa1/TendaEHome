@@ -22,7 +22,7 @@
             <key-property name="goodsUrl" type="java.lang.String">
                 <column name="goods_url" length="237" />
             </key-property>
-            <key-property name="num" type="java.lang.Double">
+            <key-property name="num" type="java.lang.Integer">
                 <column name="num" precision="11" />
             </key-property>
             <key-property name="prices" type="java.lang.Double">

@@ -1,18 +1,28 @@
 package org.app.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bean.OrderList;
 import org.dao.GoodsDao;
 import org.dao.imp.GoodsDaoImp;
 import org.model.GoodsCatalog;
+import org.model.OrdersDetail;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.util.JsonUtils;
 import org.util.ResultUtils;
 import org.view.VGoodsId;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller("/app/GoodsController")
 @RequestMapping("/app/goods")
@@ -34,6 +44,28 @@ public class GoodsController {
 		}
 		return ResultUtils.toJson(100, "", data);
 	}
+
+	@RequestMapping("/checkGoods")
+	@ResponseBody
+	public Object checkGoods(@RequestBody OrderList details) {
+		StringBuffer list = new StringBuffer();
+		gDao = new GoodsDaoImp();
+		for (OrdersDetail od : details.getDetails()) {
+			if (gDao.getGoods(od.getGoodsId(), od.getTime()) == null) {
+				if (list.length() == 0) {
+					list.append(od.getName());
+				} else {
+					list.append("、" + od.getName());
+				}
+			}
+		}
+		if (list.length() > 0) {
+			return ResultUtils.toJson(101,
+					"您的购物车中如下商品信息已过期，请重新选购:" + list.toString(), "");
+		}
+		return ResultUtils.toJson(100, "", "");
+	}
+
 	// 获取销量最高的10个商品
 	@RequestMapping("/getBestSell")
 	@ResponseBody

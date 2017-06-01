@@ -61,7 +61,7 @@ public class TokenUtils {
 			Jwts.parser().setSigningKey(key).parseClaimsJws(token.trim());
 			return true;
 		} catch (Exception e) {
-			// e.printStackTrace();
+//			 e.printStackTrace();
 			System.out.println("验证不通过");
 			return false;
 		}

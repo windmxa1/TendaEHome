@@ -23,4 +23,6 @@ public interface UserAddressDao {
 	 * 修改默认地址
 	 */
 	public boolean updateDefault(Long id,Boolean default_);
+
+	public UserAddress getDefaultAddress(Long userid);
 }

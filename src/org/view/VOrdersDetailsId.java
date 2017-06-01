@@ -13,7 +13,7 @@ public class VOrdersDetailsId implements java.io.Serializable {
 	private Long goodsId;
 	private String goodsName;
 	private String goodsUrl;
-	private Double num;
+	private Integer num;
 	private Double prices;
 
 	// Constructors
@@ -23,7 +23,7 @@ public class VOrdersDetailsId implements java.io.Serializable {
 	}
 
 	/** minimal constructor */
-	public VOrdersDetailsId(Long id, Long orderId, Long goodsId, Double num,
+	public VOrdersDetailsId(Long id, Long orderId, Long goodsId, Integer num,
 			Double prices) {
 		this.id = id;
 		this.orderId = orderId;
@@ -34,7 +34,7 @@ public class VOrdersDetailsId implements java.io.Serializable {
 
 	/** full constructor */
 	public VOrdersDetailsId(Long id, Long orderId, Long goodsId,
-			String goodsName, String goodsUrl, Double num, Double prices) {
+			String goodsName, String goodsUrl, Integer num, Double prices) {
 		this.id = id;
 		this.orderId = orderId;
 		this.goodsId = goodsId;
@@ -86,11 +86,11 @@ public class VOrdersDetailsId implements java.io.Serializable {
 		this.goodsUrl = goodsUrl;
 	}
 
-	public Double getNum() {
+	public Integer getNum() {
 		return this.num;
 	}
 
-	public void setNum(Double num) {
+	public void setNum(Integer num) {
 		this.num = num;
 	}
 

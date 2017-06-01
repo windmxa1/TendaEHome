@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50535
 File Encoding         : 65001
 
-Date: 2017-05-27 19:03:02
+Date: 2017-06-01 18:27:23
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -70,7 +70,7 @@ CREATE TABLE `garousel_catalog` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `garousel_catalog` varchar(20) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of garousel_catalog
@@ -80,6 +80,7 @@ INSERT INTO `garousel_catalog` VALUES ('2', '一米菜园轮播图');
 INSERT INTO `garousel_catalog` VALUES ('3', '啊实打asdasdf');
 INSERT INTO `garousel_catalog` VALUES ('5', 'asdas');
 INSERT INTO `garousel_catalog` VALUES ('6', '啊实打实');
+INSERT INTO `garousel_catalog` VALUES ('7', '啊实打实');
 
 -- ----------------------------
 -- Table structure for `goods`
@@ -100,12 +101,12 @@ CREATE TABLE `goods` (
 -- ----------------------------
 -- Records of goods
 -- ----------------------------
-INSERT INTO `goods` VALUES ('1', '白菜', '5.40', 'upload/goods/cabbage.jpg', '5', ' ', '0', '');
-INSERT INTO `goods` VALUES ('2', '黄瓜', '8.20', 'upload/goods/cucumber.jpg', '7', '', '0', '');
-INSERT INTO `goods` VALUES ('3', '西红柿', '6.50', 'upload/goods/tomato.jpg', '2', ' ', '0', '');
-INSERT INTO `goods` VALUES ('4', '土豆', '5.56', 'upload/goods/sweetpotato.jpg', '1', '', '0', '');
-INSERT INTO `goods` VALUES ('5', '西兰花', '6.20', 'upload/goods/Broccoli.jpg', '3', '', '0', '');
-INSERT INTO `goods` VALUES ('6', '胡萝卜', '6.80', 'upload/goods/carrot.jpg', '4', '', '0', '');
+INSERT INTO `goods` VALUES ('1', '白菜', '5.60', 'upload/goods/5/cabbage.jpg', '5', ' ', '0', '');
+INSERT INTO `goods` VALUES ('2', '黄瓜', '8.30', 'upload/goods/7/cucumber.jpg', '7', '', '0', '');
+INSERT INTO `goods` VALUES ('3', '西红柿', '6.50', 'upload/goods/2/tomato.jpg', '2', ' ', '0', '');
+INSERT INTO `goods` VALUES ('4', '土豆', '5.56', 'upload/goods/1/sweetpotato.jpg', '1', '', '0', '');
+INSERT INTO `goods` VALUES ('5', '西兰花', '6.20', 'upload/goods/3/Broccoli.jpg', '3', '', '0', '');
+INSERT INTO `goods` VALUES ('6', '胡萝卜', '6.80', 'upload/goods/4/carrot.jpg', '4', '', '0', '');
 
 -- ----------------------------
 -- Table structure for `goods_activity`
@@ -123,8 +124,6 @@ CREATE TABLE `goods_activity` (
 -- ----------------------------
 -- Records of goods_activity
 -- ----------------------------
-INSERT INTO `goods_activity` VALUES ('1', '1', '0', '1496764800', '0.12');
-INSERT INTO `goods_activity` VALUES ('2', '2', '0', '1494309600', '1.00');
 
 -- ----------------------------
 -- Table structure for `goods_catalog`
@@ -134,7 +133,7 @@ CREATE TABLE `goods_catalog` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `catalog` varchar(20) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of goods_catalog
@@ -149,6 +148,7 @@ INSERT INTO `goods_catalog` VALUES ('7', '黄瓜');
 INSERT INTO `goods_catalog` VALUES ('8', '玉米');
 INSERT INTO `goods_catalog` VALUES ('9', '葱');
 INSERT INTO `goods_catalog` VALUES ('10', '生菜');
+INSERT INTO `goods_catalog` VALUES ('11', '菠菜');
 
 -- ----------------------------
 -- Table structure for `logs`
@@ -229,203 +229,202 @@ CREATE TABLE `orders_detail` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `order_id` bigint(20) NOT NULL,
   `goods_id` bigint(20) NOT NULL,
-  `num` decimal(11,2) NOT NULL,
-  `prices` decimal(11,2) NOT NULL,
+  `num` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=190 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of orders_detail
 -- ----------------------------
-INSERT INTO `orders_detail` VALUES ('1', '1', '1', '4.00', '1.00');
-INSERT INTO `orders_detail` VALUES ('2', '1', '2', '12.00', '1.00');
-INSERT INTO `orders_detail` VALUES ('3', '2', '1', '76.00', '1.00');
-INSERT INTO `orders_detail` VALUES ('4', '2', '2', '5.00', '1.00');
-INSERT INTO `orders_detail` VALUES ('5', '2', '3', '55.00', '1.00');
-INSERT INTO `orders_detail` VALUES ('6', '3', '2', '3.00', '24.60');
-INSERT INTO `orders_detail` VALUES ('7', '3', '3', '3.00', '19.50');
-INSERT INTO `orders_detail` VALUES ('8', '4', '2', '3.00', '24.60');
-INSERT INTO `orders_detail` VALUES ('9', '4', '3', '3.00', '19.50');
-INSERT INTO `orders_detail` VALUES ('10', '5', '2', '3.00', '24.60');
-INSERT INTO `orders_detail` VALUES ('11', '5', '3', '3.00', '19.50');
-INSERT INTO `orders_detail` VALUES ('12', '6', '1', '1.00', '1.00');
-INSERT INTO `orders_detail` VALUES ('13', '6', '2', '1.00', '1.00');
-INSERT INTO `orders_detail` VALUES ('14', '7', '1', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('15', '7', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('16', '7', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('17', '7', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('18', '7', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('19', '7', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('20', '7', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('21', '7', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('22', '7', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('23', '7', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('24', '7', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('25', '7', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('26', '7', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('27', '7', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('28', '7', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('29', '7', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('30', '7', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('31', '7', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('32', '7', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('33', '7', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('34', '7', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('35', '7', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('36', '7', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('37', '7', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('38', '7', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('39', '7', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('40', '8', '1', '1.00', '1.00');
-INSERT INTO `orders_detail` VALUES ('41', '8', '2', '1.00', '1.00');
-INSERT INTO `orders_detail` VALUES ('42', '9', '1', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('43', '9', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('44', '9', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('45', '9', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('46', '9', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('47', '9', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('48', '9', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('49', '9', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('50', '9', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('51', '9', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('52', '9', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('53', '9', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('54', '9', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('55', '9', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('56', '9', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('57', '9', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('58', '9', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('59', '9', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('60', '9', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('61', '9', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('62', '9', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('63', '9', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('64', '9', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('65', '9', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('66', '9', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('67', '9', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('68', '10', '1', '1.00', '1.00');
-INSERT INTO `orders_detail` VALUES ('69', '10', '2', '1.00', '1.00');
-INSERT INTO `orders_detail` VALUES ('70', '11', '1', '1.00', '1.00');
-INSERT INTO `orders_detail` VALUES ('71', '11', '2', '1.00', '1.00');
-INSERT INTO `orders_detail` VALUES ('72', '12', '1', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('73', '12', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('74', '12', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('75', '12', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('76', '12', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('77', '12', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('78', '12', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('79', '12', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('80', '12', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('81', '12', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('82', '12', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('83', '12', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('84', '12', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('85', '12', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('86', '12', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('87', '12', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('88', '12', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('89', '12', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('90', '12', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('91', '12', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('92', '12', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('93', '12', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('94', '12', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('95', '12', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('96', '12', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('97', '12', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('98', '13', '1', '1.00', '1.00');
-INSERT INTO `orders_detail` VALUES ('99', '13', '2', '1.00', '1.00');
-INSERT INTO `orders_detail` VALUES ('100', '14', '1', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('101', '14', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('102', '14', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('103', '14', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('104', '14', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('105', '14', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('106', '14', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('107', '14', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('108', '14', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('109', '14', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('110', '14', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('111', '14', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('112', '14', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('113', '14', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('114', '14', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('115', '14', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('116', '14', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('117', '14', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('118', '14', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('119', '14', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('120', '14', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('121', '14', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('122', '14', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('123', '14', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('124', '14', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('125', '14', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('126', '15', '1', '1.00', '1.00');
-INSERT INTO `orders_detail` VALUES ('127', '15', '2', '1.00', '1.00');
-INSERT INTO `orders_detail` VALUES ('128', '16', '1', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('129', '16', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('130', '16', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('131', '16', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('132', '16', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('133', '16', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('134', '16', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('135', '16', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('136', '16', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('137', '16', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('138', '16', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('139', '16', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('140', '16', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('141', '16', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('142', '16', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('143', '16', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('144', '16', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('145', '16', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('146', '16', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('147', '16', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('148', '16', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('149', '16', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('150', '16', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('151', '16', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('152', '16', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('153', '16', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('154', '17', '1', '1.00', '1.00');
-INSERT INTO `orders_detail` VALUES ('155', '17', '2', '1.00', '1.00');
-INSERT INTO `orders_detail` VALUES ('156', '18', '1', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('157', '18', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('158', '18', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('159', '18', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('160', '18', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('161', '18', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('162', '18', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('163', '18', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('164', '18', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('165', '18', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('166', '18', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('167', '18', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('168', '18', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('169', '18', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('170', '18', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('171', '18', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('172', '18', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('173', '18', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('174', '18', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('175', '18', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('176', '18', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('177', '18', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('178', '18', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('179', '18', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('180', '18', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('181', '18', '2', '12.00', '57.60');
-INSERT INTO `orders_detail` VALUES ('182', '19', '1', '3.00', '16.20');
-INSERT INTO `orders_detail` VALUES ('183', '19', '2', '2.00', '16.40');
-INSERT INTO `orders_detail` VALUES ('184', '20', '1', '3.00', '16.20');
-INSERT INTO `orders_detail` VALUES ('185', '20', '2', '2.00', '16.40');
-INSERT INTO `orders_detail` VALUES ('186', '21', '1', '3.00', '16.20');
-INSERT INTO `orders_detail` VALUES ('187', '21', '2', '2.00', '16.40');
-INSERT INTO `orders_detail` VALUES ('188', '22', '1', '3.00', '16.20');
-INSERT INTO `orders_detail` VALUES ('189', '22', '2', '2.00', '16.40');
+INSERT INTO `orders_detail` VALUES ('1', '1', '1', '4');
+INSERT INTO `orders_detail` VALUES ('2', '1', '2', '12');
+INSERT INTO `orders_detail` VALUES ('3', '2', '1', '76');
+INSERT INTO `orders_detail` VALUES ('4', '2', '2', '5');
+INSERT INTO `orders_detail` VALUES ('5', '2', '3', '55');
+INSERT INTO `orders_detail` VALUES ('6', '3', '2', '3');
+INSERT INTO `orders_detail` VALUES ('7', '3', '3', '3');
+INSERT INTO `orders_detail` VALUES ('8', '4', '2', '3');
+INSERT INTO `orders_detail` VALUES ('9', '4', '3', '3');
+INSERT INTO `orders_detail` VALUES ('10', '5', '2', '3');
+INSERT INTO `orders_detail` VALUES ('11', '5', '3', '3');
+INSERT INTO `orders_detail` VALUES ('12', '6', '1', '1');
+INSERT INTO `orders_detail` VALUES ('13', '6', '2', '1');
+INSERT INTO `orders_detail` VALUES ('14', '7', '1', '12');
+INSERT INTO `orders_detail` VALUES ('15', '7', '2', '12');
+INSERT INTO `orders_detail` VALUES ('16', '7', '2', '12');
+INSERT INTO `orders_detail` VALUES ('17', '7', '2', '12');
+INSERT INTO `orders_detail` VALUES ('18', '7', '2', '12');
+INSERT INTO `orders_detail` VALUES ('19', '7', '2', '12');
+INSERT INTO `orders_detail` VALUES ('20', '7', '2', '12');
+INSERT INTO `orders_detail` VALUES ('21', '7', '2', '12');
+INSERT INTO `orders_detail` VALUES ('22', '7', '2', '12');
+INSERT INTO `orders_detail` VALUES ('23', '7', '2', '12');
+INSERT INTO `orders_detail` VALUES ('24', '7', '2', '12');
+INSERT INTO `orders_detail` VALUES ('25', '7', '2', '12');
+INSERT INTO `orders_detail` VALUES ('26', '7', '2', '12');
+INSERT INTO `orders_detail` VALUES ('27', '7', '2', '12');
+INSERT INTO `orders_detail` VALUES ('28', '7', '2', '12');
+INSERT INTO `orders_detail` VALUES ('29', '7', '2', '12');
+INSERT INTO `orders_detail` VALUES ('30', '7', '2', '12');
+INSERT INTO `orders_detail` VALUES ('31', '7', '2', '12');
+INSERT INTO `orders_detail` VALUES ('32', '7', '2', '12');
+INSERT INTO `orders_detail` VALUES ('33', '7', '2', '12');
+INSERT INTO `orders_detail` VALUES ('34', '7', '2', '12');
+INSERT INTO `orders_detail` VALUES ('35', '7', '2', '12');
+INSERT INTO `orders_detail` VALUES ('36', '7', '2', '12');
+INSERT INTO `orders_detail` VALUES ('37', '7', '2', '12');
+INSERT INTO `orders_detail` VALUES ('38', '7', '2', '12');
+INSERT INTO `orders_detail` VALUES ('39', '7', '2', '12');
+INSERT INTO `orders_detail` VALUES ('40', '8', '1', '1');
+INSERT INTO `orders_detail` VALUES ('41', '8', '2', '1');
+INSERT INTO `orders_detail` VALUES ('42', '9', '1', '12');
+INSERT INTO `orders_detail` VALUES ('43', '9', '2', '12');
+INSERT INTO `orders_detail` VALUES ('44', '9', '2', '12');
+INSERT INTO `orders_detail` VALUES ('45', '9', '2', '12');
+INSERT INTO `orders_detail` VALUES ('46', '9', '2', '12');
+INSERT INTO `orders_detail` VALUES ('47', '9', '2', '12');
+INSERT INTO `orders_detail` VALUES ('48', '9', '2', '12');
+INSERT INTO `orders_detail` VALUES ('49', '9', '2', '12');
+INSERT INTO `orders_detail` VALUES ('50', '9', '2', '12');
+INSERT INTO `orders_detail` VALUES ('51', '9', '2', '12');
+INSERT INTO `orders_detail` VALUES ('52', '9', '2', '12');
+INSERT INTO `orders_detail` VALUES ('53', '9', '2', '12');
+INSERT INTO `orders_detail` VALUES ('54', '9', '2', '12');
+INSERT INTO `orders_detail` VALUES ('55', '9', '2', '12');
+INSERT INTO `orders_detail` VALUES ('56', '9', '2', '12');
+INSERT INTO `orders_detail` VALUES ('57', '9', '2', '12');
+INSERT INTO `orders_detail` VALUES ('58', '9', '2', '12');
+INSERT INTO `orders_detail` VALUES ('59', '9', '2', '12');
+INSERT INTO `orders_detail` VALUES ('60', '9', '2', '12');
+INSERT INTO `orders_detail` VALUES ('61', '9', '2', '12');
+INSERT INTO `orders_detail` VALUES ('62', '9', '2', '12');
+INSERT INTO `orders_detail` VALUES ('63', '9', '2', '12');
+INSERT INTO `orders_detail` VALUES ('64', '9', '2', '12');
+INSERT INTO `orders_detail` VALUES ('65', '9', '2', '12');
+INSERT INTO `orders_detail` VALUES ('66', '9', '2', '12');
+INSERT INTO `orders_detail` VALUES ('67', '9', '2', '12');
+INSERT INTO `orders_detail` VALUES ('68', '10', '1', '1');
+INSERT INTO `orders_detail` VALUES ('69', '10', '2', '1');
+INSERT INTO `orders_detail` VALUES ('70', '11', '1', '1');
+INSERT INTO `orders_detail` VALUES ('71', '11', '2', '1');
+INSERT INTO `orders_detail` VALUES ('72', '12', '1', '12');
+INSERT INTO `orders_detail` VALUES ('73', '12', '2', '12');
+INSERT INTO `orders_detail` VALUES ('74', '12', '2', '12');
+INSERT INTO `orders_detail` VALUES ('75', '12', '2', '12');
+INSERT INTO `orders_detail` VALUES ('76', '12', '2', '12');
+INSERT INTO `orders_detail` VALUES ('77', '12', '2', '12');
+INSERT INTO `orders_detail` VALUES ('78', '12', '2', '12');
+INSERT INTO `orders_detail` VALUES ('79', '12', '2', '12');
+INSERT INTO `orders_detail` VALUES ('80', '12', '2', '12');
+INSERT INTO `orders_detail` VALUES ('81', '12', '2', '12');
+INSERT INTO `orders_detail` VALUES ('82', '12', '2', '12');
+INSERT INTO `orders_detail` VALUES ('83', '12', '2', '12');
+INSERT INTO `orders_detail` VALUES ('84', '12', '2', '12');
+INSERT INTO `orders_detail` VALUES ('85', '12', '2', '12');
+INSERT INTO `orders_detail` VALUES ('86', '12', '2', '12');
+INSERT INTO `orders_detail` VALUES ('87', '12', '2', '12');
+INSERT INTO `orders_detail` VALUES ('88', '12', '2', '12');
+INSERT INTO `orders_detail` VALUES ('89', '12', '2', '12');
+INSERT INTO `orders_detail` VALUES ('90', '12', '2', '12');
+INSERT INTO `orders_detail` VALUES ('91', '12', '2', '12');
+INSERT INTO `orders_detail` VALUES ('92', '12', '2', '12');
+INSERT INTO `orders_detail` VALUES ('93', '12', '2', '12');
+INSERT INTO `orders_detail` VALUES ('94', '12', '2', '12');
+INSERT INTO `orders_detail` VALUES ('95', '12', '2', '12');
+INSERT INTO `orders_detail` VALUES ('96', '12', '2', '12');
+INSERT INTO `orders_detail` VALUES ('97', '12', '2', '12');
+INSERT INTO `orders_detail` VALUES ('98', '13', '1', '1');
+INSERT INTO `orders_detail` VALUES ('99', '13', '2', '1');
+INSERT INTO `orders_detail` VALUES ('100', '14', '1', '12');
+INSERT INTO `orders_detail` VALUES ('101', '14', '2', '12');
+INSERT INTO `orders_detail` VALUES ('102', '14', '2', '12');
+INSERT INTO `orders_detail` VALUES ('103', '14', '2', '12');
+INSERT INTO `orders_detail` VALUES ('104', '14', '2', '12');
+INSERT INTO `orders_detail` VALUES ('105', '14', '2', '12');
+INSERT INTO `orders_detail` VALUES ('106', '14', '2', '12');
+INSERT INTO `orders_detail` VALUES ('107', '14', '2', '12');
+INSERT INTO `orders_detail` VALUES ('108', '14', '2', '12');
+INSERT INTO `orders_detail` VALUES ('109', '14', '2', '12');
+INSERT INTO `orders_detail` VALUES ('110', '14', '2', '12');
+INSERT INTO `orders_detail` VALUES ('111', '14', '2', '12');
+INSERT INTO `orders_detail` VALUES ('112', '14', '2', '12');
+INSERT INTO `orders_detail` VALUES ('113', '14', '2', '12');
+INSERT INTO `orders_detail` VALUES ('114', '14', '2', '12');
+INSERT INTO `orders_detail` VALUES ('115', '14', '2', '12');
+INSERT INTO `orders_detail` VALUES ('116', '14', '2', '12');
+INSERT INTO `orders_detail` VALUES ('117', '14', '2', '12');
+INSERT INTO `orders_detail` VALUES ('118', '14', '2', '12');
+INSERT INTO `orders_detail` VALUES ('119', '14', '2', '12');
+INSERT INTO `orders_detail` VALUES ('120', '14', '2', '12');
+INSERT INTO `orders_detail` VALUES ('121', '14', '2', '12');
+INSERT INTO `orders_detail` VALUES ('122', '14', '2', '12');
+INSERT INTO `orders_detail` VALUES ('123', '14', '2', '12');
+INSERT INTO `orders_detail` VALUES ('124', '14', '2', '12');
+INSERT INTO `orders_detail` VALUES ('125', '14', '2', '12');
+INSERT INTO `orders_detail` VALUES ('126', '15', '1', '1');
+INSERT INTO `orders_detail` VALUES ('127', '15', '2', '1');
+INSERT INTO `orders_detail` VALUES ('128', '16', '1', '12');
+INSERT INTO `orders_detail` VALUES ('129', '16', '2', '12');
+INSERT INTO `orders_detail` VALUES ('130', '16', '2', '12');
+INSERT INTO `orders_detail` VALUES ('131', '16', '2', '12');
+INSERT INTO `orders_detail` VALUES ('132', '16', '2', '12');
+INSERT INTO `orders_detail` VALUES ('133', '16', '2', '12');
+INSERT INTO `orders_detail` VALUES ('134', '16', '2', '12');
+INSERT INTO `orders_detail` VALUES ('135', '16', '2', '12');
+INSERT INTO `orders_detail` VALUES ('136', '16', '2', '12');
+INSERT INTO `orders_detail` VALUES ('137', '16', '2', '12');
+INSERT INTO `orders_detail` VALUES ('138', '16', '2', '12');
+INSERT INTO `orders_detail` VALUES ('139', '16', '2', '12');
+INSERT INTO `orders_detail` VALUES ('140', '16', '2', '12');
+INSERT INTO `orders_detail` VALUES ('141', '16', '2', '12');
+INSERT INTO `orders_detail` VALUES ('142', '16', '2', '12');
+INSERT INTO `orders_detail` VALUES ('143', '16', '2', '12');
+INSERT INTO `orders_detail` VALUES ('144', '16', '2', '12');
+INSERT INTO `orders_detail` VALUES ('145', '16', '2', '12');
+INSERT INTO `orders_detail` VALUES ('146', '16', '2', '12');
+INSERT INTO `orders_detail` VALUES ('147', '16', '2', '12');
+INSERT INTO `orders_detail` VALUES ('148', '16', '2', '12');
+INSERT INTO `orders_detail` VALUES ('149', '16', '2', '12');
+INSERT INTO `orders_detail` VALUES ('150', '16', '2', '12');
+INSERT INTO `orders_detail` VALUES ('151', '16', '2', '12');
+INSERT INTO `orders_detail` VALUES ('152', '16', '2', '12');
+INSERT INTO `orders_detail` VALUES ('153', '16', '2', '12');
+INSERT INTO `orders_detail` VALUES ('154', '17', '1', '1');
+INSERT INTO `orders_detail` VALUES ('155', '17', '2', '1');
+INSERT INTO `orders_detail` VALUES ('156', '18', '1', '12');
+INSERT INTO `orders_detail` VALUES ('157', '18', '2', '12');
+INSERT INTO `orders_detail` VALUES ('158', '18', '2', '12');
+INSERT INTO `orders_detail` VALUES ('159', '18', '2', '12');
+INSERT INTO `orders_detail` VALUES ('160', '18', '2', '12');
+INSERT INTO `orders_detail` VALUES ('161', '18', '2', '12');
+INSERT INTO `orders_detail` VALUES ('162', '18', '2', '12');
+INSERT INTO `orders_detail` VALUES ('163', '18', '2', '12');
+INSERT INTO `orders_detail` VALUES ('164', '18', '2', '12');
+INSERT INTO `orders_detail` VALUES ('165', '18', '2', '12');
+INSERT INTO `orders_detail` VALUES ('166', '18', '2', '12');
+INSERT INTO `orders_detail` VALUES ('167', '18', '2', '12');
+INSERT INTO `orders_detail` VALUES ('168', '18', '2', '12');
+INSERT INTO `orders_detail` VALUES ('169', '18', '2', '12');
+INSERT INTO `orders_detail` VALUES ('170', '18', '2', '12');
+INSERT INTO `orders_detail` VALUES ('171', '18', '2', '12');
+INSERT INTO `orders_detail` VALUES ('172', '18', '2', '12');
+INSERT INTO `orders_detail` VALUES ('173', '18', '2', '12');
+INSERT INTO `orders_detail` VALUES ('174', '18', '2', '12');
+INSERT INTO `orders_detail` VALUES ('175', '18', '2', '12');
+INSERT INTO `orders_detail` VALUES ('176', '18', '2', '12');
+INSERT INTO `orders_detail` VALUES ('177', '18', '2', '12');
+INSERT INTO `orders_detail` VALUES ('178', '18', '2', '12');
+INSERT INTO `orders_detail` VALUES ('179', '18', '2', '12');
+INSERT INTO `orders_detail` VALUES ('180', '18', '2', '12');
+INSERT INTO `orders_detail` VALUES ('181', '18', '2', '12');
+INSERT INTO `orders_detail` VALUES ('182', '19', '1', '3');
+INSERT INTO `orders_detail` VALUES ('183', '19', '2', '2');
+INSERT INTO `orders_detail` VALUES ('184', '20', '1', '3');
+INSERT INTO `orders_detail` VALUES ('185', '20', '2', '2');
+INSERT INTO `orders_detail` VALUES ('186', '21', '1', '3');
+INSERT INTO `orders_detail` VALUES ('187', '21', '2', '2');
+INSERT INTO `orders_detail` VALUES ('188', '22', '1', '3');
+INSERT INTO `orders_detail` VALUES ('189', '22', '2', '2');
 
 -- ----------------------------
 -- Table structure for `permission`
@@ -550,9 +549,31 @@ INSERT INTO `user_address` VALUES ('5', '1', '行行行行想', '收件人1号',
 INSERT INTO `user_address` VALUES ('6', '1', '行行行行想', '收件人1号', '0', 'teltelteltel', '先生');
 INSERT INTO `user_address` VALUES ('8', '4', '', '', '0', '', '先生');
 INSERT INTO `user_address` VALUES ('11', '4', '', '', '0', '', '先生');
-INSERT INTO `user_address` VALUES ('16', '3', '深圳市顺兴工业区', 'xiaolong199489899', '1', '13148700419', '先生');
-INSERT INTO `user_address` VALUES ('18', '3', 'asdfa99090', 'asdfj456464564', '0', '13148700419', '先生');
-INSERT INTO `user_address` VALUES ('19', '3', 'ooooxxxxxiiiiijkkk', 'llloo', '0', '13148700419', '先生');
+INSERT INTO `user_address` VALUES ('16', '3', '深圳市顺兴工业区', '小龙', '0', '13148700419', '先生');
+INSERT INTO `user_address` VALUES ('18', '3', 'asdfa99090', '小李', '0', '13148700419', '先生');
+INSERT INTO `user_address` VALUES ('19', '3', 'ooooxxxxxiiiiijkkk', '小黑', '1', '13148700419', '先生');
+
+-- ----------------------------
+-- Table structure for `user_feedback`
+-- ----------------------------
+DROP TABLE IF EXISTS `user_feedback`;
+CREATE TABLE `user_feedback` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `message` varchar(100) NOT NULL,
+  `user_id` bigint(20) NOT NULL,
+  `time` bigint(11) NOT NULL,
+  `read` tinyint(4) DEFAULT '0' COMMENT '已读状态',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of user_feedback
+-- ----------------------------
+INSERT INTO `user_feedback` VALUES ('1', 'asdasfafdgsadg', '4', '1496215066', '0');
+INSERT INTO `user_feedback` VALUES ('2', 'asdasfafdgsadg', '2', '1496216465', '1');
+INSERT INTO `user_feedback` VALUES ('3', 'asdasfafdgsadg', '4', '1496217327', '0');
+INSERT INTO `user_feedback` VALUES ('4', 'asdasfafdgsadg', '4', '1496217505', '0');
+INSERT INTO `user_feedback` VALUES ('5', 'asdasfafdgsadg', '4', '1496217584', '0');
 
 -- ----------------------------
 -- Table structure for `user_role`
@@ -603,13 +624,19 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- View structure for `v_orders`
 -- ----------------------------
 DROP VIEW IF EXISTS `v_orders`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_orders` AS select `o`.`id` AS `id`,`o`.`userid` AS `userid`,`o`.`time` AS `time`,`o`.`order_num` AS `order_num`,(select sum(`od`.`prices`) from `orders_detail` `od` where (`od`.`order_id` = `o`.`id`) group by `od`.`order_id`) AS `total`,date_format(from_unixtime(`o`.`time`),'%Y-%m-%d %H:%i:%S') AS `create_time`,`o`.`state` AS `state`,(case `o`.`state` when 0 then '取消订单' when 1 then '未付款' when 2 then '已付款，未发货' when 3 then '已发货，未签收' else '已签收，订单完成' end) AS `status`,(select concat(`ua`.`receiver`,' ',`ua`.`sex`,' ',`ua`.`tel`,' ',`ua`.`address`) from `user_address` `ua` where (`ua`.`id` = `o`.`address_id`)) AS `address` from `orders` `o` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_orders` AS select `o`.`id` AS `id`,`o`.`userid` AS `userid`,`o`.`time` AS `time`,(select `vot`.`total` from `v_order_total` `vot` where (`vot`.`order_id` = `o`.`id`)) AS `total`,date_format(from_unixtime(`o`.`time`),'%Y-%m-%d %H:%i:%S') AS `create_time`,`o`.`state` AS `state`,(case `o`.`state` when 0 then '取消订单' when 1 then '未付款' when 2 then '已付款，未发货' when 3 then '已发货，未签收' else '已签收，订单完成' end) AS `status`,(select concat(`ua`.`receiver`,' ',`ua`.`sex`,' ',`ua`.`tel`,' ',`ua`.`address`) from `user_address` `ua` where (`ua`.`id` = `o`.`address_id`)) AS `address`,`o`.`order_num` AS `order_num` from `orders` `o` ;
 
 -- ----------------------------
 -- View structure for `v_orders_details`
 -- ----------------------------
 DROP VIEW IF EXISTS `v_orders_details`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_orders_details` AS select `od`.`id` AS `id`,`od`.`order_id` AS `order_id`,`od`.`goods_id` AS `goods_id`,(select `g`.`name` from `goods` `g` where (`od`.`goods_id` = `g`.`id`)) AS `goods_name`,(select concat('http://192.168.1.150:8080/TendaEHome/',`g`.`url`) from `goods` `g` where (`od`.`goods_id` = `g`.`id`)) AS `goods_url`,`od`.`num` AS `num`,`od`.`prices` AS `prices` from `orders_detail` `od` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_orders_details` AS select `od`.`id` AS `id`,`od`.`order_id` AS `order_id`,`od`.`goods_id` AS `goods_id`,(select `g`.`name` from `goods` `g` where (`od`.`goods_id` = `g`.`id`)) AS `goods_name`,(select concat('http://192.168.1.150:8080/TendaEHome/',`g`.`url`) from `goods` `g` where (`od`.`goods_id` = `g`.`id`)) AS `goods_url`,`od`.`num` AS `num`,cast((select (`od`.`num` * `g`.`price`) from `goods` `g` where (`od`.`goods_id` = `g`.`id`)) as decimal(11,2)) AS `prices` from `orders_detail` `od` ;
+
+-- ----------------------------
+-- View structure for `v_order_total`
+-- ----------------------------
+DROP VIEW IF EXISTS `v_order_total`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_order_total` AS select `od`.`order_id` AS `order_id`,cast(sum((`g`.`price` * `od`.`num`)) as decimal(11,2)) AS `total` from (`goods` `g` join `orders_detail` `od`) where (`g`.`id` = `od`.`goods_id`) group by `od`.`order_id` ;
 
 -- ----------------------------
 -- View structure for `v_tv`
@@ -628,3 +655,9 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- ----------------------------
 DROP VIEW IF EXISTS `v_user_address`;
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_user_address` AS select `u`.`id` AS `userid`,`ua`.`id` AS `id`,concat(`ua`.`receiver`,' ',`ua`.`sex`,' ',`ua`.`tel`,' ',`ua`.`address`) AS `address` from (`user_address` `ua` join `user` `u`) where ((`u`.`id` = `ua`.`userid`) and (`ua`.`default_` = 1)) ;
+
+-- ----------------------------
+-- View structure for `v_user_feedback`
+-- ----------------------------
+DROP VIEW IF EXISTS `v_user_feedback`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_user_feedback` AS select `uf`.`id` AS `id`,`uf`.`message` AS `message`,`uf`.`user_id` AS `user_id`,`uf`.`time` AS `time`,`uf`.`read` AS `read`,date_format(from_unixtime(`uf`.`time`),'%Y-%m-%d %H:%i:%S') AS `create_time`,`u`.`phone` AS `phone` from (`user_feedback` `uf` left join `user` `u` on((`u`.`id` = `uf`.`user_id`))) ;

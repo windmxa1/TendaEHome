@@ -106,7 +106,7 @@ public class OrdersDaoImp implements OrdersDao {
 		}
 	}
 
-	public boolean generateOrder(Orders orders, final List<OrdersDetail> details) {
+	public Long generateOrder(Orders orders, final List<OrdersDetail> details) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
 			Transaction ts = session.beginTransaction();
@@ -115,27 +115,24 @@ public class OrdersDaoImp implements OrdersDao {
 			session.doWork(new Work() {
 				public void execute(Connection connection) throws SQLException {
 					PreparedStatement stmt = connection
-							.prepareStatement("insert into orders_detail(order_id,goods_id,num,prices) values(?,?,?,?)");
+							.prepareStatement("insert into orders_detail(order_id,goods_id,num) values(?,?,?)");
 					connection.setAutoCommit(false);
 					for (OrdersDetail d : details) {
-						System.out.println("1");
 						stmt.setLong(1, id);
 						stmt.setLong(2, d.getGoodsId());
 						stmt.setDouble(3, d.getNum());
-						stmt.setDouble(4, d.getPrices());
 						stmt.addBatch();
 					}
 					stmt.executeBatch();
 				}
 			});
-
 			ts.commit();
 			session.flush();
 			session.clear();
-			return true;
+			return id;
 		} catch (Exception e) {
 			e.printStackTrace();
-			return false;
+			return -1L;
 		} finally {
 			HibernateSessionFactory.closeSession();
 		}
@@ -160,7 +157,6 @@ public class OrdersDaoImp implements OrdersDao {
 				query.setMaxResults(limit);
 			}
 			query.setFirstResult(start);
-			query.setMaxResults(limit);
 			List<VOrdersDetails> vOrders = query.list();
 			List<VOrdersDetailsId> list = new ArrayList<VOrdersDetailsId>();
 			for (VOrdersDetails v : vOrders) {
@@ -180,12 +176,16 @@ public class OrdersDaoImp implements OrdersDao {
 			Integer state) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
-			String sql = "from VOrders v where v.id.state=? order by v.id.time desc";
-			Query query = session.createQuery(sql);
+			String sql = "";
+			Query query = null;
 			if (state == null) {
-				state = 2;
+				sql = "from VOrders v order by v.id.time desc";
+				query = session.createQuery(sql);
+			} else {
+				sql = "from VOrders v where v.id.state=? order by v.id.time desc";
+				query = session.createQuery(sql);
+				query.setParameter(0, state);
 			}
-			query.setParameter(0, state);
 			if (start == null) {
 				start = 0;
 			}
@@ -282,7 +282,7 @@ public class OrdersDaoImp implements OrdersDao {
 		try {
 			Session session = HibernateSessionFactory.getSession();
 			Transaction ts = session.beginTransaction();
-			String sql = "delete Orders where id=? and state=0";
+			String sql = "delete Orders where id=? and (state=0 or state=1)";
 			Query query = session.createQuery(sql);
 			query.setParameter(0, id);
 			int a = query.executeUpdate();
@@ -299,9 +299,17 @@ public class OrdersDaoImp implements OrdersDao {
 	public Long getCountByState(Integer state) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
-			String sql = "select count(id) from Orders where state=?";
-			Query query = session.createQuery(sql);
-			query.setParameter(0, state);
+			String sql = "";
+			Query query = null;
+			if (state == null) {
+				sql = "select count(id) from Orders ";
+				query = session.createQuery(sql);
+			} else {
+				sql = "select count(id) from Orders where state=?";
+				query = session.createQuery(sql);
+				query.setParameter(0, state);
+			}
+
 			Long a = (Long) query.uniqueResult();
 			return a;
 		} catch (Exception e) {
@@ -309,6 +317,24 @@ public class OrdersDaoImp implements OrdersDao {
 		} finally {
 			HibernateSessionFactory.closeSession();
 		}
+	}
+
+	@Override
+	public Long getDetailsCount(Long orderId) {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			String sql = "select count(id) from OrdersDetail where orderId=?";
+			Query query = session.createQuery(sql);
+			query.setParameter(0, orderId);
+			query.setMaxResults(1);
+			Long a = (Long) query.uniqueResult();
+			return a;
+		} catch (Exception e) {
+			return 0L;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+
 	}
 
 }

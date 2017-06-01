@@ -8,11 +8,15 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.bean.OrderList;
+import org.dao.GoodsDao;
 import org.dao.OrdersDao;
+import org.dao.imp.GoodsDaoImp;
 import org.dao.imp.OrdersDaoImp;
 import org.model.Orders;
 import org.model.OrdersDetail;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,6 +38,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @RequestMapping("/app/orders")
 public class OrdersController {
 	OrdersDao oDao;
+	GoodsDao gDao;
 	// Long userid;
 	Map<String, Object> data;
 
@@ -97,23 +102,6 @@ public class OrdersController {
 		return ResultUtils.toJson(100, "", data);
 	}
 
-	@RequestMapping(value = "/test", method = RequestMethod.POST)
-	@ResponseBody
-	public Object test(HttpServletRequest request,
-			@RequestParam Long addressId, @RequestParam String details) {
-		System.out.println(addressId);
-		System.out.println(details);
-		return ResultUtils.toJson(100, "", data);
-	}
-
-	@RequestMapping(value = "/test1", method = RequestMethod.POST)
-	@ResponseBody
-	public Object test1(HttpServletRequest request,
-			@RequestParam Object addressId) {
-		System.out.println(addressId);
-		return ResultUtils.toJson(100, "", data);
-	}
-
 	@RequestMapping("/cancelOrder")
 	@ResponseBody
 	public Object cancelOrder(HttpServletRequest request, Long id) {
@@ -133,43 +121,44 @@ public class OrdersController {
 	@RequestMapping("/addOrder")
 	@ResponseBody
 	public Object addOrder(HttpServletRequest request, Long addressId,
-			String details) {
+			@RequestBody OrderList details, Double total,
+			@RequestParam(value = "pay_way") Integer PayWay) {
 		oDao = new OrdersDaoImp();
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");
 		Long userid = Long.parseLong(""
 				+ TokenUtils.getValue(token, TokenUtils.getKey(), "userid"));
-		System.out.println("userid:" + userid);
 		Long time = System.currentTimeMillis();
 		String orderNum = time + Utils.ran6();
 		/*********************************/
 		Orders orders = new Orders(userid, time / 1000, 0, addressId, orderNum);
-		ObjectMapper mapper = JsonUtils.getMapperInstance();
-		JavaType javaType = JsonUtils.getCollectionType(ArrayList.class,
-				OrdersDetail.class);
-		List<OrdersDetail> details2 = null;
-		try {
-			details2 = mapper.readValue(details, javaType);
-		} catch (JsonParseException e) {
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		if (oDao.generateOrder(orders, details2)) {
-			String clientIp = request.getRemoteAddr();
-			// 订单总价不能包含小数，单位为分，因此乘100并转整型
-			// 不使用APP端传递的总价是为了防止数据被恶意修改导致无法匹配
-			Double total = oDao.getTotal(orderNum);
-			Integer fee = (int) (total * 100);
-			data = WXAPI.doPay(orderNum, fee, clientIp);
-			if (data == null) {
-				System.out.println("data==null");
-				return ResultUtils.toJson(101, "生成订单失败，请重试", "");
+		Long id = oDao.generateOrder(orders, details.getDetails());
+		if (id > 0) {
+			Double Realtotal = oDao.getTotal(orderNum);
+			if (Realtotal != total) {
+				oDao.deleteOrder(id);
+				return ResultUtils.toJson(101, "服务器繁忙，请重试", "商品价格与实际价格不符");
+			}
+			switch (PayWay) {
+			case 0:// 微信
+				String clientIp = request.getRemoteAddr();
+				// 订单总价不能包含小数，单位为分，因此乘100并转整型
+				// 不使用APP端传递的总价是为了防止数据被恶意修改导致无法匹配
+				Integer fee = (int) (Realtotal * 100);
+				data = WXAPI.doPay(orderNum, fee, clientIp);
+				if (data == null) {
+					oDao.deleteOrder(id);
+					System.out.println("data==null");
+					return ResultUtils.toJson(101, "生成订单失败，请重试", "");
+				}
+				break;
+			case 1:// 支付宝
+				break;
+			default:
+				break;
 			}
 			// data.put("orderNum", orderNum);
-			return ResultUtils.toJson(100, "生成订单成功", data);
+			return ResultUtils.toJson(100, "生成订单成功", "");
 		} else {
 			return ResultUtils.toJson(101, "生成订单失败，请重试", "");
 		}

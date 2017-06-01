@@ -11,10 +11,13 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.dao.UserAddressDao;
 import org.dao.UserDao;
+import org.dao.UserFeedbackDao;
 import org.dao.imp.UserAddressDaoImp;
 import org.dao.imp.UserDaoImp;
+import org.dao.imp.UserFeedbackDaoImp;
 import org.model.User;
 import org.model.UserAddress;
+import org.model.UserFeedback;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,6 +32,7 @@ import org.view.VUserId;
 public class UserController {
 	UserDao uDao;
 	UserAddressDao uAddressDao;
+	UserFeedbackDao uFeedbackDao;
 	Map<String, Object> data;
 
 	// Long userid;
@@ -265,16 +269,11 @@ public class UserController {
 	/**
 	 * 修改默认地址
 	 */
-	@RequestMapping("/updateDefault")
+	@RequestMapping("/updateDefaultAddress")
 	@ResponseBody
-	public Object updateDefault(HttpServletRequest request, Long id,
+	public Object updateDefaultAddress(HttpServletRequest request, Long id,
 			Boolean default_) {
 		uAddressDao = new UserAddressDaoImp();
-		/**** 获取header中的token并取出userid ****/
-		String token = request.getHeader("token");
-		Long userid = Long.parseLong(""
-				+ TokenUtils.getValue(token, TokenUtils.getKey(), "userid"));
-		/*********************************/
 		// System.out.println(default_);
 		if (uAddressDao.updateDefault(id, default_)) {
 			return ResultUtils.toJson(100, "修改成功", "");
@@ -283,4 +282,47 @@ public class UserController {
 		}
 	}
 
+	/**
+	 * 获取默认地址
+	 */
+	@RequestMapping("/getDefaultAddress")
+	@ResponseBody
+	public Object getDefaultAddress(HttpServletRequest request) {
+		uAddressDao = new UserAddressDaoImp();
+		/**** 获取header中的token并取出userid ****/
+		String token = request.getHeader("token");
+		Long userid = Long.parseLong(""
+				+ TokenUtils.getValue(token, TokenUtils.getKey(), "userid"));
+		/*********************************/
+		UserAddress userAddress = uAddressDao.getDefaultAddress(userid);
+		if (userAddress == null) {
+			return ResultUtils.toJson(100, "您没有设置默认地址", "");
+		}
+		data = new HashMap<>();
+		data.put("address", userAddress);
+		return ResultUtils.toJson(100, "", data);
+
+	}
+
+	/**
+	 * 用户反馈
+	 */
+	@RequestMapping("/addFeedback")
+	@ResponseBody
+	public Object addFeedback(HttpServletRequest request, String message) {
+		uFeedbackDao = new UserFeedbackDaoImp();
+		/**** 获取header中的token并取出userid ****/
+		String token = request.getHeader("token");
+		Long userid = Long.parseLong(""
+				+ TokenUtils.getValue(token, TokenUtils.getKey(), "userid"));
+		/*********************************/
+		Long time = System.currentTimeMillis() / 1000;
+//		System.out.println(message);
+//		System.out.println(userid);
+		UserFeedback userFeedback = new UserFeedback(message, userid, time);
+		if (uFeedbackDao.saveOrUpdate(userFeedback) > 0) {
+			return ResultUtils.toJson(100, "反馈成功，我们会尽快处理", "");
+		}
+		return ResultUtils.toJson(101, "反馈失败，服务器繁忙，请重试", "");
+	}
 }

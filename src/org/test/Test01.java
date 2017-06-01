@@ -28,11 +28,11 @@ public class Test01 {
 		OrdersDao oDao = new OrdersDaoImp();
 		Orders order = new Orders(1L, System.currentTimeMillis() / 1000, 0, 1L,"020215151");
 		OrdersDetail detail1 = new OrdersDetail();
-		detail1.setNum(1d);
+		detail1.setNum(1);
 		detail1.setPrices(1d);
 		detail1.setGoodsId(1L);
 		OrdersDetail detail2 = new OrdersDetail();
-		detail2.setNum(1d);
+		detail2.setNum(1);
 		detail2.setPrices(1d);
 		detail2.setGoodsId(2L);
 
