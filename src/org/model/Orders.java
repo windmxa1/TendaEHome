@@ -14,11 +14,20 @@ public class Orders implements java.io.Serializable {
 	private Integer state;
 	private Long addressId;
 	private String orderNum;
+	private Integer pay_way;
+	private Double total;
 
 	// Constructors
 
 	/** default constructor */
 	public Orders() {
+	}
+
+	public Orders(Long userid, Long time, Long addressId, String orderNum) {
+		this.userid = userid;
+		this.time = time;
+		this.addressId = addressId;
+		this.orderNum = orderNum;
 	}
 
 	/** full constructor */
@@ -79,6 +88,22 @@ public class Orders implements java.io.Serializable {
 
 	public void setOrderNum(String orderNum) {
 		this.orderNum = orderNum;
+	}
+
+	public Integer getPay_way() {
+		return pay_way;
+	}
+
+	public void setPay_way(Integer pay_way) {
+		this.pay_way = pay_way;
+	}
+
+	public Double getTotal() {
+		return total;
+	}
+
+	public void setTotal(Double total) {
+		this.total = total;
 	}
 
 }

@@ -1,5 +1,7 @@
 package org.view;
 
+import java.math.BigDecimal;
+
 /**
  * VGoodsId entity. @author MyEclipse Persistence Tools
  */
@@ -9,20 +11,21 @@ public class VGoodsId implements java.io.Serializable {
 	// Fields
 
 	private Long goodsId;
-	private String name;
-	private Double price;
+	private String name;		//名称
+	private Double price;		//单价
 	private String url;
 	private Long catalogId;
-	private String description;
-	private Long time;
-	private String createTime;
-	private String catalog;
-	private Double count;
-	private Double disPrice;
-	private String startDate;
+	private String description;//描述
+	private Long time;		
+	private Short state;
+	private String createTime;	//最新修改时间
+	private String catalog;		//商品种类
+	private BigDecimal count;		//商品已售数目
+	private Double disPrice;	
+	private String startDate;	
 	private String endDate;
-	private String goodsUrl;
-	private String origin;
+	private String goodsUrl;	//商品图片地址
+	private String origin;		
 
 	// Constructors
 
@@ -43,9 +46,10 @@ public class VGoodsId implements java.io.Serializable {
 
 	/** full constructor */
 	public VGoodsId(Long goodsId, String name, Double price, String url,
-			Long catalogId, String description, Long time, String createTime,
-			String catalog, Double count, Double disPrice, String startDate,
-			String endDate, String goodsUrl, String origin) {
+			Long catalogId, String description, Long time, Short state,
+			String createTime, String catalog, BigDecimal count,
+			Double disPrice, String startDate, String endDate, String goodsUrl,
+			String origin) {
 		this.goodsId = goodsId;
 		this.name = name;
 		this.price = price;
@@ -53,6 +57,7 @@ public class VGoodsId implements java.io.Serializable {
 		this.catalogId = catalogId;
 		this.description = description;
 		this.time = time;
+		this.state = state;
 		this.createTime = createTime;
 		this.catalog = catalog;
 		this.count = count;
@@ -137,11 +142,11 @@ public class VGoodsId implements java.io.Serializable {
 		this.catalog = catalog;
 	}
 
-	public Double getCount() {
+	public BigDecimal getCount() {
 		return this.count;
 	}
 
-	public void setCount(Double count) {
+	public void setCount(BigDecimal count) {
 		this.count = count;
 	}
 
@@ -185,6 +190,14 @@ public class VGoodsId implements java.io.Serializable {
 		this.origin = origin;
 	}
 
+	public Short getState() {
+		return state;
+	}
+
+	public void setState(Short state) {
+		this.state = state;
+	}
+
 	public boolean equals(Object other) {
 		if ((this == other))
 			return true;
@@ -217,6 +230,9 @@ public class VGoodsId implements java.io.Serializable {
 				&& ((this.getTime() == castOther.getTime()) || (this.getTime() != null
 						&& castOther.getTime() != null && this.getTime()
 						.equals(castOther.getTime())))
+				&& ((this.getState() == castOther.getState()) || (this
+						.getState() != null && castOther.getState() != null && this
+						.getState().equals(castOther.getState())))
 				&& ((this.getCreateTime() == castOther.getCreateTime()) || (this
 						.getCreateTime() != null
 						&& castOther.getCreateTime() != null && this
@@ -266,6 +282,8 @@ public class VGoodsId implements java.io.Serializable {
 						.hashCode());
 		result = 37 * result
 				+ (getTime() == null ? 0 : this.getTime().hashCode());
+		result = 37 * result
+				+ (getState() == null ? 0 : this.getState().hashCode());
 		result = 37
 				* result
 				+ (getCreateTime() == null ? 0 : this.getCreateTime()

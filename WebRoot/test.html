@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>index.html</title>
+
+<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+<meta http-equiv="description" content="this is my page">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+<!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="css/bootstrap.min.css" type="text/css"></link>
+<script type="text/javascript" src="js/md5.js"></script>
+<script type="text/javascript">
+	$(function() {
+		var token1 = "";
+		var user = {
+			phone : 13590440185,
+			password : 123456
+		};
+		$.ajax({
+			type : "post",
+			url : "app/user/login",
+			data : user,
+			dataType : "json",
+			//contentType : 'application/json;charset=utf-8',
+			async : false,
+			cache : false,
+			success : function(data) {
+				token1 = data.data.token;
+				console.log(token1);
+			},
+			error : function(data) {
+				alert("error");
+			}
+		});
+		var token2 = "";
+		var admin = {
+			username : 22,
+			password : hex_md5("22")
+		};
+		$.ajax({
+			type : "post",
+			url : "back/admin/login",
+			data : admin,
+			dataType : "json",
+			//contentType : 'application/json;charset=utf-8',
+			async : false,
+			cache : false,
+			success : function(data) {
+				token2 = data.data.token;
+				console.log(token2);
+			},
+			error : function(data) {
+				alert("error");
+			}
+		});
+		$("#btn1").click(function() {
+			var xml = "";
+			$.ajax({
+				type : "post",
+				url : "back/orders/notifyWxPay",
+				headers : {
+					"token" : token1
+				},
+				data : xml,
+				contentType : "text/xml; charset=utf-8",
+				dataType : "json",
+				success : function(data) {
+					console.log(JSON.stringify(data));
+					//console.log(data);
+				},
+				error : function(data) {
+					alert("error");
+				}
+			});
+		});
+		$("#btn2").click(function() {
+			var json = {
+				message : "asdasfafdgsadg"
+			};
+			$.ajax({
+				type : "post",
+				url : "app/user/addFeedback",
+				headers : {
+					"token" : token1
+				},
+				data : json,
+				//contentType : "text/xml; charset=utf-8",
+				dataType : "json",
+				success : function(data) {
+					console.log(JSON.stringify(data));
+					//console.log(data);
+				},
+				error : function(data) {
+					alert("error");
+				}
+			});
+		});
+		$("#btn3").click(function() {
+			var json = {};
+			$.ajax({
+				type : "post",
+				url : "back/user/getFeedbackList",
+				headers : {
+					"token" : token2
+				},
+				data : json,
+				//contentType : "text/xml; charset=utf-8",
+				dataType : "json",
+				success : function(data) {
+					console.log(JSON.stringify(data));
+					//console.log(data);
+				},
+				error : function(data) {
+					alert("error");
+				}
+			});
+		});
+		$("#btn4").click(function() {
+			var json = {
+				id : 3
+			};
+			$.ajax({
+				type : "post",
+				url : "back/user/deleteFeedback",
+				headers : {
+					"token" : token2
+				},
+				data : json,
+				//contentType : "text/xml; charset=utf-8",
+				dataType : "json",
+				success : function(data) {
+					console.log(JSON.stringify(data));
+					//console.log(data);
+				},
+				error : function(data) {
+					alert("error");
+				}
+			});
+		});
+		$("#btn5").click(function() {
+			var json = {
+				id : 3
+			};
+			$.ajax({
+				type : "post",
+				url : "back/user/updateFeedbackState",
+				headers : {
+					"token" : token2
+				},
+				data : json,
+				//contentType : "text/xml; charset=utf-8",
+				dataType : "json",
+				success : function(data) {
+					console.log(JSON.stringify(data));
+					//console.log(data);
+				},
+				error : function(data) {
+					alert("error");
+				}
+			});
+		});
+		$("#btn6").click(function() {
+			var json = {
+				id : 12
+			};
+			$.ajax({
+				type : "post",
+				url : "back/goods/delCatalog",
+				headers : {
+					"token" : token2
+				},
+				data : json,
+				//contentType : "text/xml; charset=utf-8",
+				dataType : "json",
+				success : function(data) {
+					console.log(JSON.stringify(data));
+					//console.log(data);
+				},
+				error : function(data) {
+					alert("error");
+				}
+			});
+		});
+		$("#btn7").click(function() {
+			var json = {
+				"details" : [ {
+					"goodsId" : 3,
+					"time" : 12564521
+				}, {
+					"goodsId" : 1,
+					"time" : 13546161
+				} ]
+			};
+			console.log(JSON.stringify(json));
+			$.ajax({
+				type : "post",
+				url : "app/goods/test",
+				headers : {
+					"token" : token1
+				},
+				data : JSON.stringify(json),
+				//contentType : "text/xml; charset=utf-8",
+				contentType : "application/json",
+				dataType : "json",
+				success : function(data) {
+					console.log(JSON.stringify(data));
+					//console.log(data);
+				},
+				error : function(data) {
+					alert("error");
+				}
+			});
+		});
+	});
+</script>
+</head>
+<body>
+	<div class="container">
+		<input type="button" value="postXml" id="btn1"> <input
+			type="button" value="addFeedback" id="btn2"> <input
+			type="button" value="getFeedbackList" id="btn3"> <input
+			type="button" value="deleteFeedback" id="btn4"> <input
+			type="button" value="updateFeedbackState" id="btn5"> <input
+			type="button" value="delCatalog" id="btn6"> <input
+			type="button" value="addOrder" id="btn7">
+	</div>
+</body>
+</html>

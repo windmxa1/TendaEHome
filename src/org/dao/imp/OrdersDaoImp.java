@@ -138,6 +138,22 @@ public class OrdersDaoImp implements OrdersDao {
 		}
 	}
 
+	public List<String> getUrlList(Long orderId) {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			String sql = "select vg.id.goodsUrl from VOrdersDetails v,VGoods vg where v.id.orderId=? and v.id.goodsId=vg.id.goodsId ";
+			Query query = session.createQuery(sql);
+			query.setParameter(0, orderId);
+			List<String> list = query.list();
+			return list;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
 	@Override
 	public List<VOrdersDetailsId> getDetailList(Long orderId, Integer start,
 			Integer limit) {
@@ -286,6 +302,12 @@ public class OrdersDaoImp implements OrdersDao {
 			Query query = session.createQuery(sql);
 			query.setParameter(0, id);
 			int a = query.executeUpdate();
+
+			String sql2 = "delete OrdersDetail where orderId = ?";
+			Query query2 = session.createQuery(sql2);
+			query2.setParameter(0, id);
+			query2.executeUpdate();
+
 			ts.commit();
 			return a;
 		} catch (Exception e) {

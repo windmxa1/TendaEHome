@@ -16,6 +16,7 @@ public class Goods implements java.io.Serializable {
 	private String description;
 	private Long time;
 	private String origin;
+	private Short state;
 
 	// Constructors
 
@@ -35,7 +36,7 @@ public class Goods implements java.io.Serializable {
 
 	/** full constructor */
 	public Goods(String name, Double price, String url, Long catalogId,
-			String description, Long time, String origin) {
+			String description, Long time, String origin, Short state) {
 		this.name = name;
 		this.price = price;
 		this.url = url;
@@ -43,6 +44,7 @@ public class Goods implements java.io.Serializable {
 		this.description = description;
 		this.time = time;
 		this.origin = origin;
+		this.state = state;
 	}
 
 	// Property accessors
@@ -109,6 +111,14 @@ public class Goods implements java.io.Serializable {
 
 	public void setOrigin(String origin) {
 		this.origin = origin;
+	}
+
+	public Short getState() {
+		return this.state;
+	}
+
+	public void setState(Short state) {
+		this.state = state;
 	}
 
 }

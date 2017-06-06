@@ -166,6 +166,14 @@ public class UserController {
 				+ file.getOriginalFilename();
 		String filePath = path + File.separator + filename;
 		File newFile = new File(filePath);
+		
+		if (!newFile.getParentFile().exists()) {
+			System.out.println("目标文件的目录不存在，准备创建目录...");
+			if (!newFile.getParentFile().mkdirs()) {
+				System.out.println("创建目录失败");
+				return ResultUtils.toJson(101, "服务器繁忙请重试", "");
+			}
+		}
 		// 通过CommonsMultipartFile的方法直接写文件（注意这个时候）
 		file.transferTo(newFile);
 
@@ -317,8 +325,8 @@ public class UserController {
 				+ TokenUtils.getValue(token, TokenUtils.getKey(), "userid"));
 		/*********************************/
 		Long time = System.currentTimeMillis() / 1000;
-//		System.out.println(message);
-//		System.out.println(userid);
+		// System.out.println(message);
+		// System.out.println(userid);
 		UserFeedback userFeedback = new UserFeedback(message, userid, time);
 		if (uFeedbackDao.saveOrUpdate(userFeedback) > 0) {
 			return ResultUtils.toJson(100, "反馈成功，我们会尽快处理", "");

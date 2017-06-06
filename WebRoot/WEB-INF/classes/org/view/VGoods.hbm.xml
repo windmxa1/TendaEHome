@@ -28,14 +28,17 @@
             <key-property name="time" type="java.lang.Long">
                 <column name="time" />
             </key-property>
+            <key-property name="state" type="java.lang.Short">
+                <column name="state" />
+            </key-property>
             <key-property name="createTime" type="java.lang.String">
                 <column name="create_time" length="24" />
             </key-property>
             <key-property name="catalog" type="java.lang.String">
                 <column name="catalog" length="20" />
             </key-property>
-            <key-property name="count" type="java.lang.Double">
-                <column name="count" precision="33" />
+            <key-property name="count" type="java.math.BigDecimal">
+                <column name="count" precision="32" scale="0" />
             </key-property>
             <key-property name="disPrice" type="java.lang.Double">
                 <column name="dis_price" precision="11" />

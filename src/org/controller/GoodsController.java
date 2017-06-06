@@ -39,10 +39,10 @@ public class GoodsController {
 	public Object getGoodsList(Integer start, Integer limit) {
 		gDao = new GoodsDaoImp();
 		data = new HashMap<String, Object>();
-		List<VGoodsId> list = gDao.getList(start, limit);
+		List<VGoodsId> list = gDao.getList(start, limit, (short) 1);
 		if (list != null) {
 			data.put("list", list);
-			data.put("total", gDao.getCount());
+			data.put("total", gDao.getCount((short) 1));
 		} else {
 			data.put("list", new ArrayList<>());
 		}
@@ -55,10 +55,10 @@ public class GoodsController {
 	public Object searchGoods(Integer start, Integer limit, String key) {
 		gDao = new GoodsDaoImp();
 		data = new HashMap<String, Object>();
-		List<VGoodsId> list = gDao.getGoodsByKey(start, limit, key);
+		List<VGoodsId> list = gDao.getGoodsByKey(start, limit, key, (short) 1);
 		if (list != null) {
 			data.put("list", list);
-			data.put("total", gDao.getCountByKey(key));
+			data.put("total", gDao.getCountByKey(key, (short) 1));
 		} else {
 			data.put("list", new ArrayList<>());
 		}
@@ -141,11 +141,19 @@ public class GoodsController {
 				+ file.getOriginalFilename();
 		String filePath = path + File.separator + catalogId + File.separator
 				+ filename;
+		// System.out.println(filePath);
 		File newFile = new File(filePath);
+		if (!newFile.getParentFile().exists()) {
+			System.out.println("目标文件的目录不存在，准备创建目录...");
+			if (!newFile.getParentFile().mkdirs()) {
+				System.out.println("创建目录失败");
+				return ResultUtils.toJson(101, "服务器繁忙请重试", "");
+			}
+		}
 		// 通过CommonsMultipartFile的方法直接写文件（注意这个时候）
 		file.transferTo(newFile);
 
-		String url = "upload/goods/" + filename;
+		String url = "upload/goods/" + catalogId + "/" + filename;
 
 		Goods goods = new Goods(name, price, url, catalogId, time);
 		if (description != null) {
@@ -154,6 +162,7 @@ public class GoodsController {
 		if (origin != null) {
 			goods.setOrigin(origin);
 		}
+		gDao = new GoodsDaoImp();
 		if (gDao.saveOrUpdate(goods) > 0) {
 			return ResultUtils.toJson(100, "添加成功", "");
 		}
@@ -205,9 +214,16 @@ public class GoodsController {
 			String filePath = path + File.separator + catalogId
 					+ File.separator + filename;
 			File newFile = new File(filePath);
+			if (!newFile.getParentFile().exists()) {
+				System.out.println("目标文件的目录不存在，准备创建目录...");
+				if (!newFile.getParentFile().mkdirs()) {
+					System.out.println("创建目录失败");
+					return ResultUtils.toJson(101, "服务器繁忙请重试", "");
+				}
+			}
 			// 通过CommonsMultipartFile的方法直接写文件（注意这个时候）
 			file.transferTo(newFile);
-			url = "upload/goods/" + filename;
+			url = "upload/goods/" + catalogId + "/" + filename;
 		}
 		// 删除之前上传的商品图片
 		Goods g = gDao.getGoods(id);
@@ -220,7 +236,7 @@ public class GoodsController {
 			}
 		}
 		Goods goods = new Goods(name, price, url, catalogId, description, time,
-				origin);
+				origin, (short) 1);
 		goods.setId(id);
 		if (gDao.saveOrUpdate(goods) == 0) {
 			return ResultUtils.toJson(100, "修改成功", "");
@@ -234,10 +250,11 @@ public class GoodsController {
 	public Object getCataGoods(Integer start, Integer limit, Long catalogId) {
 		gDao = new GoodsDaoImp();
 		data = new HashMap<String, Object>();
-		List<VGoodsId> list = gDao.getCataGoods(start, limit, catalogId);
+		List<VGoodsId> list = gDao.getCataGoods(start, limit, catalogId,
+				(short) 1);
 		if (list != null) {
 			data.put("list", list);
-			data.put("total", gDao.getCountByCatalog(catalogId));
+			data.put("total", gDao.getCountByCatalog(catalogId, (short) 1));
 		} else {
 			data.put("list", new ArrayList<>());
 		}

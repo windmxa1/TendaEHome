@@ -18,7 +18,10 @@ public interface OrdersDao {
 	 * 获取单个订单
 	 */
 	public VOrdersId getOrder(String orderNum);
-
+	/**
+	 * 获取订单中商品的图片数组
+	 */
+	public List<String> getUrlList(Long orderId);
 	/**
 	 * 获取订单详情列表
 	 */

@@ -1,8 +1,6 @@
 package org.controller;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -17,25 +15,15 @@ import org.bean.WXRETURN;
 import org.dao.OrdersDao;
 import org.dao.imp.OrdersDaoImp;
 import org.dom4j.DocumentException;
-import org.model.Orders;
-import org.model.OrdersDetail;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.util.JsonUtils;
 import org.util.ResultUtils;
-import org.util.TokenUtils;
 import org.util.Utils;
 import org.util.WXAPI;
-import org.util.XmlUtils;
 import org.view.VOrdersDetailsId;
 import org.view.VOrdersId;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.org.apache.bcel.internal.generic.NEW;
-import com.sun.org.apache.xml.internal.security.utils.XMLUtils;
 
 @Controller
 @RequestMapping("/back/orders")
@@ -97,9 +85,10 @@ public class OrdersController {
 			List<VOrdersDetailsId> details = oDao.getDetailList(v.getId(),
 					start, limit);
 			v.setDetails(details);
-			data.put("order", v);
+			data.put("list", v);
+			data.put("total",1);
 		} else {
-			data.put("order", "");
+			data.put("list", new ArrayList<>());
 		}
 		return ResultUtils.toJson(100, "", data);
 	}

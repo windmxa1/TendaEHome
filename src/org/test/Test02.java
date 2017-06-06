@@ -3,6 +3,7 @@ package org.test;
 import org.dao.AdminDao;
 import org.dao.GarouselCatalogDao;
 import org.dao.GarouselDao;
+import org.dao.GoodsCatalogDao;
 import org.dao.GoodsDao;
 import org.dao.OrdersDao;
 import org.dao.UserAddressDao;
@@ -10,11 +11,16 @@ import org.dao.UserDao;
 import org.dao.imp.AdminDaoImp;
 import org.dao.imp.GarouselCatalogDaoImp;
 import org.dao.imp.GarouselDaoImp;
+import org.dao.imp.GoodsCatalogDaoImp;
 import org.dao.imp.GoodsDaoImp;
 import org.dao.imp.OrdersDaoImp;
 import org.dao.imp.UserAddressDaoImp;
 import org.dao.imp.UserDaoImp;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.model.GarouselCatalog;
+import org.util.HibernateSessionFactory;
 import org.util.JsonUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -26,22 +32,29 @@ public class Test02 {
 	final static UserDao uDao = new UserDaoImp();
 	final static UserAddressDao uaDao = new UserAddressDaoImp();
 	final static GoodsDao gDao = new GoodsDaoImp();
+	final static GoodsCatalogDao gcDao = new GoodsCatalogDaoImp();
 	final static GarouselDao G_DAO = new GarouselDaoImp();
 	final static GarouselCatalogDao GC_DAO = new GarouselCatalogDaoImp();
 	final static ObjectMapper mapper = JsonUtils.getMapperInstance();
-	
-	public static void main(String[] args) throws JsonProcessingException, InterruptedException {
+
+	public static void main(String[] args) throws JsonProcessingException,
+			InterruptedException {
 		GarouselCatalog gCatalog = new GarouselCatalog("asdas");
 		gCatalog.setId(5);
-//		GC_DAO.saveOrUpdate(gCatalog);
+		// GC_DAO.saveOrUpdate(gCatalog);
 		Long time = System.currentTimeMillis();
 		System.out.println(oDao.getOrder("0132"));
-//		Thread.sleep(5*1000);
-		System.out.println(System.currentTimeMillis()-time);
+		// Thread.sleep(5*1000);
+		System.out.println(System.currentTimeMillis() - time);
 		time = System.currentTimeMillis();
-		System.out.println(gDao.getGoods(3L));
-//		System.out.println(oDao.getTotal("0132"));
-		System.out.println(System.currentTimeMillis()-time);
+		System.out.println(System.currentTimeMillis() - time);
 		System.out.println(oDao.getCountByState(2));
+
+		System.out.println(gDao.delete(8L));
+		System.out.println(oDao.getUrlList(3L));
+
+		// gDao.delete((long) 3);
+		// gcDao.delete(3L);
+
 	}
 }

@@ -3,7 +3,6 @@ package org.dao;
 import java.util.List;
 
 import org.model.Admin;
-import org.view.VAdmin;
 import org.view.VAdminId;
 
 public interface AdminDao {

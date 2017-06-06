@@ -33,5 +33,8 @@
                 <comment>源产地</comment>
             </column>
         </property>
+        <property name="state" type="java.lang.Short">
+            <column name="state" />
+        </property>
     </class>
 </hibernate-mapping>

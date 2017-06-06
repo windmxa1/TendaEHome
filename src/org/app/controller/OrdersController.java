@@ -1,6 +1,5 @@
 package org.app.controller;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,31 +7,21 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.bean.OrderList;
+import org.bean.OrderModel;
 import org.dao.GoodsDao;
 import org.dao.OrdersDao;
-import org.dao.imp.GoodsDaoImp;
 import org.dao.imp.OrdersDaoImp;
 import org.model.Orders;
-import org.model.OrdersDetail;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.util.JsonUtils;
 import org.util.ResultUtils;
 import org.util.TokenUtils;
 import org.util.Utils;
 import org.util.WXAPI;
 import org.view.VOrdersDetailsId;
 import org.view.VOrdersId;
-
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller("/app/OrdersController")
 @RequestMapping("/app/orders")
@@ -58,9 +47,7 @@ public class OrdersController {
 			data.put("list", new ArrayList<>());
 		} else {
 			for (VOrdersId order : list) {
-				List<VOrdersDetailsId> details = oDao.getDetailList(
-						order.getId(), 0, -1);
-				order.setDetails(details);
+				order.setUrlList(oDao.getUrlList(order.getId()));
 			}
 			data.put("list", list);
 		}
@@ -91,7 +78,6 @@ public class OrdersController {
 		Long userid = Long.parseLong(""
 				+ TokenUtils.getValue(token, TokenUtils.getKey(), "userid"));
 		/*********************************/
-		System.out.println(userid);
 		List<VOrdersId> list = oDao.getList(userid, start, limit);
 		data = new HashMap<String, Object>();
 		if (list == null || list.size() == 0) {
@@ -120,9 +106,7 @@ public class OrdersController {
 
 	@RequestMapping("/addOrder")
 	@ResponseBody
-	public Object addOrder(HttpServletRequest request, Long addressId,
-			@RequestBody OrderList details, Double total,
-			@RequestParam(value = "pay_way") Integer PayWay) {
+	public Object addOrder(HttpServletRequest request, @RequestBody OrderModel o) {
 		oDao = new OrdersDaoImp();
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");
@@ -131,15 +115,17 @@ public class OrdersController {
 		Long time = System.currentTimeMillis();
 		String orderNum = time + Utils.ran6();
 		/*********************************/
-		Orders orders = new Orders(userid, time / 1000, 0, addressId, orderNum);
-		Long id = oDao.generateOrder(orders, details.getDetails());
+		Orders orders = new Orders(userid, time / 1000, 1, o.getAddressId(),
+				orderNum);
+		Long id = oDao.generateOrder(orders, o.getDetails());
 		if (id > 0) {
 			Double Realtotal = oDao.getTotal(orderNum);
-			if (Realtotal != total) {
+			System.out.println(Realtotal);
+			if (!("" + Realtotal).equals("" + o.getTotal())) {
 				oDao.deleteOrder(id);
-				return ResultUtils.toJson(101, "服务器繁忙，请重试", "商品价格与实际价格不符");
+				return ResultUtils.toJson(101, "商品价格与实际价格不符", "");
 			}
-			switch (PayWay) {
+			switch (o.getPayWay()) {
 			case 0:// 微信
 				String clientIp = request.getRemoteAddr();
 				// 订单总价不能包含小数，单位为分，因此乘100并转整型

@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50535
 File Encoding         : 65001
 
-Date: 2017-06-01 18:27:23
+Date: 2017-06-05 17:00:28
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -30,12 +30,28 @@ CREATE TABLE `admin` (
 -- ----------------------------
 -- Records of admin
 -- ----------------------------
-INSERT INTO `admin` VALUES ('1', '1', '12', '1478000000');
-INSERT INTO `admin` VALUES ('2', '12', '12', '1495847591');
+INSERT INTO `admin` VALUES ('1', 'admin', 'e10adc3949ba59abbe56e057f20f883e', '1478000000');
+INSERT INTO `admin` VALUES ('2', '12', 'e10adc3949ba59abbe56e057f20f883e', '1495847591');
 INSERT INTO `admin` VALUES ('3', 'qqq', '202cb962ac59075b964b07152d234b70', '1495873888');
 INSERT INTO `admin` VALUES ('4', '111', '698d51a19d8a121ce581499d7b701668', '1495873953');
 INSERT INTO `admin` VALUES ('5', 'tb', 'e44d967f3e8a44f6a7fee562af4d82f4', '1495874097');
 INSERT INTO `admin` VALUES ('6', '22', 'b6d767d2f8ed5d21a44b0e5886680cb9', '1495874319');
+
+-- ----------------------------
+-- Table structure for `admin_log`
+-- ----------------------------
+DROP TABLE IF EXISTS `admin_log`;
+CREATE TABLE `admin_log` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `userid` bigint(20) NOT NULL,
+  `time` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `url` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of admin_log
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for `garousel`
@@ -95,18 +111,21 @@ CREATE TABLE `goods` (
   `description` varchar(10) DEFAULT '',
   `time` bigint(11) NOT NULL,
   `origin` varchar(20) DEFAULT '' COMMENT '源产地',
+  `state` tinyint(4) DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of goods
 -- ----------------------------
-INSERT INTO `goods` VALUES ('1', '白菜', '5.60', 'upload/goods/5/cabbage.jpg', '5', ' ', '0', '');
-INSERT INTO `goods` VALUES ('2', '黄瓜', '8.30', 'upload/goods/7/cucumber.jpg', '7', '', '0', '');
-INSERT INTO `goods` VALUES ('3', '西红柿', '6.50', 'upload/goods/2/tomato.jpg', '2', ' ', '0', '');
-INSERT INTO `goods` VALUES ('4', '土豆', '5.56', 'upload/goods/1/sweetpotato.jpg', '1', '', '0', '');
-INSERT INTO `goods` VALUES ('5', '西兰花', '6.20', 'upload/goods/3/Broccoli.jpg', '3', '', '0', '');
-INSERT INTO `goods` VALUES ('6', '胡萝卜', '6.80', 'upload/goods/4/carrot.jpg', '4', '', '0', '');
+INSERT INTO `goods` VALUES ('1', '白菜', '5.60', 'upload/goods/5/cabbage.jpg', '5', ' ', '1496652467', '', '1');
+INSERT INTO `goods` VALUES ('2', '黄瓜', '8.30', 'upload/goods/7/cucumber.jpg', '7', '', '1496652490', '', '1');
+INSERT INTO `goods` VALUES ('3', '西红柿', '6.50', 'upload/goods/2/tomato.jpg', '2', ' ', '1496652470', '', '1');
+INSERT INTO `goods` VALUES ('4', '土豆', '5.56', 'upload/goods/1/sweetpotato.jpg', '1', '', '1496652480', '', '1');
+INSERT INTO `goods` VALUES ('5', '西兰花', '6.20', 'upload/goods/3/Broccoli.jpg', '3', '', '1496652484', '', '1');
+INSERT INTO `goods` VALUES ('6', '胡萝卜', '6.80', 'upload/goods/4/carrot.jpg', '4', '', '1496652473', '', '1');
+INSERT INTO `goods` VALUES ('8', '玉米', '8.20', 'upload/goods/8/corn.jpg', '8', '', '1496652495', '', '1');
+INSERT INTO `goods` VALUES ('12', '阿斯达', '12.23', 'upload/goods/8/1496645951_223949062156597456.png', '8', '', '1496645951', '', '0');
 
 -- ----------------------------
 -- Table structure for `goods_activity`
@@ -119,7 +138,7 @@ CREATE TABLE `goods_activity` (
   `end_time` bigint(11) NOT NULL,
   `discount` decimal(11,2) DEFAULT '1.00' COMMENT '折扣',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of goods_activity
@@ -133,7 +152,7 @@ CREATE TABLE `goods_catalog` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `catalog` varchar(20) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of goods_catalog
@@ -147,8 +166,8 @@ INSERT INTO `goods_catalog` VALUES ('6', '绿豆');
 INSERT INTO `goods_catalog` VALUES ('7', '黄瓜');
 INSERT INTO `goods_catalog` VALUES ('8', '玉米');
 INSERT INTO `goods_catalog` VALUES ('9', '葱');
-INSERT INTO `goods_catalog` VALUES ('10', '生菜');
 INSERT INTO `goods_catalog` VALUES ('11', '菠菜');
+INSERT INTO `goods_catalog` VALUES ('12', '冬瓜');
 
 -- ----------------------------
 -- Table structure for `logs`
@@ -189,17 +208,17 @@ CREATE TABLE `orders` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `userid` bigint(20) NOT NULL,
   `time` bigint(11) NOT NULL,
-  `state` int(11) NOT NULL DEFAULT '1' COMMENT '0取消订单,1未支付，2已支付未发货，3发货未签收，4发货已签收',
+  `state` int(11) DEFAULT '1' COMMENT '0取消订单,1未支付，2已支付未发货，3发货未签收，4发货已签收',
   `address_id` bigint(20) NOT NULL,
   `order_num` varchar(20) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of orders
 -- ----------------------------
 INSERT INTO `orders` VALUES ('1', '1', '1494135144', '2', '1', '0132');
-INSERT INTO `orders` VALUES ('2', '1', '1494136308', '3', '2', '1465');
+INSERT INTO `orders` VALUES ('2', '1', '1494136308', '4', '2', '1465');
 INSERT INTO `orders` VALUES ('3', '1', '1494314099', '0', '1', '2456');
 INSERT INTO `orders` VALUES ('4', '1', '1494314196', '1', '1', '3654');
 INSERT INTO `orders` VALUES ('5', '1', '1494314516', '1', '1', '478');
@@ -215,11 +234,27 @@ INSERT INTO `orders` VALUES ('14', '1', '1495006863', '0', '1', '12345');
 INSERT INTO `orders` VALUES ('15', '1', '1495006882', '0', '1', '45678');
 INSERT INTO `orders` VALUES ('16', '1', '1495006884', '0', '1', '456487');
 INSERT INTO `orders` VALUES ('17', '1', '1495691220', '0', '1', '020215151');
-INSERT INTO `orders` VALUES ('18', '1', '1495691224', '0', '1', '051516160320');
-INSERT INTO `orders` VALUES ('19', '4', '1495780669', '0', '1', '1495780669655519885');
-INSERT INTO `orders` VALUES ('20', '4', '1495789832', '0', '1', '1495789832969234551');
-INSERT INTO `orders` VALUES ('21', '4', '1495791147', '0', '1', '1495791147603866267');
-INSERT INTO `orders` VALUES ('22', '4', '1495791549', '0', '1', '1495791549934782018');
+INSERT INTO `orders` VALUES ('18', '1', '1495691224', '1', '1', '051516160320');
+INSERT INTO `orders` VALUES ('19', '4', '1495780669', '1', '1', '1495780669655519885');
+INSERT INTO `orders` VALUES ('20', '4', '1495789832', '1', '1', '1495789832969234551');
+INSERT INTO `orders` VALUES ('21', '4', '1495791147', '1', '1', '1495791147603866267');
+INSERT INTO `orders` VALUES ('22', '4', '1495791549', '1', '1', '1495791549934782018');
+INSERT INTO `orders` VALUES ('30', '3', '1496369854', '1', '18', '1496369854702471820');
+INSERT INTO `orders` VALUES ('33', '3', '1496370803', '1', '18', '1496370803985423681');
+INSERT INTO `orders` VALUES ('34', '3', '1496374521', '1', '18', '1496374521391478921');
+INSERT INTO `orders` VALUES ('35', '3', '1496374554', '1', '18', '1496374554487534858');
+INSERT INTO `orders` VALUES ('36', '3', '1496374596', '1', '18', '1496374596618800393');
+INSERT INTO `orders` VALUES ('37', '3', '1496375165', '1', '18', '1496375165613236062');
+INSERT INTO `orders` VALUES ('38', '3', '1496375409', '1', '18', '1496375409584290550');
+INSERT INTO `orders` VALUES ('39', '3', '1496375698', '1', '18', '1496375698701201888');
+INSERT INTO `orders` VALUES ('40', '3', '1496383158', '1', '18', '1496383158410333427');
+INSERT INTO `orders` VALUES ('41', '3', '1496383176', '1', '18', '1496383176968674049');
+INSERT INTO `orders` VALUES ('42', '3', '1496384728', '1', '18', '1496384728821181971');
+INSERT INTO `orders` VALUES ('43', '3', '1496386215', '3', '18', '1496386215762457787');
+INSERT INTO `orders` VALUES ('44', '3', '1496390418', '4', '18', '1496390418982872902');
+INSERT INTO `orders` VALUES ('46', '3', '1496398094', '0', '18', '1496398094543518735');
+INSERT INTO `orders` VALUES ('48', '3', '1496636514', '0', '18', '1496636514532731979');
+INSERT INTO `orders` VALUES ('49', '3', '1496647822', '0', '18', '1496647822194333968');
 
 -- ----------------------------
 -- Table structure for `orders_detail`
@@ -231,7 +266,7 @@ CREATE TABLE `orders_detail` (
   `goods_id` bigint(20) NOT NULL,
   `num` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=190 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=268 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of orders_detail
@@ -425,6 +460,54 @@ INSERT INTO `orders_detail` VALUES ('186', '21', '1', '3');
 INSERT INTO `orders_detail` VALUES ('187', '21', '2', '2');
 INSERT INTO `orders_detail` VALUES ('188', '22', '1', '3');
 INSERT INTO `orders_detail` VALUES ('189', '22', '2', '2');
+INSERT INTO `orders_detail` VALUES ('208', '30', '6', '2');
+INSERT INTO `orders_detail` VALUES ('209', '30', '5', '1');
+INSERT INTO `orders_detail` VALUES ('210', '30', '4', '1');
+INSERT INTO `orders_detail` VALUES ('217', '33', '6', '2');
+INSERT INTO `orders_detail` VALUES ('218', '33', '5', '1');
+INSERT INTO `orders_detail` VALUES ('219', '33', '4', '1');
+INSERT INTO `orders_detail` VALUES ('220', '34', '6', '2');
+INSERT INTO `orders_detail` VALUES ('221', '34', '5', '1');
+INSERT INTO `orders_detail` VALUES ('222', '34', '4', '1');
+INSERT INTO `orders_detail` VALUES ('223', '35', '6', '2');
+INSERT INTO `orders_detail` VALUES ('224', '35', '5', '1');
+INSERT INTO `orders_detail` VALUES ('225', '35', '4', '1');
+INSERT INTO `orders_detail` VALUES ('226', '36', '6', '2');
+INSERT INTO `orders_detail` VALUES ('227', '36', '5', '1');
+INSERT INTO `orders_detail` VALUES ('228', '36', '4', '1');
+INSERT INTO `orders_detail` VALUES ('229', '37', '6', '2');
+INSERT INTO `orders_detail` VALUES ('230', '37', '5', '1');
+INSERT INTO `orders_detail` VALUES ('231', '37', '4', '1');
+INSERT INTO `orders_detail` VALUES ('232', '38', '6', '2');
+INSERT INTO `orders_detail` VALUES ('233', '38', '5', '1');
+INSERT INTO `orders_detail` VALUES ('234', '38', '4', '1');
+INSERT INTO `orders_detail` VALUES ('235', '39', '6', '2');
+INSERT INTO `orders_detail` VALUES ('236', '39', '5', '1');
+INSERT INTO `orders_detail` VALUES ('237', '39', '4', '1');
+INSERT INTO `orders_detail` VALUES ('238', '40', '6', '3');
+INSERT INTO `orders_detail` VALUES ('239', '40', '5', '1');
+INSERT INTO `orders_detail` VALUES ('240', '40', '4', '1');
+INSERT INTO `orders_detail` VALUES ('241', '41', '6', '3');
+INSERT INTO `orders_detail` VALUES ('242', '41', '5', '1');
+INSERT INTO `orders_detail` VALUES ('243', '41', '4', '1');
+INSERT INTO `orders_detail` VALUES ('244', '42', '4', '5');
+INSERT INTO `orders_detail` VALUES ('245', '42', '6', '9');
+INSERT INTO `orders_detail` VALUES ('246', '42', '2', '1');
+INSERT INTO `orders_detail` VALUES ('247', '42', '5', '1');
+INSERT INTO `orders_detail` VALUES ('248', '43', '6', '2');
+INSERT INTO `orders_detail` VALUES ('249', '43', '5', '2');
+INSERT INTO `orders_detail` VALUES ('250', '43', '4', '3');
+INSERT INTO `orders_detail` VALUES ('251', '43', '2', '1');
+INSERT INTO `orders_detail` VALUES ('252', '43', '1', '1');
+INSERT INTO `orders_detail` VALUES ('253', '43', '3', '1');
+INSERT INTO `orders_detail` VALUES ('254', '44', '6', '3');
+INSERT INTO `orders_detail` VALUES ('255', '44', '4', '1');
+INSERT INTO `orders_detail` VALUES ('256', '44', '3', '2');
+INSERT INTO `orders_detail` VALUES ('260', '46', '6', '1');
+INSERT INTO `orders_detail` VALUES ('264', '48', '6', '1');
+INSERT INTO `orders_detail` VALUES ('265', '48', '4', '1');
+INSERT INTO `orders_detail` VALUES ('266', '49', '6', '1');
+INSERT INTO `orders_detail` VALUES ('267', '49', '5', '3');
 
 -- ----------------------------
 -- Table structure for `permission`
@@ -518,10 +601,10 @@ CREATE TABLE `user` (
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES ('1', '13590440184', '123456789', '0', '', 'upload/headimg/user.png');
-INSERT INTO `user` VALUES ('2', '13156464658', '123456', '0', '', 'upload/headimg/user.png');
+INSERT INTO `user` VALUES ('1', '13590440184', '123456789', '0', '', 'upload/headimg/headimg.jpg');
+INSERT INTO `user` VALUES ('2', '13156464658', '123456', '0', '', 'upload/headimg/headimg.jpg');
 INSERT INTO `user` VALUES ('3', '13148700419', '1234567', '1494401572', '', 'upload/headimg/headimg.jpg');
-INSERT INTO `user` VALUES ('4', '13590440185', '123456', '0', '', 'upload/headimg/user.png');
+INSERT INTO `user` VALUES ('4', '13590440185', '123456', '0', '', 'upload/headimg/headimg.jpg');
 
 -- ----------------------------
 -- Table structure for `user_address`
@@ -606,7 +689,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- View structure for `v_goods`
 -- ----------------------------
 DROP VIEW IF EXISTS `v_goods`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_goods` AS select `g`.`id` AS `goods_id`,`g`.`name` AS `name`,`g`.`price` AS `price`,`g`.`url` AS `url`,`g`.`catalog_id` AS `catalog_id`,`g`.`description` AS `description`,`g`.`time` AS `time`,date_format(from_unixtime(`g`.`time`),'%Y-%m-%d %H:%i:%S') AS `create_time`,(select `gc`.`catalog` from `goods_catalog` `gc` where (`g`.`catalog_id` = `gc`.`id`)) AS `catalog`,coalesce(`vgc`.`count`,0) AS `count`,coalesce(`ga`.`dis_price`,0) AS `dis_price`,coalesce(`ga`.`start_date`,'') AS `start_date`,coalesce(`ga`.`end_date`,'') AS `end_date`,concat('http://192.168.1.150:8080/TendaEHome/',`g`.`url`) AS `goods_url`,`g`.`origin` AS `origin` from ((`goods` `g` left join `v_goods_count` `vgc` on((`vgc`.`goods_id` = `g`.`id`))) left join `v_goods_activity` `ga` on((`g`.`id` = `ga`.`goods_id`))) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_goods` AS select `g`.`id` AS `goods_id`,`g`.`name` AS `name`,`g`.`price` AS `price`,`g`.`url` AS `url`,`g`.`catalog_id` AS `catalog_id`,`g`.`description` AS `description`,`g`.`time` AS `time`,`g`.`state` AS `state`,date_format(from_unixtime(`g`.`time`),'%Y-%m-%d %H:%i:%S') AS `create_time`,(select `gc`.`catalog` from `goods_catalog` `gc` where (`g`.`catalog_id` = `gc`.`id`)) AS `catalog`,coalesce(`vgc`.`count`,0) AS `count`,coalesce(`ga`.`dis_price`,0) AS `dis_price`,coalesce(`ga`.`start_date`,'') AS `start_date`,coalesce(`ga`.`end_date`,'') AS `end_date`,concat('http://192.168.1.150:8080/TendaEHome/',`g`.`url`) AS `goods_url`,`g`.`origin` AS `origin` from ((`goods` `g` left join `v_goods_count` `vgc` on((`vgc`.`goods_id` = `g`.`id`))) left join `v_goods_activity` `ga` on((`g`.`id` = `ga`.`goods_id`))) ;
 
 -- ----------------------------
 -- View structure for `v_goods_activity`
@@ -624,13 +707,13 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- View structure for `v_orders`
 -- ----------------------------
 DROP VIEW IF EXISTS `v_orders`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_orders` AS select `o`.`id` AS `id`,`o`.`userid` AS `userid`,`o`.`time` AS `time`,(select `vot`.`total` from `v_order_total` `vot` where (`vot`.`order_id` = `o`.`id`)) AS `total`,date_format(from_unixtime(`o`.`time`),'%Y-%m-%d %H:%i:%S') AS `create_time`,`o`.`state` AS `state`,(case `o`.`state` when 0 then '取消订单' when 1 then '未付款' when 2 then '已付款，未发货' when 3 then '已发货，未签收' else '已签收，订单完成' end) AS `status`,(select concat(`ua`.`receiver`,' ',`ua`.`sex`,' ',`ua`.`tel`,' ',`ua`.`address`) from `user_address` `ua` where (`ua`.`id` = `o`.`address_id`)) AS `address`,`o`.`order_num` AS `order_num` from `orders` `o` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_orders` AS select `o`.`id` AS `id`,`o`.`userid` AS `userid`,`o`.`time` AS `time`,(select `vot`.`total` from `v_order_total` `vot` where (`vot`.`order_id` = `o`.`id`)) AS `total`,date_format(from_unixtime(`o`.`time`),'%Y-%m-%d %H:%i:%S') AS `create_time`,`o`.`state` AS `state`,(case `o`.`state` when 0 then '取消订单' when 1 then '未付款' when 2 then '已付款，未发货' when 3 then '已发货，未签收' else '已签收，订单完成' end) AS `status`,(select concat(`ua`.`receiver`,' ',`ua`.`sex`,' ',`ua`.`tel`,' ',`ua`.`address`) from `user_address` `ua` where (`ua`.`id` = `o`.`address_id`)) AS `address`,`o`.`address_id` AS `address_id`,`o`.`order_num` AS `order_num` from `orders` `o` ;
 
 -- ----------------------------
 -- View structure for `v_orders_details`
 -- ----------------------------
 DROP VIEW IF EXISTS `v_orders_details`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_orders_details` AS select `od`.`id` AS `id`,`od`.`order_id` AS `order_id`,`od`.`goods_id` AS `goods_id`,(select `g`.`name` from `goods` `g` where (`od`.`goods_id` = `g`.`id`)) AS `goods_name`,(select concat('http://192.168.1.150:8080/TendaEHome/',`g`.`url`) from `goods` `g` where (`od`.`goods_id` = `g`.`id`)) AS `goods_url`,`od`.`num` AS `num`,cast((select (`od`.`num` * `g`.`price`) from `goods` `g` where (`od`.`goods_id` = `g`.`id`)) as decimal(11,2)) AS `prices` from `orders_detail` `od` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_orders_details` AS select `od`.`id` AS `id`,`od`.`order_id` AS `order_id`,(select `o`.`order_num` from `orders` `o` where (`o`.`id` = `od`.`order_id`)) AS `order_num`,`od`.`goods_id` AS `goods_id`,(select `g`.`name` from `goods` `g` where (`od`.`goods_id` = `g`.`id`)) AS `goods_name`,(select concat('http://192.168.1.150:8080/TendaEHome/',`g`.`url`) from `goods` `g` where (`od`.`goods_id` = `g`.`id`)) AS `goods_url`,`od`.`num` AS `num`,cast((select (`od`.`num` * `g`.`price`) from `goods` `g` where (`od`.`goods_id` = `g`.`id`)) as decimal(11,2)) AS `prices` from `orders_detail` `od` ;
 
 -- ----------------------------
 -- View structure for `v_order_total`

@@ -1,0 +1,63 @@
+<!--
+	作者：tangbin_man@163.com
+	时间：2017-05-27
+	描述：登录模块
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>登录</title>
+		<!--jquery库-->
+		<script src="js/jquery.min.js"></script>
+		<!--bootstrap库-->
+		<link href="css/bootstrap.min.css" rel="stylesheet" />
+		<script src="js/bootstrap/bootstrap.min.js"></script>
+		<!--font-awesome字体库-->
+		<link href="css/font-awesome.min.css" rel="stylesheet" />
+		<!--平滑滚动到顶部库-->
+		<script src="js/jquery.scrolltopcontrol/scrolltopcontrol.js" type="text/javascript"></script>
+		<!--主要写的jquery拓展方法-->
+		<script src="js/jquery.extend.js" type="text/javascript"></script>
+		<!--主要写的css代码-->
+		<link href="css/default.css" rel="stylesheet" type="text/css" />
+		<!--<script src="js/default.js"></script>-->
+        <link href="css/login.css" rel="stylesheet" type="text/css" />
+        <script src="js/md5.js"></script>
+        <script src="js/login.js"></script>
+	</head>
+
+	<body>
+		<!--<div class="demo form-bg" style="padding: 20px 0;margin-top: 180px;">-->
+			<div class="container" style="margin-top: 180px; margin: 0 auto;">
+				<div class="row">
+					<div style=" width: 600px; height: 450px; background: url(img/dl.png); margin: 0 auto;" >
+						<form class="form-horizontal" id="form_login">
+							<span class="heading">用户登录<a href="register.html">注册账号</a></span>
+							<div class="form-group">
+								<input type="text" class="form-control" id="username" placeholder="账号">
+								<i class="fa fa-user"></i>
+							</div>
+							<div class="form-group help">
+								<input type="password" class="form-control" id="password" placeholder="密码">
+								<i class="fa fa-lock"></i>
+								<!--<a href="#" class="fa fa-question-circle"></a>-->
+							</div>
+							<div class="form-group">
+								<!--<div class="main-checkbox">
+									<input type="checkbox" value="None" id="checkbox1" name="check" />
+									<label for="checkbox1"></label>
+								</div>-->
+								<!--<span class="text">Remember me</span>-->
+								<button type="button" class="btn btn-default" onclick="login()">登录</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		<!--</div>-->
+	</body>
+</html>

@@ -10,6 +10,7 @@ public class VOrdersDetailsId implements java.io.Serializable {
 
 	private Long id;
 	private Long orderId;
+	private String orderNum;
 	private Long goodsId;
 	private String goodsName;
 	private String goodsUrl;
@@ -23,20 +24,20 @@ public class VOrdersDetailsId implements java.io.Serializable {
 	}
 
 	/** minimal constructor */
-	public VOrdersDetailsId(Long id, Long orderId, Long goodsId, Integer num,
-			Double prices) {
+	public VOrdersDetailsId(Long id, Long orderId, Long goodsId, Integer num) {
 		this.id = id;
 		this.orderId = orderId;
 		this.goodsId = goodsId;
 		this.num = num;
-		this.prices = prices;
 	}
 
 	/** full constructor */
-	public VOrdersDetailsId(Long id, Long orderId, Long goodsId,
-			String goodsName, String goodsUrl, Integer num, Double prices) {
+	public VOrdersDetailsId(Long id, Long orderId, String orderNum,
+			Long goodsId, String goodsName, String goodsUrl, Integer num,
+			Double prices) {
 		this.id = id;
 		this.orderId = orderId;
+		this.orderNum = orderNum;
 		this.goodsId = goodsId;
 		this.goodsName = goodsName;
 		this.goodsUrl = goodsUrl;
@@ -60,6 +61,14 @@ public class VOrdersDetailsId implements java.io.Serializable {
 
 	public void setOrderId(Long orderId) {
 		this.orderId = orderId;
+	}
+
+	public String getOrderNum() {
+		return this.orderNum;
+	}
+
+	public void setOrderNum(String orderNum) {
+		this.orderNum = orderNum;
 	}
 
 	public Long getGoodsId() {
@@ -117,6 +126,10 @@ public class VOrdersDetailsId implements java.io.Serializable {
 				&& ((this.getOrderId() == castOther.getOrderId()) || (this
 						.getOrderId() != null && castOther.getOrderId() != null && this
 						.getOrderId().equals(castOther.getOrderId())))
+				&& ((this.getOrderNum() == castOther.getOrderNum()) || (this
+						.getOrderNum() != null
+						&& castOther.getOrderNum() != null && this
+						.getOrderNum().equals(castOther.getOrderNum())))
 				&& ((this.getGoodsId() == castOther.getGoodsId()) || (this
 						.getGoodsId() != null && castOther.getGoodsId() != null && this
 						.getGoodsId().equals(castOther.getGoodsId())))
@@ -142,6 +155,8 @@ public class VOrdersDetailsId implements java.io.Serializable {
 		result = 37 * result + (getId() == null ? 0 : this.getId().hashCode());
 		result = 37 * result
 				+ (getOrderId() == null ? 0 : this.getOrderId().hashCode());
+		result = 37 * result
+				+ (getOrderNum() == null ? 0 : this.getOrderNum().hashCode());
 		result = 37 * result
 				+ (getGoodsId() == null ? 0 : this.getGoodsId().hashCode());
 		result = 37 * result

@@ -54,8 +54,8 @@ public class GoodsCatalogDaoImp implements GoodsCatalogDao {
 			Query query = session.createQuery(sql);
 			query.setParameter(0, id);
 			query.executeUpdate();
-			
-			String sql2 = "delete from Goods where catalogId=?";
+
+			String sql2 = "update Goods set state = 0 where catalogId=?";
 			Query query2 = session.createQuery(sql2);
 			query2.setParameter(0, id);
 			query2.executeUpdate();

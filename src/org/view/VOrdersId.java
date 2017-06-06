@@ -1,5 +1,6 @@
 package org.view;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,7 +20,10 @@ public class VOrdersId implements java.io.Serializable {
 	private Integer state;
 	private String status;
 	private String address;
-	private List<VOrdersDetailsId> details;
+	private Long addressId;
+	private List<String> urlList;
+	private List<VOrdersDetailsId> details= new ArrayList<>();
+
 	// Constructors
 
 	/** default constructor */
@@ -27,29 +31,31 @@ public class VOrdersId implements java.io.Serializable {
 	}
 
 	/** minimal constructor */
-	public VOrdersId(Long id, Long userid, Long time, String orderNum,
-			Integer state, String status) {
+	public VOrdersId(Long id, Long userid, Long time, Integer state,
+			String status, Long addressId, String orderNum) {
 		this.id = id;
 		this.userid = userid;
 		this.time = time;
-		this.orderNum = orderNum;
 		this.state = state;
 		this.status = status;
+		this.addressId = addressId;
+		this.orderNum = orderNum;
 	}
 
 	/** full constructor */
-	public VOrdersId(Long id, Long userid, Long time, String orderNum,
-			Double total, String createTime, Integer state, String status,
-			String address) {
+	public VOrdersId(Long id, Long userid, Long time, Double total,
+			String createTime, Integer state, String status, String address,
+			Long addressId, String orderNum) {
 		this.id = id;
 		this.userid = userid;
 		this.time = time;
-		this.orderNum = orderNum;
 		this.total = total;
 		this.createTime = createTime;
 		this.state = state;
 		this.status = status;
 		this.address = address;
+		this.addressId = addressId;
+		this.orderNum = orderNum;
 	}
 
 	// Property accessors
@@ -126,12 +132,28 @@ public class VOrdersId implements java.io.Serializable {
 		this.address = address;
 	}
 
+	public Long getAddressId() {
+		return addressId;
+	}
+
+	public void setAddressId(Long addressId) {
+		this.addressId = addressId;
+	}
+
 	public List<VOrdersDetailsId> getDetails() {
 		return details;
 	}
 
 	public void setDetails(List<VOrdersDetailsId> details) {
 		this.details = details;
+	}
+
+	public List<String> getUrlList() {
+		return urlList;
+	}
+
+	public void setUrlList(List<String> urlList) {
+		this.urlList = urlList;
 	}
 
 	public boolean equals(Object other) {
@@ -152,10 +174,6 @@ public class VOrdersId implements java.io.Serializable {
 				&& ((this.getTime() == castOther.getTime()) || (this.getTime() != null
 						&& castOther.getTime() != null && this.getTime()
 						.equals(castOther.getTime())))
-				&& ((this.getOrderNum() == castOther.getOrderNum()) || (this
-						.getOrderNum() != null
-						&& castOther.getOrderNum() != null && this
-						.getOrderNum().equals(castOther.getOrderNum())))
 				&& ((this.getTotal() == castOther.getTotal()) || (this
 						.getTotal() != null && castOther.getTotal() != null && this
 						.getTotal().equals(castOther.getTotal())))
@@ -171,7 +189,15 @@ public class VOrdersId implements java.io.Serializable {
 						.getStatus().equals(castOther.getStatus())))
 				&& ((this.getAddress() == castOther.getAddress()) || (this
 						.getAddress() != null && castOther.getAddress() != null && this
-						.getAddress().equals(castOther.getAddress())));
+						.getAddress().equals(castOther.getAddress())))
+				&& ((this.getAddressId() == castOther.getAddressId()) || (this
+						.getAddressId() != null
+						&& castOther.getAddressId() != null && this
+						.getAddressId().equals(castOther.getAddressId())))
+				&& ((this.getOrderNum() == castOther.getOrderNum()) || (this
+						.getOrderNum() != null
+						&& castOther.getOrderNum() != null && this
+						.getOrderNum().equals(castOther.getOrderNum())));
 	}
 
 	public int hashCode() {
@@ -182,8 +208,6 @@ public class VOrdersId implements java.io.Serializable {
 				+ (getUserid() == null ? 0 : this.getUserid().hashCode());
 		result = 37 * result
 				+ (getTime() == null ? 0 : this.getTime().hashCode());
-		result = 37 * result
-				+ (getOrderNum() == null ? 0 : this.getOrderNum().hashCode());
 		result = 37 * result
 				+ (getTotal() == null ? 0 : this.getTotal().hashCode());
 		result = 37
@@ -196,6 +220,10 @@ public class VOrdersId implements java.io.Serializable {
 				+ (getStatus() == null ? 0 : this.getStatus().hashCode());
 		result = 37 * result
 				+ (getAddress() == null ? 0 : this.getAddress().hashCode());
+		result = 37 * result
+				+ (getAddressId() == null ? 0 : this.getAddressId().hashCode());
+		result = 37 * result
+				+ (getOrderNum() == null ? 0 : this.getOrderNum().hashCode());
 		return result;
 	}
 

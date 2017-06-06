@@ -1,7 +1,6 @@
 package org.dao.imp;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.dao.GoodsDao;
@@ -32,12 +31,14 @@ public class GoodsDaoImp implements GoodsDao {
 		}
 	}
 
-	public Goods getGoods(Long id, Long time) {
+	public Goods getGoods(Long id, Long time, Short state) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
-			String sql = "from Goods g where id=? and time=?";
+			String sql = "from Goods g where id=? and time=? and state=?";
 			Query query = session.createQuery(sql);
 			query.setParameter(0, id);
+			query.setParameter(1, time);
+			query.setParameter(2, state);
 			query.setMaxResults(1);
 			Goods goods = (Goods) query.uniqueResult();
 			return goods;
@@ -49,10 +50,10 @@ public class GoodsDaoImp implements GoodsDao {
 		}
 	}
 
-	public List<VGoodsId> getList(Integer start, Integer limit) {
+	public List<VGoodsId> getList(Integer start, Integer limit, Short state) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
-			String sql = "from VGoods v order by v.id.count desc";
+			String sql = "from VGoods v where v.id.state =? order by v.id.count desc";
 			Query query = session.createQuery(sql);
 			if (start == null) {
 				start = 0;
@@ -62,6 +63,7 @@ public class GoodsDaoImp implements GoodsDao {
 			}
 			query.setFirstResult(start);
 			query.setMaxResults(limit);
+			query.setParameter(0, state);
 			List<VGoods> vGoods = query.list();
 			List<VGoodsId> list = new ArrayList<VGoodsId>();
 			for (VGoods v : vGoods) {
@@ -79,7 +81,7 @@ public class GoodsDaoImp implements GoodsDao {
 	public List<VGoodsId> getDiscounts(Integer start, Integer limit) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
-			String sql = "from VGoods v where now() between v.id.startDate and v.id.endDate order by v.id.count desc";
+			String sql = "from VGoods v where (now() between v.id.startDate and v.id.endDate ) and v.id.state=1 order by v.id.count desc";
 			Query query = session.createQuery(sql);
 			if (start == null) {
 				start = 0;
@@ -107,16 +109,8 @@ public class GoodsDaoImp implements GoodsDao {
 	public List<VGoodsId> getNewArrival() {
 		try {
 			Session session = HibernateSessionFactory.getSession();
-			String sql = "from VGoods v order by v.id.time desc";
+			String sql = "from VGoods v where v.id.state =1 order by v.id.time desc";
 			Query query = session.createQuery(sql);
-			// if (start == null) {
-			// start = 0;
-			// }
-			// if (limit == null) {
-			// limit = 15;
-			// }
-			// query.setFirstResult(start);
-			// query.setMaxResults(limit);
 			query.setMaxResults(10);
 			List<VGoods> vGoods = query.list();
 			List<VGoodsId> list = new ArrayList<VGoodsId>();
@@ -149,11 +143,11 @@ public class GoodsDaoImp implements GoodsDao {
 	}
 
 	public List<VGoodsId> getCataGoods(Integer start, Integer limit,
-			Long catalogId) {
+			Long catalogId, Short state) {
 
 		try {
 			Session session = HibernateSessionFactory.getSession();
-			String sql = "from VGoods v where v.id.catalogId = ? order by v.id.count desc";
+			String sql = "from VGoods v where v.id.catalogId = ? and v.id.state=? order by v.id.count desc";
 			Query query = session.createQuery(sql);
 			if (start == null) {
 				start = 0;
@@ -167,6 +161,7 @@ public class GoodsDaoImp implements GoodsDao {
 			query.setFirstResult(start);
 			query.setMaxResults(limit);
 			query.setParameter(0, catalogId);
+			query.setParameter(1, state);
 			List<VGoods> vGoods = query.list();
 			List<VGoodsId> list = new ArrayList<VGoodsId>();
 			for (VGoods v : vGoods) {
@@ -182,10 +177,11 @@ public class GoodsDaoImp implements GoodsDao {
 	}
 
 	@Override
-	public List<VGoodsId> getGoodsByKey(Integer start, Integer limit, String key) {
+	public List<VGoodsId> getGoodsByKey(Integer start, Integer limit,
+			String key, Short state) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
-			String sql = "from VGoods v where v.id.catalogId in (select id from GoodsCatalog where catalog like ? ) or v.id.name like ? order by v.id.count desc";
+			String sql = "from VGoods v where v.id.state= ? and v.id.catalogId in (select id from GoodsCatalog where catalog like ? ) or v.id.name like ? order by v.id.count desc";
 			Query query = session.createQuery(sql);
 			if (start == null) {
 				start = 0;
@@ -195,8 +191,9 @@ public class GoodsDaoImp implements GoodsDao {
 			}
 			query.setFirstResult(start);
 			query.setMaxResults(limit);
-			query.setParameter(0, "%" + key + "%");
+			query.setParameter(0, state);
 			query.setParameter(1, "%" + key + "%");
+			query.setParameter(2, "%" + key + "%");
 			List<VGoods> vGoods = query.list();
 			List<VGoodsId> list = new ArrayList<VGoodsId>();
 			for (VGoods v : vGoods) {
@@ -238,7 +235,7 @@ public class GoodsDaoImp implements GoodsDao {
 		try {
 			Session session = HibernateSessionFactory.getSession();
 			Transaction ts = session.beginTransaction();
-			String sql = "delete from Goods where id=?";
+			String sql = "update Goods set state=0 where id=?";
 			Query query = session.createQuery(sql);
 			query.setParameter(0, id);
 			query.executeUpdate();
@@ -253,39 +250,12 @@ public class GoodsDaoImp implements GoodsDao {
 	}
 
 	@Override
-	public boolean validate(List<Long> ids) {
+	public Long getCount(Short state) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
-			String sql = "";
-			for (int i = 0; i < ids.size(); i++) {
-				if (i == 0) {
-					sql = "where id=?";
-				} else {
-					sql = sql + " or id=?";
-				}
-			}
-			Query query = session.createQuery("select id from Goods " + sql);
-			for (int i = 0; i < ids.size(); i++) {
-				query.setParameter(i, ids.get(i));
-			}
-			List<Long> list = query.list();
-
-			return true;
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		} finally {
-			HibernateSessionFactory.closeSession();
-		}
-	}
-
-	@Override
-	public Long getCount() {
-		try {
-			Session session = HibernateSessionFactory.getSession();
-			String sql = "select count(id) from Goods";
+			String sql = "select count(id) from Goods where state=?";
 			Query query = session.createQuery(sql);
+			query.setParameter(0, state);
 			query.setMaxResults(1);
 			Long a = (Long) query.uniqueResult();
 			return a;
@@ -297,12 +267,13 @@ public class GoodsDaoImp implements GoodsDao {
 	}
 
 	@Override
-	public Long getCountByCatalog(Long catalogId) {
+	public Long getCountByCatalog(Long catalogId, Short state) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
-			String sql = "select count(id) from Goods where catalogId=?";
+			String sql = "select count(id) from Goods where catalogId=? and state = ?";
 			Query query = session.createQuery(sql);
 			query.setParameter(0, catalogId);
+			query.setParameter(1, state);
 			query.setMaxResults(1);
 			Long a = (Long) query.uniqueResult();
 			return a;
@@ -314,13 +285,14 @@ public class GoodsDaoImp implements GoodsDao {
 	}
 
 	@Override
-	public Long getCountByKey(String key) {
+	public Long getCountByKey(String key, Short state) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
-			String sql = "select count(v.id.id) from VGoods v where v.id.catalogId in (select id from GoodsCatalog where catalog like ? ) or v.id.name like ?";
+			String sql = "select count(v.id.id) from VGoods v where v.id.state =? and v.id.catalogId in (select id from GoodsCatalog where catalog like ? ) or v.id.name like ?";
 			Query query = session.createQuery(sql);
-			query.setParameter(0, "%" + key + "%");
+			query.setParameter(0, state);
 			query.setParameter(1, "%" + key + "%");
+			query.setParameter(2, "%" + key + "%");
 			query.setMaxResults(1);
 			Long a = (Long) query.uniqueResult();
 			return a;

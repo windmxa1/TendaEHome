@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.model.Goods;
 import org.model.GoodsCatalog;
-import org.model.UserAddress;
 import org.view.VGoodsId;
 
 public interface GoodsDao {
@@ -12,21 +11,26 @@ public interface GoodsDao {
 	 * 获取商品对象
 	 */
 	public Goods getGoods(Long id);
+
 	/**
 	 * 获取商品对象，用于检测商品信息是否被修改
 	 */
-	public Goods getGoods(Long id,Long time);
+	public Goods getGoods(Long id, Long time, Short state);
+
 	/**
 	 * 获取商品列表，按一定的规则，暂定是销量
 	 * 
 	 * @return
 	 */
-	public List<VGoodsId> getList(Integer start, Integer limit);
+	public List<VGoodsId> getList(Integer start, Integer limit, Short state);
+
 	/**
 	 * 获取商品总数
 	 */
-	public Long getCount();
-	public Long getCountByCatalog(Long catalogId);
+	public Long getCount(Short state);
+
+	public Long getCountByCatalog(Long catalogId, Short state);
+
 	/**
 	 * 获取折扣商品列表
 	 */
@@ -41,6 +45,7 @@ public interface GoodsDao {
 	 * 获取目录列表
 	 */
 	public List<GoodsCatalog> getCatalog();
+
 	/**
 	 * 获取目录总数
 	 */
@@ -49,27 +54,28 @@ public interface GoodsDao {
 	/**
 	 * 获取目录对应的商品列表
 	 */
-	public List<VGoodsId> getCataGoods(Integer start, Integer limit,Long catalogId);
+	public List<VGoodsId> getCataGoods(Integer start, Integer limit,
+			Long catalogId, Short state);
+
 	/**
 	 * 获取指定名称的商品
 	 */
-	public List<VGoodsId> getGoodsByKey(Integer start, Integer limit,String key);
+	public List<VGoodsId> getGoodsByKey(Integer start, Integer limit,
+			String key, Short state);
+
 	/**
 	 * 获取指定名称的商品总数
 	 */
-	public Long getCountByKey(String key);
+	public Long getCountByKey(String key, Short state);
+
 	/**
 	 * 维护商品信息
 	 */
-	public Long saveOrUpdate(Goods goods);	
-	
+	public Long saveOrUpdate(Goods goods);
+
 	/**
-	 * 删除商品 
+	 * 删除商品#####伪删除######
 	 */
 	public boolean delete(Long id);
-	/**
-	 * 校验商品是否存在
-	 */
-	public boolean validate(List<Long> ids);
-	
+
 }

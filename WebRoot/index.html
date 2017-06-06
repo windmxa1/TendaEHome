@@ -1,231 +1,170 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>index.html</title>
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
 
-<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
-<meta http-equiv="description" content="this is my page">
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title></title>
+		<!--jquery库-->
+		<script src="js/jquery.min.js"></script>
+		<!--bootstrap库-->
+		<link href="css/bootstrap.min.css" rel="stylesheet" />
+		<script src="js/bootstrap/bootstrap.min.js"></script>
+		<!--font-awesome字体库-->
+		<link href="css/font-awesome.min.css" rel="stylesheet" />
+		<!--页面加载进度条-->
+		<link href="css/pace/dataurl.css" rel="stylesheet" />
+		<script src="js/pace/pace.min.js"></script>
+		<!--平滑滚动到顶部库-->
+		<script src="js/jquery.scrolltopcontrol/scrolltopcontrol.js" type="text/javascript"></script>
+		<!--主要写的jquery拓展方法-->
+		<script src="js/jquery.extend.js" type="text/javascript"></script>
+		<!--主要写的css代码-->
+		<link href="css/default.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$('.sidebar li').click(function() {
+					$('.sidebar li').removeClass('addLiba');
+					$(this).addClass('addLiba');
+				});
+            $(".dropdown").mouseover(function () {
+		        $(this).addClass("open");
+		    });
 
-<!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
-<script type="text/javascript" src="js/jquery.min.js"></script>
-<script type="text/javascript" src="js/bootstrap.min.js"></script>
-<link rel="stylesheet" href="css/bootstrap.min.css" type="text/css"></link>
-<script type="text/javascript" src="js/md5.js"></script>
-<script type="text/javascript">
-	$(function() {
-		var token1 = "";
-		var user = {
-			phone : 13590440185,
-			password : 123456
-		};
-		$.ajax({
-			type : "post",
-			url : "app/user/login",
-			data : user,
-			dataType : "json",
-			//contentType : 'application/json;charset=utf-8',
-			async : false,
-			cache : false,
-			success : function(data) {
-				token1 = data.data.token;
-				console.log(token1);
-			},
-			error : function(data) {
-				alert("error");
+		    $(".dropdown").mouseleave(function(){
+		        $(this).removeClass("open");
+		    })
+			});
+		</script>
+		<style type="text/css">
+			.addLiba {
+				background: #03A9F3;
 			}
-		});
-		var token2 = "";
-		var admin = {
-			username : 22,
-			password : hex_md5("22")
-		};
-		$.ajax({
-			type : "post",
-			url : "back/admin/login",
-			data : admin,
-			dataType : "json",
-			//contentType : 'application/json;charset=utf-8',
-			async : false,
-			cache : false,
-			success : function(data) {
-				token2 = data.data.token;
-				console.log(token2);
-			},
-			error : function(data) {
-				alert("error");
+			
+			.navbar-nav>li>a {
+				padding-top: 10px;
+				padding-bottom: 10px;
 			}
-		});
-		$("#btn1").click(function() {
-			var xml = "";
-			$.ajax({
-				type : "post",
-				url : "back/orders/notifyWxPay",
-				headers : {
-					"token" : token1
-				},
-				data : xml,
-				contentType : "text/xml; charset=utf-8",
-				dataType : "json",
-				success : function(data) {
-					console.log(JSON.stringify(data));
-					//console.log(data);
-				},
-				error : function(data) {
-					alert("error");
-				}
-			});
-		});
-		$("#btn2").click(function() {
-			var json = {
-				message : "asdasfafdgsadg"
-			};
-			$.ajax({
-				type : "post",
-				url : "app/user/addFeedback",
-				headers : {
-					"token" : token1
-				},
-				data : json,
-				//contentType : "text/xml; charset=utf-8",
-				dataType : "json",
-				success : function(data) {
-					console.log(JSON.stringify(data));
-					//console.log(data);
-				},
-				error : function(data) {
-					alert("error");
-				}
-			});
-		});
-		$("#btn3").click(function() {
-			var json = {};
-			$.ajax({
-				type : "post",
-				url : "back/user/getFeedbackList",
-				headers : {
-					"token" : token2
-				},
-				data : json,
-				//contentType : "text/xml; charset=utf-8",
-				dataType : "json",
-				success : function(data) {
-					console.log(JSON.stringify(data));
-					//console.log(data);
-				},
-				error : function(data) {
-					alert("error");
-				}
-			});
-		});
-		$("#btn4").click(function() {
-			var json = {
-				id : 3
-			};
-			$.ajax({
-				type : "post",
-				url : "back/user/deleteFeedback",
-				headers : {
-					"token" : token2
-				},
-				data : json,
-				//contentType : "text/xml; charset=utf-8",
-				dataType : "json",
-				success : function(data) {
-					console.log(JSON.stringify(data));
-					//console.log(data);
-				},
-				error : function(data) {
-					alert("error");
-				}
-			});
-		});
-		$("#btn5").click(function() {
-			var json = {
-				id : 3
-			};
-			$.ajax({
-				type : "post",
-				url : "back/user/updateFeedbackState",
-				headers : {
-					"token" : token2
-				},
-				data : json,
-				//contentType : "text/xml; charset=utf-8",
-				dataType : "json",
-				success : function(data) {
-					console.log(JSON.stringify(data));
-					//console.log(data);
-				},
-				error : function(data) {
-					alert("error");
-				}
-			});
-		});
-		$("#btn6").click(function() {
-			var json = {
-				id : 12
-			};
-			$.ajax({
-				type : "post",
-				url : "back/goods/delCatalog",
-				headers : {
-					"token" : token2
-				},
-				data : json,
-				//contentType : "text/xml; charset=utf-8",
-				dataType : "json",
-				success : function(data) {
-					console.log(JSON.stringify(data));
-					//console.log(data);
-				},
-				error : function(data) {
-					alert("error");
-				}
-			});
-		});
-		$("#btn7").click(function() {
-			var json = {
-				"details" : [ {
-					"goodsId" : 3,
-					"time" : 12564521
-				}, {
-					"goodsId" : 1,
-					"time" : 13546161
-				} ]
-			};
-			console.log(JSON.stringify(json));
-			$.ajax({
-				type : "post",
-				url : "app/goods/test",
-				headers : {
-					"token" : token1
-				},
-				data : JSON.stringify(json),
-				//contentType : "text/xml; charset=utf-8",
-				contentType: "application/json",				
-				dataType : "json",
-				success : function(data) {
-					console.log(JSON.stringify(data));
-					//console.log(data);
-				},
-				error : function(data) {
-					alert("error");
-				}
-			});
-		});
-	});
-</script>
-</head>
-<body>
-	<div class="container">
-		<input type="button" value="postXml" id="btn1"> <input
-			type="button" value="addFeedback" id="btn2"> <input
-			type="button" value="getFeedbackList" id="btn3"> <input
-			type="button" value="deleteFeedback" id="btn4"> <input
-			type="button" value="updateFeedbackState" id="btn5"> <input
-			type="button" value="delCatalog" id="btn6"> <input
-			type="button" value="addOrder" id="btn7">
-	</div>
-</body>
+			
+			.navbar-brand {
+				height: 50px;
+				padding-top: 10px;
+			}
+			
+			.navbar {
+				min-height: 50px;
+			}
+			
+			.navbar-toggle {
+				margin-top: 4px;
+				margin-bottom: 4px;
+			}
+			/*.info select {
+				border: 1px #993300 solid;
+				background: #FFFFFF;
+			}
+			
+			.info {
+				margin: 5px;
+				text-align: center;
+			}*/
+		</style>
+	</head>
+
+	<body>
+
+		<nav class="navbar navbar-inverse navbar-fixed-top" style="height: 50px; font-size: 18px; color: #666; background: #F5F5F5;">
+			<div class="container-fluid">
+				<!--左侧导航栏收缩功能-->
+				<!--<div class="navbar-header">
+                <button type="button" class="navbar-toggle show pull-left" data-target="sidebar">
+                    <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
+                </button>
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                        aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
+                </button>
+            </div>-->
+
+				<div id="navbar" class="collapse navbar-collapse">
+					<div class="topMenu">
+						<ul style="float: right; padding-left: 15px;">
+							<li class="dropdown" style="list-style-type:none;">
+								<div id="dropdownMenu1" data-toggle="dropdown"><label>用户</label></div>
+								<ul class="dropdown-menu" role="menu" style="margin: 0 0 0 -40px; ">
+									<li>
+										<a href=""><i class="fa fa-user"></i>&nbsp;修改用户信息</a>
+									</li>
+									<li class="divider"></li>
+									<li>
+										<a href=""><i class="fa fa-key"></i>&nbsp;修改密码</a>
+									</li>
+									<li class="divider"></li>
+									<li>
+										<a href="login.html"><i class="fa fa-power-off"></i>&nbsp;退出登录</a>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</div>
+		</nav>
+		<div class="container-fluid all">
+			<div class="sidebar">
+				<ul class="nav" id="menuList">
+					<li>
+						<a href="indent.html" target="f">
+							<div style="width: 100%; text-align: center; margin-left: 8px;">
+								<i class="fa fa-check-square-o" style="font-size: 20px"></i>
+							</div>
+							<div>
+								订单
+							</div>
+						</a>
+					</li>
+					<li>
+						<a href="commodity.html" target="f">
+							<div style="width: 100%; text-align: center; margin-left: 8px;">
+								<i class="fa fa-shopping-cart" style="font-size: 20px"></i>
+							</div>
+							<div>
+								商品
+							</div>
+						</a>
+					</li>
+					<li>
+						<a href="user.html" target="f">
+							<div style="width: 100%; text-align: center; margin-left: 8px;">
+								<i class="fa fa-user-secret" style="font-size: 20px"></i>
+							</div>
+							<div>
+								用户
+							</div>
+						</a>
+					</li>
+					<!--<li>
+						<a href="administrator.html" target="f">
+							<div style="width: 100%; text-align: center; margin-left: 8px;">
+								<i class="fa fa-reddit-alien" style="font-size: 20px"></i>
+							</div>
+							<div style="font-size: 15px">
+								管理员
+							</div>
+						</a>
+					</li>-->
+				</ul>
+			</div>
+			<div class="content">
+				<!----------------主体内容（开始）----------------------->
+				<iframe name="f" frameborder="no" border="0"  src="indent.html"></iframe>
+				<!----------------主体内容（结束）----------------------->
+			</div>
+		</div>
+		<!--
+        	描述：内容超出浏览器高度时，显示“返回到顶部”按钮
+        -->
+		<a href="#top" id="goTop" title="返回到顶部"><i class="fa fa-angle-up fa-3x"></i></a>
+	</body>
+
 </html>

@@ -7,15 +7,11 @@ import java.util.Map;
 
 import org.dao.GarouselDao;
 import org.dao.imp.GarouselDaoImp;
-import org.dao.imp.OrdersDaoImp;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.util.ResultUtils;
-import org.view.VGarousel;
 import org.view.VGarouselId;
-import org.view.VOrdersDetailsId;
-import org.view.VOrdersId;
 
 @Controller("/app/GarouselController")
 @RequestMapping("/app/garousel")
