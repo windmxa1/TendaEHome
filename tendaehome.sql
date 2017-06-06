@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50535
 File Encoding         : 65001
 
-Date: 2017-06-05 17:00:28
+Date: 2017-06-06 14:59:30
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -113,7 +113,7 @@ CREATE TABLE `goods` (
   `origin` varchar(20) DEFAULT '' COMMENT '源产地',
   `state` tinyint(4) DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of goods
@@ -152,7 +152,7 @@ CREATE TABLE `goods_catalog` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `catalog` varchar(20) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of goods_catalog
@@ -212,7 +212,7 @@ CREATE TABLE `orders` (
   `address_id` bigint(20) NOT NULL,
   `order_num` varchar(20) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of orders
@@ -255,6 +255,8 @@ INSERT INTO `orders` VALUES ('44', '3', '1496390418', '4', '18', '14963904189828
 INSERT INTO `orders` VALUES ('46', '3', '1496398094', '0', '18', '1496398094543518735');
 INSERT INTO `orders` VALUES ('48', '3', '1496636514', '0', '18', '1496636514532731979');
 INSERT INTO `orders` VALUES ('49', '3', '1496647822', '0', '18', '1496647822194333968');
+INSERT INTO `orders` VALUES ('50', '3', '1496714622', '1', '19', '1496714622131640513');
+INSERT INTO `orders` VALUES ('51', '3', '1496719910', '1', '19', '1496719910467191402');
 
 -- ----------------------------
 -- Table structure for `orders_detail`
@@ -266,7 +268,7 @@ CREATE TABLE `orders_detail` (
   `goods_id` bigint(20) NOT NULL,
   `num` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=268 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=272 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of orders_detail
@@ -508,6 +510,10 @@ INSERT INTO `orders_detail` VALUES ('264', '48', '6', '1');
 INSERT INTO `orders_detail` VALUES ('265', '48', '4', '1');
 INSERT INTO `orders_detail` VALUES ('266', '49', '6', '1');
 INSERT INTO `orders_detail` VALUES ('267', '49', '5', '3');
+INSERT INTO `orders_detail` VALUES ('268', '50', '4', '1');
+INSERT INTO `orders_detail` VALUES ('269', '51', '6', '3');
+INSERT INTO `orders_detail` VALUES ('270', '51', '1', '2');
+INSERT INTO `orders_detail` VALUES ('271', '51', '3', '2');
 
 -- ----------------------------
 -- Table structure for `permission`
