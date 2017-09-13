@@ -11,7 +11,10 @@ public interface GoodsDao {
 	 * 获取商品对象
 	 */
 	public Goods getGoods(Long id);
-
+	/**
+	 * 修改商品上下架状态
+	 */
+	public boolean updateGoodsState(Long id,Short state);
 	/**
 	 * 获取商品对象，用于检测商品信息是否被修改
 	 */
@@ -22,12 +25,16 @@ public interface GoodsDao {
 	 * 
 	 * @return
 	 */
-	public List<VGoodsId> getList(Integer start, Integer limit, Short state);
+	public List<VGoodsId> getList(Integer start, Integer limit, Short[] state);
 
 	/**
 	 * 获取商品总数
 	 */
 	public Long getCount(Short state);
+	/**
+	 * 获取商品总数
+	 */
+	public Long getCount(Short[] state);
 
 	public Long getCountByCatalog(Long catalogId, Short state);
 
@@ -74,7 +81,7 @@ public interface GoodsDao {
 	public Long saveOrUpdate(Goods goods);
 
 	/**
-	 * 删除商品#####伪删除######
+	 * 删除商品,伪删除
 	 */
 	public boolean delete(Long id);
 

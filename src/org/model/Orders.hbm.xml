@@ -17,12 +17,12 @@
             <column name="time" not-null="true" />
         </property>
         <property name="state" type="java.lang.Integer">
-            <column name="state" >
+            <column name="state">
                 <comment>0取消订单,1未支付，2已支付未发货，3发货未签收，4发货已签收</comment>
             </column>
         </property>
-        <property name="addressId" type="java.lang.Long">
-            <column name="address_id" not-null="true" />
+        <property name="address" type="java.lang.String">
+            <column name="address" length="200" not-null="true" />
         </property>
         <property name="orderNum" type="java.lang.String">
             <column name="order_num" length="20" not-null="true" />

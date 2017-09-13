@@ -26,4 +26,9 @@ public interface UserFeedbackDao {
 	 */
 	public List<VUserFeedbackId> getList(Integer read, Integer start,
 			Integer limit);
+
+	/**
+	 * 获取反馈信息总数
+	 */
+	public Long getFeedbackCount();
 }

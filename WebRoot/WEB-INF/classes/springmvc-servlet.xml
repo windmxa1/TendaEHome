@@ -29,6 +29,7 @@
 			<mvc:mapping path="/app/**" />
 			<mvc:exclude-mapping path="/app/user/login" />
 			<mvc:exclude-mapping path="/app/user/register" />
+			<mvc:exclude-mapping path="/app/user/phoneVerify" />
 			<mvc:exclude-mapping path="/app/goods/**" />
 			<mvc:exclude-mapping path="/app/garousel/**" />
 			<bean class="org.interceptor.AppInterceptor"></bean>
@@ -37,6 +38,7 @@
 			<mvc:mapping path="/back/**" />
 			<mvc:exclude-mapping path="/back/admin/login" />
 			<mvc:exclude-mapping path="/back/admin/register" />
+			<mvc:exclude-mapping path="/back/staff/addStaffPromotion" />
 			<bean class="org.interceptor.BackInterceptor"></bean>
 		</mvc:interceptor>
 	</mvc:interceptors>	

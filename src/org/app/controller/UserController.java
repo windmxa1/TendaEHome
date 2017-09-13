@@ -304,7 +304,7 @@ public class UserController {
 		/*********************************/
 		UserAddress userAddress = uAddressDao.getDefaultAddress(userid);
 		if (userAddress == null) {
-			return ResultUtils.toJson(100, "您没有设置默认地址", "");
+			return ResultUtils.toJson(101, "您没有设置默认地址", "");
 		}
 		data = new HashMap<>();
 		data.put("address", userAddress);

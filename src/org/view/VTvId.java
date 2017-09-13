@@ -14,6 +14,7 @@ public class VTvId implements java.io.Serializable {
 	private String tvUrl;
 	private Long time;
 	private String createTime;
+	private Integer available;
 
 	// Constructors
 
@@ -22,23 +23,25 @@ public class VTvId implements java.io.Serializable {
 	}
 
 	/** minimal constructor */
-	public VTvId(Integer id, String name, String imgUrl, String tvUrl, Long time) {
+	public VTvId(Integer id, String name, String tvUrl, Long time,
+			Integer available) {
 		this.id = id;
 		this.name = name;
-		this.imgUrl = imgUrl;
 		this.tvUrl = tvUrl;
 		this.time = time;
+		this.available = available;
 	}
 
 	/** full constructor */
 	public VTvId(Integer id, String name, String imgUrl, String tvUrl,
-			Long time, String createTime) {
+			Long time, String createTime, Integer available) {
 		this.id = id;
 		this.name = name;
 		this.imgUrl = imgUrl;
 		this.tvUrl = tvUrl;
 		this.time = time;
 		this.createTime = createTime;
+		this.available = available;
 	}
 
 	// Property accessors
@@ -91,6 +94,14 @@ public class VTvId implements java.io.Serializable {
 		this.createTime = createTime;
 	}
 
+	public Integer getAvailable() {
+		return this.available;
+	}
+
+	public void setAvailable(Integer available) {
+		this.available = available;
+	}
+
 	public boolean equals(Object other) {
 		if ((this == other))
 			return true;
@@ -118,7 +129,11 @@ public class VTvId implements java.io.Serializable {
 				&& ((this.getCreateTime() == castOther.getCreateTime()) || (this
 						.getCreateTime() != null
 						&& castOther.getCreateTime() != null && this
-						.getCreateTime().equals(castOther.getCreateTime())));
+						.getCreateTime().equals(castOther.getCreateTime())))
+				&& ((this.getAvailable() == castOther.getAvailable()) || (this
+						.getAvailable() != null
+						&& castOther.getAvailable() != null && this
+						.getAvailable().equals(castOther.getAvailable())));
 	}
 
 	public int hashCode() {
@@ -137,6 +152,8 @@ public class VTvId implements java.io.Serializable {
 				* result
 				+ (getCreateTime() == null ? 0 : this.getCreateTime()
 						.hashCode());
+		result = 37 * result
+				+ (getAvailable() == null ? 0 : this.getAvailable().hashCode());
 		return result;
 	}
 

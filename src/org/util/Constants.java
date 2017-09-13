@@ -1,8 +1,10 @@
 package org.util;
 
+import java.io.File;
+
 public class Constants {
 	/**
-	 * 商品描述	
+	 * 商品描述
 	 */
 	public static final String body = "泰达E家人 一米菜园网上超市购物";
 	/**
@@ -26,8 +28,25 @@ public class Constants {
 	 */
 	public static final String trade_type = "APP";
 	/**
-	 *统一下单接口地址
+	 * 统一下单接口地址
 	 */
 	public static final String payUrl = "https://api.mch.weixin.qq.com/pay/unifiedorder";
+	/**
+	 * 适应任何系统的文件分隔符
+	 */
+	public static final String dot = File.separator;
+	/**
+	 * pdf在服务器的根目录
+	 */
+	public static String pdfDir = "" ;
+	/**
+	 * pdf的网络地址
+	 */
+	public static String pdfUrl = "";
+	/**
+	 * 水印地址
+	 */
+	public static final String watermark = TokenUtils.rootPath
+			+ "watermark.jpg";
 
 }

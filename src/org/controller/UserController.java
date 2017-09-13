@@ -36,6 +36,7 @@ public class UserController {
 		List<VUserId> list = uDao.getUsers(start, limit);
 		data = new HashMap<String, Object>();
 		data.put("list", list);
+		data.put("total", uDao.getUserCount());
 		return ResultUtils.toJson(100, "", data);
 	}
 
@@ -47,6 +48,7 @@ public class UserController {
 		List<VUserFeedbackId> list = uFeedbackDao.getList(read, start, limit);
 		data = new HashMap<String, Object>();
 		data.put("list", list);
+		data.put("total", uFeedbackDao.getFeedbackCount());
 		return ResultUtils.toJson(100, "", data);
 	}
 

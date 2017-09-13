@@ -29,7 +29,8 @@ public class GoodsController {
 	public Object getGoodsList(Integer start, Integer limit) {
 		gDao = new GoodsDaoImp();
 		data = new HashMap<String, Object>();
-		List<VGoodsId> list = gDao.getList(start, limit, (short) 1);
+		Short[] state = { (short) 1 };
+		List<VGoodsId> list = gDao.getList(start, limit, state);
 		if (list != null) {
 			data.put("list", list);
 		} else {
@@ -65,7 +66,8 @@ public class GoodsController {
 	public Object getGoodsList() {
 		gDao = new GoodsDaoImp();
 		data = new HashMap<String, Object>();
-		List<VGoodsId> list = gDao.getList(0, 10, (short) 1);
+		Short[] state = { (short) 1 };
+		List<VGoodsId> list = gDao.getList(0, 10, state);
 		if (list != null) {
 			data.put("list", list);
 		} else {

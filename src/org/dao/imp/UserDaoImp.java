@@ -78,13 +78,13 @@ public class UserDaoImp implements UserDao {
 			query.setParameter(0, id);
 			query.setMaxResults(1);
 			VUser u = (VUser) query.uniqueResult();
-			if (u!= null) {
+			if (u != null) {
 				return u.getId();
 			} else {
 				return null;
 			}
 		} catch (Exception e) {
-//			e.printStackTrace();
+			// e.printStackTrace();
 			return null;
 		} finally {
 			HibernateSessionFactory.closeSession();
@@ -272,6 +272,23 @@ public class UserDaoImp implements UserDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
+	@Override
+	public Long getUserCount() {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			String sql = "select count(id) from User ";
+			Query query = session.createQuery(sql);
+			query.setMaxResults(1);
+			Long count = (Long) query.uniqueResult();
+			return count;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 0L;
 		} finally {
 			HibernateSessionFactory.closeSession();
 		}

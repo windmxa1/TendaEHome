@@ -39,10 +39,11 @@ public class GoodsController {
 	public Object getGoodsList(Integer start, Integer limit) {
 		gDao = new GoodsDaoImp();
 		data = new HashMap<String, Object>();
-		List<VGoodsId> list = gDao.getList(start, limit, (short) 1);
+		Short[] state = { (short) 1, (short) 0 };
+		List<VGoodsId> list = gDao.getList(start, limit, state);
 		if (list != null) {
 			data.put("list", list);
-			data.put("total", gDao.getCount((short) 1));
+			data.put("total", gDao.getCount(state));
 		} else {
 			data.put("list", new ArrayList<>());
 		}
@@ -95,6 +96,7 @@ public class GoodsController {
 		return ResultUtils.toJson(101, "添加失败", "");
 	}
 
+	// 删除商品目录，伪删除，但会删除图片
 	@RequestMapping("/delCatalog")
 	@ResponseBody
 	public Object delCatalog(HttpServletRequest request, @RequestParam Long id) {
@@ -114,6 +116,18 @@ public class GoodsController {
 		return ResultUtils.toJson(101, "添加失败", "");
 	}
 
+	// 上下架商品
+	@RequestMapping("/updateGoodsState")
+	@ResponseBody
+	public Object updateGoodsState(HttpServletRequest request, Long id,
+			Short state) {
+		gDao = new GoodsDaoImp();
+		if (gDao.updateGoodsState(id, (short) Math.abs(state-1))) {
+			return ResultUtils.toJson(100, "操作成功", "");
+		}
+		return ResultUtils.toJson(101, "操作失败", "");
+	}
+
 	@RequestMapping("/updateCatalog")
 	@ResponseBody
 	public Object updateCatalog(@RequestParam Long id,
@@ -131,7 +145,7 @@ public class GoodsController {
 	@ResponseBody
 	public Object addGoods(HttpServletRequest request, String name,
 			Double price, @RequestParam CommonsMultipartFile file,
-			Long catalogId, String description, String origin)
+			Long catalogId, String description, String origin, String unit)
 			throws IllegalStateException, IOException {
 		Long time = System.currentTimeMillis() / 1000;
 
@@ -155,12 +169,20 @@ public class GoodsController {
 
 		String url = "upload/goods/" + catalogId + "/" + filename;
 
-		Goods goods = new Goods(name, price, url, catalogId, time);
+		Goods goods = new Goods(name, price, url, catalogId, time, "g", 500);
 		if (description != null) {
 			goods.setDescription(description);
 		}
 		if (origin != null) {
 			goods.setOrigin(origin);
+		}
+		if (unit != null) {
+			try {
+				goods.setUnitName(unit.replaceAll("\\d+", ""));
+				goods.setUnitNum(Integer.parseInt(unit.replaceAll("\\D+", "")));
+			} catch (Exception e) {
+				return ResultUtils.toJson(101, "添加失败，单位格式错误", "");
+			}
 		}
 		gDao = new GoodsDaoImp();
 		if (gDao.saveOrUpdate(goods) > 0) {
@@ -169,6 +191,7 @@ public class GoodsController {
 		return ResultUtils.toJson(101, "添加失败", "");
 	}
 
+	// 删除商品，伪删除
 	@RequestMapping("/deleteGoods")
 	@ResponseBody
 	public Object deleteGoods(HttpServletRequest request, Long id) {
@@ -194,7 +217,7 @@ public class GoodsController {
 	public Object updateGoods(HttpServletRequest request, Long id, String name,
 			Double price,
 			@RequestParam(required = false) CommonsMultipartFile file,
-			Long catalogId, String description, String origin)
+			Long catalogId, String description, String origin, String unit,Short state)
 			throws IllegalStateException, IOException {
 		Long time = System.currentTimeMillis() / 1000;
 		gDao = new GoodsDaoImp();
@@ -236,7 +259,15 @@ public class GoodsController {
 			}
 		}
 		Goods goods = new Goods(name, price, url, catalogId, description, time,
-				origin, (short) 1);
+				origin, state, "g", 500);
+		if (unit != null) {
+			try {
+				goods.setUnitName(unit.replaceAll("\\d+", ""));
+				goods.setUnitNum(Integer.parseInt(unit.replaceAll("\\D+", "")));
+			} catch (Exception e) {
+				return ResultUtils.toJson(101, "修改失败，单位格式错误", "");
+			}
+		}
 		goods.setId(id);
 		if (gDao.saveOrUpdate(goods) == 0) {
 			return ResultUtils.toJson(100, "修改成功", "");

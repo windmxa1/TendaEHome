@@ -17,6 +17,10 @@ public interface UserDao {
 	public VUserId getVUser(String phone,String password);
 	public VUserId getVUser(Long id);
 	/**
+	 * 获取用户总数
+	 */
+	public Long getUserCount();
+	/**
 	 * 获取用户对象
 	 */
 	public User getUser(Long userid,String password);

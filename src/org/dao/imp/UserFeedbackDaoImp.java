@@ -75,7 +75,8 @@ public class UserFeedbackDaoImp implements UserFeedbackDao {
 			Session session = HibernateSessionFactory.getSession();
 			Query query = null;
 			if (read == null) {
-				query = session.createQuery("from VUserFeedback v order by v.id.read");
+				query = session
+						.createQuery("from VUserFeedback v order by v.id.read");
 			} else {
 				query = session
 						.createQuery("from VUserFeedback where v.id.read= ? order by v.id.read");
@@ -101,6 +102,23 @@ public class UserFeedbackDaoImp implements UserFeedbackDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
+	@Override
+	public Long getFeedbackCount() {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			String sql = "select count(id) from UserFeedback";
+			Query query = session.createQuery(sql);
+			query.setMaxResults(1);
+			Long count = (Long) query.uniqueResult();
+			return count;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 0L;
 		} finally {
 			HibernateSessionFactory.closeSession();
 		}

@@ -207,9 +207,12 @@ public class OrdersDaoImp implements OrdersDao {
 			}
 			if (limit == null) {
 				limit = 15;
+				query.setMaxResults(limit);
+			} else if (limit == -1) {
+			} else {
+				query.setMaxResults(limit);
 			}
 			query.setFirstResult(start);
-			query.setMaxResults(limit);
 			List<VOrders> vOrders = query.list();
 			List<VOrdersId> list = new ArrayList<VOrdersId>();
 			for (VOrders v : vOrders) {

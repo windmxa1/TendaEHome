@@ -19,6 +19,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.util.Constants;
+import org.util.PDFUtil;
 import org.util.ResultUtils;
 import org.util.Utils;
 import org.util.WXAPI;
@@ -46,6 +48,24 @@ public class OrdersController {
 			data.put("total", oDao.getCountByState(state));
 		}
 		return ResultUtils.toJson(100, "", data);
+	}
+
+	@RequestMapping("/getOrdersPDF")
+	@ResponseBody
+	public Object getOrdersPDF(HttpServletRequest request, Integer state) {
+		oDao = new OrdersDaoImp();
+		List<VOrdersId> list = oDao.getListByState(0, -1, state);
+		for (VOrdersId v : list) {
+			v.setDetails(oDao.getDetailList(v.getId(), 0, -1));
+		}
+		if (list == null || list.size() == 0) {
+			return ResultUtils.toJson(100, "暂无订单", "");
+		} else {
+			String url = PDFUtil.buidPDF(Constants.watermark, list, 0);
+			data = new HashMap<String, Object>();
+			data.put("pdfUrl", url);
+			return ResultUtils.toJson(100, "", data);
+		}
 	}
 
 	@RequestMapping("/getOrdersDetails")
@@ -86,7 +106,7 @@ public class OrdersController {
 					start, limit);
 			v.setDetails(details);
 			data.put("list", v);
-			data.put("total",1);
+			data.put("total", 1);
 		} else {
 			data.put("list", new ArrayList<>());
 		}

@@ -41,6 +41,12 @@
 	<mapping resource="org/model/UserFeedback.hbm.xml" />
 	<mapping resource="org/view/VUserFeedback.hbm.xml" />
 	<mapping resource="org/view/VTv.hbm.xml" />
+	<mapping resource="org/model/RepairOrder.hbm.xml" />
+	<mapping resource="org/model/RepairComment.hbm.xml" />
+	<mapping resource="org/view/VRepairOrder.hbm.xml" />
+	<mapping resource="org/model/StaffPromotion.hbm.xml" />
+	<mapping resource="org/view/VStaffPromotion.hbm.xml" />
+	<mapping resource="org/model/Staff.hbm.xml" />
 
 </session-factory>
 

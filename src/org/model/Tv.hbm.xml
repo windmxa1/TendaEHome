@@ -22,5 +22,8 @@
         <property name="time" type="java.lang.Long">
             <column name="time" not-null="true" />
         </property>
+        <property name="available" type="java.lang.Integer">
+            <column name="available" not-null="true" />
+        </property>
     </class>
 </hibernate-mapping>

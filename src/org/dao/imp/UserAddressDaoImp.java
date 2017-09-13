@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.dao.UserAddressDao;
 import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.model.User;
@@ -105,6 +106,24 @@ public class UserAddressDaoImp implements UserAddressDao {
 			query.setParameter(0, userid);
 			query.setMaxResults(1);
 			UserAddress userAddress = (UserAddress) query.uniqueResult();
+			return userAddress;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
+	@Override
+	public String getAddressById(Long id) {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			String sql = "select concat(ua.receiver,' ',ua.sex,' ',ua.tel,' ',ua.address) as address from user_address ua where id= ? ";
+			SQLQuery query = session.createSQLQuery(sql);
+			query.setParameter(0, id);
+			query.setMaxResults(1);
+			String userAddress = (String) query.uniqueResult();
 			return userAddress;
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -1,7 +1,5 @@
 package org.view;
 
-import java.math.BigDecimal;
-
 /**
  * VGoodsId entity. @author MyEclipse Persistence Tools
  */
@@ -9,23 +7,24 @@ import java.math.BigDecimal;
 public class VGoodsId implements java.io.Serializable {
 
 	// Fields
-
 	private Long goodsId;
 	private String name;		//名称
 	private Double price;		//单价
 	private String url;
 	private Long catalogId;
 	private String description;//描述
-	private Long time;		
+	private Long time;
 	private Short state;
+	private String status;
+	private String unit;		//单位
 	private String createTime;	//最新修改时间
 	private String catalog;		//商品种类
-	private BigDecimal count;		//商品已售数目
-	private Double disPrice;	
-	private String startDate;	
+	private Long count;		//商品已售数目
+	private Double disPrice;
+	private String startDate;
 	private String endDate;
 	private String goodsUrl;	//商品图片地址
-	private String origin;		
+	private String origin;		//原产地
 
 	// Constructors
 
@@ -47,9 +46,9 @@ public class VGoodsId implements java.io.Serializable {
 	/** full constructor */
 	public VGoodsId(Long goodsId, String name, Double price, String url,
 			Long catalogId, String description, Long time, Short state,
-			String createTime, String catalog, BigDecimal count,
-			Double disPrice, String startDate, String endDate, String goodsUrl,
-			String origin) {
+			String status, String unit, String createTime, String catalog,
+			Long count, Double disPrice, String startDate, String endDate,
+			String goodsUrl, String origin) {
 		this.goodsId = goodsId;
 		this.name = name;
 		this.price = price;
@@ -58,6 +57,8 @@ public class VGoodsId implements java.io.Serializable {
 		this.description = description;
 		this.time = time;
 		this.state = state;
+		this.status = status;
+		this.unit = unit;
 		this.createTime = createTime;
 		this.catalog = catalog;
 		this.count = count;
@@ -126,6 +127,30 @@ public class VGoodsId implements java.io.Serializable {
 		this.time = time;
 	}
 
+	public Short getState() {
+		return this.state;
+	}
+
+	public void setState(Short state) {
+		this.state = state;
+	}
+
+	public String getStatus() {
+		return this.status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getUnit() {
+		return this.unit;
+	}
+
+	public void setUnit(String unit) {
+		this.unit = unit;
+	}
+
 	public String getCreateTime() {
 		return this.createTime;
 	}
@@ -142,11 +167,11 @@ public class VGoodsId implements java.io.Serializable {
 		this.catalog = catalog;
 	}
 
-	public BigDecimal getCount() {
+	public Long getCount() {
 		return this.count;
 	}
 
-	public void setCount(BigDecimal count) {
+	public void setCount(Long count) {
 		this.count = count;
 	}
 
@@ -190,14 +215,6 @@ public class VGoodsId implements java.io.Serializable {
 		this.origin = origin;
 	}
 
-	public Short getState() {
-		return state;
-	}
-
-	public void setState(Short state) {
-		this.state = state;
-	}
-
 	public boolean equals(Object other) {
 		if ((this == other))
 			return true;
@@ -233,6 +250,12 @@ public class VGoodsId implements java.io.Serializable {
 				&& ((this.getState() == castOther.getState()) || (this
 						.getState() != null && castOther.getState() != null && this
 						.getState().equals(castOther.getState())))
+				&& ((this.getStatus() == castOther.getStatus()) || (this
+						.getStatus() != null && castOther.getStatus() != null && this
+						.getStatus().equals(castOther.getStatus())))
+				&& ((this.getUnit() == castOther.getUnit()) || (this.getUnit() != null
+						&& castOther.getUnit() != null && this.getUnit()
+						.equals(castOther.getUnit())))
 				&& ((this.getCreateTime() == castOther.getCreateTime()) || (this
 						.getCreateTime() != null
 						&& castOther.getCreateTime() != null && this
@@ -284,6 +307,10 @@ public class VGoodsId implements java.io.Serializable {
 				+ (getTime() == null ? 0 : this.getTime().hashCode());
 		result = 37 * result
 				+ (getState() == null ? 0 : this.getState().hashCode());
+		result = 37 * result
+				+ (getStatus() == null ? 0 : this.getStatus().hashCode());
+		result = 37 * result
+				+ (getUnit() == null ? 0 : this.getUnit().hashCode());
 		result = 37
 				* result
 				+ (getCreateTime() == null ? 0 : this.getCreateTime()

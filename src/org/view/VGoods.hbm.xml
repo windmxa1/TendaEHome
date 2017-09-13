@@ -23,7 +23,7 @@
                 <column name="catalog_id" />
             </key-property>
             <key-property name="description" type="java.lang.String">
-                <column name="description" length="10" />
+                <column name="description" length="100" />
             </key-property>
             <key-property name="time" type="java.lang.Long">
                 <column name="time" />
@@ -31,14 +31,20 @@
             <key-property name="state" type="java.lang.Short">
                 <column name="state" />
             </key-property>
+            <key-property name="status" type="java.lang.String">
+                <column name="status" length="3" />
+            </key-property>
+            <key-property name="unit" type="java.lang.String">
+                <column name="unit" length="22" />
+            </key-property>
             <key-property name="createTime" type="java.lang.String">
                 <column name="create_time" length="24" />
             </key-property>
             <key-property name="catalog" type="java.lang.String">
                 <column name="catalog" length="20" />
             </key-property>
-            <key-property name="count" type="java.math.BigDecimal">
-                <column name="count" precision="32" scale="0" />
+            <key-property name="count" type="java.lang.Long">
+                <column name="count" />
             </key-property>
             <key-property name="disPrice" type="java.lang.Double">
                 <column name="dis_price" precision="11" />
@@ -50,7 +56,7 @@
                 <column name="end_date" length="24" />
             </key-property>
             <key-property name="goodsUrl" type="java.lang.String">
-                <column name="goods_url" length="237" />
+                <column name="goods_url" length="236" />
             </key-property>
             <key-property name="origin" type="java.lang.String">
                 <column name="origin" length="20" />

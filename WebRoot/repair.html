@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title></title>
+<!--jquery库-->
+<script src="js/jquery.min.js"></script>
+<!--bootstrap库-->
+<link href="css/bootstrap.min.css" rel="stylesheet" />
+<script src="js/bootstrap/bootstrap.min.js"></script>
+<!--font-awesome字体库-->
+<link href="css/font-awesome.min.css" rel="stylesheet" />
+<!--平滑滚动到顶部库-->
+<script src="js/jquery.scrolltopcontrol/scrolltopcontrol.js"
+	type="text/javascript"></script>
+<!--主要写的jquery拓展方法-->
+<script src="js/jquery.extend.js" type="text/javascript"></script>
+<!--主要写的css代码-->
+<link href="css/default.css" rel="stylesheet" type="text/css" />
+<script src="js/default.js" type="text/javascript"></script>
+<link href="css/query_startic_pro.css" rel="stylesheet" type="text/css" />
+<script src="js/repair.js" type="text/javascript"></script>
+</head>
+<body>
+	<div id="browser" class="tbtree" style="text-align: center;">
+		<div class="webdesigntuts-workshop" style="margin:10px; height: 30px;">
+			<div style="float: left;">
+				<select class="selectType" style="width: 120px; height: 24px;">
+					<option value="">请选择状态</option>
+					<option value="0">未处理</option>
+					<option value="1">处理中</option>
+					<option value="2">处理完成</option>
+				</select>
+				<button onclick="selectOrder()"
+					style="background: #0066CC; border: none; outline: none; color: #FFFFFF;">搜索</button>
+			</div>
+		</div>
+		<div id="mainTbtable" class='uqt_detail'>
+			<table id="UQT_detailTable" class="">
+			</table>
+		</div>
+
+		<div id="div_pager" class="page_con"></div>
+	</div>
+
+	<!--------------------------------修改维修单(开始)---------------------------------------->
+	<div class="modal fade" id="modOrder" tabindex="-1" role="dialog"
+		aria-labelledby="xgspLabel" aria-hidden="true">
+		<div class="modal-dialog" style="width: 350px;">
+			<div class="modal-content">
+				<div class="modal-header"
+					style="text-align: center; font-weight:bold;">
+					<h4 class="modal-title" id="xgspLabel">修改维修单</h4>
+				</div>
+				<div class="modal-body">
+					<form role="form" id="modOrder_form">
+						<div style="display: none;">
+							<input type="text" class="form-control" name="id" id="OrderId"
+								aria-describedby="stmp">
+						</div>
+						<div style="display: none;">
+							<input type="text" class="form-control" name="userid" id="UserId"
+								aria-describedby="stmp">
+						</div>
+						<div class="form-group has-feedback">
+							<label for="id">员工编号(必填)</label> <input type="text"
+								class="form-control" name="staffId" id="OrderstaffId"
+								aria-describedby="stmp">
+						</div>
+						<div class="form-group has-feedback">
+							<label for="id">预约时间</label> <input readonly="readonly" type="text"
+								class="form-control" name="appointmentTime" id="OrderTime"
+								aria-describedby="stmp">
+						</div>
+						<div class="form-group has-feedback">
+							<label for="name">联系电话</label> <input readonly="readonly" type="text"
+								class="form-control" name="phone" id="Orderphone"
+								placeholder="请输入联系电话" aria-describedby="stmp">
+						</div>
+						<div class="form-group">
+							<label for="price">状态(必填)</label> 
+							<select class="form-control" id="Orderstatus" name="status" >
+								<option value="">请选择状态</option>
+								<option value="0">未处理</option>
+								<option value="1">处理中</option>
+								<option value="2">处理完成</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="price">处理结果(必填)</label> <input type="text"
+								class="form-control" name="handleResult" id="OrderhandleResult"
+								placeholder="请输入处理结果" aria-describedby="stmp">
+						</div>
+						<div class="form-group">
+							<label for="price">地址</label> <input readonly="readonly" type="text"
+								class="form-control" name="address" id="Orderaddress"
+								placeholder="请输地址" aria-describedby="stmp">
+						</div>
+						<div class="form-group">
+							<label for="price">维修内容</label>
+							<textarea class="form-control" name="description"
+								id="Orderdescription" rows="2" placeholder="请输入维修内容"></textarea>
+						</div>
+
+						<input type="reset" name="reset" style="display: none;" />
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					<button type="button" id="modOrder_btn" class="btn btn-info"
+						style="border: none;outline: none;">确认</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--------------------------------修改维修单(结束)---------------------------------------->
+
+</body>
+</html>

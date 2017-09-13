@@ -87,6 +87,7 @@ public class TokenUtils {
 
 	public static Key getKey() {
 		File file = new File(rootPath + "key.txt");
+//		File file = new File("F:\\" + "key.txt");
 		try {
 			if (file.exists()) {
 //				System.out.println("key文件存在");

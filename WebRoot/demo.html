@@ -4,8 +4,101 @@
 <script type="text/javascript" src="js/jquery.min.js"></script>
 <script type="text/javascript" src="js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css"></link>
+<script type="text/javascript" src="js/jquery.min.js"></script>
 </head>
-	<body>
-		
-	</body>
+<script type="text/javascript">
+	$(function() {
+		var token = "";
+		$("#btn1").click(function() {
+			var user = {
+				phone : $("#phone").val(),
+				password : "123456"
+			};
+			var admin = {
+				username : "admin",
+				password : "e10adc3949ba59abbe56e057f20f883e"
+			};
+			$.ajax({
+				type : "post",
+				url : "back/admin/login",
+				data : admin,
+				success : function(data) {
+					token = data.data.token;
+					console.log("token:" + token);
+				},
+				error : function(data) {
+					alert("error");
+				}
+			});
+		});
+		function toJson(x) {
+			var o = {};
+			var a = x.serializeArray();
+			$.each(a, function() {
+				if (o[this.name]) {
+					if (!o[this.name].push) {
+						o[this.name] = [ o[this.name] ];
+					}
+					o[this.name].push(this.value || '');
+				} else {
+					o[this.name] = this.value || '';
+				}
+			});
+			return JSON.stringify(o);
+		}
+		$("#btn2").click(function() {
+			console.log(toJson($("#form1")));
+			$.ajax({
+				type : "post",
+				url : "back/repair/updateRepairOrder",
+				data : toJson($("#form1")),
+				dataType : "json",
+				contentType : "application/json;charset=utf-8",
+				processData : false,
+				beforeSend : function(request) {
+					request.setRequestHeader("token", token);
+				},
+				success : function(data) {
+					console.log(JSON.stringify(data));
+				},
+				error : function(data) {
+					console.log('error');
+				}
+			});
+		});
+		$("#btn3").click(function() {
+			$.ajax({
+				type : "post",
+				url : "back/orders/getOrdersPDF",
+				dataType : "json",
+				processData : false,
+				beforeSend : function(request) {
+					request.setRequestHeader("token", token);
+				},
+				success : function(data) {
+					console.log(JSON.stringify(data));
+				},
+				error : function(data) {
+					console.log('error');
+				}
+			});
+		});
+	});
+</script>
+<body>
+	<input type="text" id="phone">
+	<input type="button" value="btn1" id="btn1">
+	<form action="" id="form1">
+		<input type="text" name="id" value="1"> <input type="text"
+			name="appointmentTime" value="23"> <input type="text"
+			name="address" value="1123"> <input type="text"
+			name="description" value="1333"> <input type="text"
+			name="phone" value="44441"> <input type="text" name="status"
+			value="3"> <input type="text" name="handleResult"
+			value="1asd"> <input type="text" name="userid" value="1">
+		<input type="text" name="staffId" value="1">
+	</form>
+	<input type="button" value="btn2" id="btn2">
+	<input type="button" value="btn3" id="btn3">
+</body>
 </html>

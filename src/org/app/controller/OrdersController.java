@@ -10,7 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import org.bean.OrderModel;
 import org.dao.GoodsDao;
 import org.dao.OrdersDao;
+import org.dao.UserAddressDao;
 import org.dao.imp.OrdersDaoImp;
+import org.dao.imp.UserAddressDaoImp;
 import org.model.Orders;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,6 +30,7 @@ import org.view.VOrdersId;
 public class OrdersController {
 	OrdersDao oDao;
 	GoodsDao gDao;
+	UserAddressDao uAddressDao;
 	// Long userid;
 	Map<String, Object> data;
 
@@ -108,6 +111,7 @@ public class OrdersController {
 	@ResponseBody
 	public Object addOrder(HttpServletRequest request, @RequestBody OrderModel o) {
 		oDao = new OrdersDaoImp();
+		uAddressDao = new UserAddressDaoImp();
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");
 		Long userid = Long.parseLong(""
@@ -115,8 +119,9 @@ public class OrdersController {
 		Long time = System.currentTimeMillis();
 		String orderNum = time + Utils.ran6();
 		/*********************************/
-		Orders orders = new Orders(userid, time / 1000, 1, o.getAddressId(),
-				orderNum);
+		Orders orders = new Orders(userid, time / 1000, 1,
+				uAddressDao.getAddressById(o.getAddressId()), orderNum);
+		System.out.println(o.getAddressId()+"|||"+orders.getAddress());
 		Long id = oDao.generateOrder(orders, o.getDetails());
 		if (id > 0) {
 			Double Realtotal = oDao.getTotal(orderNum);

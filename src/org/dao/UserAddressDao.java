@@ -16,6 +16,10 @@ public interface UserAddressDao {
 	public boolean delete(Long userid,Long id);
 	
 	/**
+	 * 根据Id获取地址
+	 */
+	public String getAddressById(Long id);
+	/**
 	 * 查出用户对应的地址信息
 	 */
 	public List<UserAddress> getList(Long userid);

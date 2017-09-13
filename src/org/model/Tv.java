@@ -13,6 +13,7 @@ public class Tv implements java.io.Serializable {
 	private String imgUrl;
 	private String tvUrl;
 	private Long time;
+	private Integer available;
 
 	// Constructors
 
@@ -21,11 +22,13 @@ public class Tv implements java.io.Serializable {
 	}
 
 	/** full constructor */
-	public Tv(String name, String imgUrl, String tvUrl, Long time) {
+	public Tv(String name, String imgUrl, String tvUrl, Long time,
+			Integer available) {
 		this.name = name;
 		this.imgUrl = imgUrl;
 		this.tvUrl = tvUrl;
 		this.time = time;
+		this.available = available;
 	}
 
 	// Property accessors
@@ -68,6 +71,14 @@ public class Tv implements java.io.Serializable {
 
 	public void setTime(Long time) {
 		this.time = time;
+	}
+
+	public Integer getAvailable() {
+		return this.available;
+	}
+
+	public void setAvailable(Integer available) {
+		this.available = available;
 	}
 
 }

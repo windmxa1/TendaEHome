@@ -16,11 +16,11 @@
             <key-property name="time" type="java.lang.Long">
                 <column name="time" />
             </key-property>
-            <key-property name="orderNum" type="java.lang.String">
-                <column name="order_num" length="20" />
-            </key-property>
             <key-property name="total" type="java.lang.Double">
-                <column name="total" precision="33" />
+                <column name="total" precision="11" />
+            </key-property>
+            <key-property name="num" type="java.lang.Long">
+                <column name="num" />
             </key-property>
             <key-property name="createTime" type="java.lang.String">
                 <column name="create_time" length="24" />
@@ -32,7 +32,10 @@
                 <column name="status" length="8" />
             </key-property>
             <key-property name="address" type="java.lang.String">
-                <column name="address" length="263" />
+                <column name="address" length="200" />
+            </key-property>
+            <key-property name="orderNum" type="java.lang.String">
+                <column name="order_num" length="20" />
             </key-property>
         </composite-id>
     </class>

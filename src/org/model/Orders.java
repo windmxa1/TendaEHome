@@ -12,10 +12,8 @@ public class Orders implements java.io.Serializable {
 	private Long userid;
 	private Long time;
 	private Integer state;
-	private Long addressId;
+	private String address;
 	private String orderNum;
-	private Integer pay_way;
-	private Double total;
 
 	// Constructors
 
@@ -23,20 +21,21 @@ public class Orders implements java.io.Serializable {
 	public Orders() {
 	}
 
-	public Orders(Long userid, Long time, Long addressId, String orderNum) {
+	/** minimal constructor */
+	public Orders(Long userid, Long time, String address, String orderNum) {
 		this.userid = userid;
 		this.time = time;
-		this.addressId = addressId;
+		this.address = address;
 		this.orderNum = orderNum;
 	}
 
 	/** full constructor */
-	public Orders(Long userid, Long time, Integer state, Long addressId,
+	public Orders(Long userid, Long time, Integer state, String address,
 			String orderNum) {
 		this.userid = userid;
 		this.time = time;
 		this.state = state;
-		this.addressId = addressId;
+		this.address = address;
 		this.orderNum = orderNum;
 	}
 
@@ -74,12 +73,12 @@ public class Orders implements java.io.Serializable {
 		this.state = state;
 	}
 
-	public Long getAddressId() {
-		return this.addressId;
+	public String getAddress() {
+		return this.address;
 	}
 
-	public void setAddressId(Long addressId) {
-		this.addressId = addressId;
+	public void setAddress(String address) {
+		this.address = address;
 	}
 
 	public String getOrderNum() {
@@ -88,22 +87,6 @@ public class Orders implements java.io.Serializable {
 
 	public void setOrderNum(String orderNum) {
 		this.orderNum = orderNum;
-	}
-
-	public Integer getPay_way() {
-		return pay_way;
-	}
-
-	public void setPay_way(Integer pay_way) {
-		this.pay_way = pay_way;
-	}
-
-	public Double getTotal() {
-		return total;
-	}
-
-	public void setTotal(Double total) {
-		this.total = total;
 	}
 
 }

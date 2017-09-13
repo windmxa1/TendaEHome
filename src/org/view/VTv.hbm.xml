@@ -14,7 +14,7 @@
                 <column name="name" length="20" />
             </key-property>
             <key-property name="imgUrl" type="java.lang.String">
-                <column name="img_url" length="200" />
+                <column name="img_url" length="236" />
             </key-property>
             <key-property name="tvUrl" type="java.lang.String">
                 <column name="tv_url" length="200" />
@@ -24,6 +24,9 @@
             </key-property>
             <key-property name="createTime" type="java.lang.String">
                 <column name="create_time" length="24" />
+            </key-property>
+            <key-property name="available" type="java.lang.Integer">
+                <column name="available" />
             </key-property>
         </composite-id>
     </class>

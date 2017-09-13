@@ -23,7 +23,7 @@
             <column name="catalog_id" not-null="true" />
         </property>
         <property name="description" type="java.lang.String">
-            <column name="description" length="10" />
+            <column name="description" length="100" />
         </property>
         <property name="time" type="java.lang.Long">
             <column name="time" not-null="true" />
@@ -35,6 +35,12 @@
         </property>
         <property name="state" type="java.lang.Short">
             <column name="state" />
+        </property>
+        <property name="unitName" type="java.lang.String">
+            <column name="unit_name" length="11" not-null="true" />
+        </property>
+        <property name="unitNum" type="java.lang.Integer">
+            <column name="unit_num" not-null="true" />
         </property>
     </class>
 </hibernate-mapping>
