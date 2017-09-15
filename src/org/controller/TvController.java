@@ -21,7 +21,7 @@ public class TvController {
 	 */
 	@RequestMapping("/getTvList")
 	@ResponseBody
-	public Object getRepairOrderList(HttpServletRequest request) {
+	public Object getRepairOrderList(HttpServletRequest request) throws Exception{
 
 		return ResultUtils.toJson(100, "", "");
 	}

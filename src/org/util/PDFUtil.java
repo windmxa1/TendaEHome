@@ -15,6 +15,7 @@ import org.view.VRepairOrderId;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Image;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Rectangle;
@@ -129,6 +130,9 @@ public class PDFUtil {
 			Font cf1 = FontFactory.getFont("STSong-Light", "UniGB-UCS2-H",
 					BaseFont.NOT_EMBEDDED, 10);
 			selector.addFont(cf1);
+			Font cf2 = FontFactory.getFont("STSong-Light", "UniGB-UCS2-H",
+					BaseFont.NOT_EMBEDDED, 14);
+
 			// 设置标题显示字体STSong-Light及大小
 			Font headerFont = FontFactory.getFont("STSong-Light",
 					"UniGB-UCS2-H", BaseFont.NOT_EMBEDDED, 18);
@@ -140,16 +144,14 @@ public class PDFUtil {
 			table.addCell(cell);
 			for (VOrdersId v : list) {
 				table.addCell(selector.process("订单编号"));
-//				table.addCell(selector.process("订单状态"));
 				table.addCell(selector.process("收货地址"));
 				table.addCell(selector.process("下单时间"));
 				table.addCell(selector.process("" + v.getOrderNum()));
-//				table.addCell(selector.process("" + v.getStatus()));
 				table.addCell(selector.process("" + v.getAddress()));
 				table.addCell(selector.process("" + v.getCreateTime()));
-				PdfPCell cell2 = new PdfPCell(selector.process("订单明细"));
+				PdfPCell cell2 = new PdfPCell(new Paragraph("订单明细", cf2));
 				cell2.setHorizontalAlignment(0);
-				cell2.setColspan(5);
+				cell2.setColspan(3);
 				table.addCell(cell2);
 				table.addCell(selector.process("商品名"));
 				table.addCell(selector.process("商品数目"));
@@ -159,6 +161,13 @@ public class PDFUtil {
 					table.addCell(selector.process("" + vDetails.getNum()));
 					table.addCell(selector.process(""));
 				}
+				Image jpg = Image.getInstance("D:\\1.png");
+				jpg.setAlignment(Image.ALIGN_CENTER);
+				table.addCell(jpg);
+				PdfPCell cell1 = new PdfPCell(new Paragraph(""));
+				cell1.setFixedHeight(20f);
+				cell1.setColspan(3);
+				table.addCell(cell1);
 			}
 			doc.add(table);
 			doc.close();

@@ -21,7 +21,7 @@ public class GarouselController {
 
 	@RequestMapping("/getGarousels")
 	@ResponseBody
-	public Object getGarousels(Integer catalogId) {
+	public Object getGarousels(Integer catalogId) throws Exception {
 		gDao = new GarouselDaoImp();
 		data = new HashMap<String, Object>();
 		if (catalogId == null) {

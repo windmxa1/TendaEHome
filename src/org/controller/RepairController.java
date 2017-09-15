@@ -30,7 +30,7 @@ public class RepairController {
 	@RequestMapping("/getRepairOrderList")
 	@ResponseBody
 	public Object getRepairOrderList(HttpServletRequest request, Integer start,
-			Integer limit, Integer type[]) {
+			Integer limit, Integer type[]) throws Exception{
 		rDao = new RepairDaoImp();
 		List<VRepairOrderId> list = rDao.getList(start, limit, type);
 
@@ -49,7 +49,7 @@ public class RepairController {
 	@RequestMapping("/updateRepairOrder")
 	@ResponseBody
 	public Object updateRepairOrder(HttpServletRequest request,
-			@RequestBody RepairOrder repair) {
+			@RequestBody RepairOrder repair) throws Exception{
 		rDao = new RepairDaoImp();
 		if (rDao.saveOrUpdate(repair) == 0L) {
 			return ResultUtils.toJson(100, "修改成功", "");
@@ -63,7 +63,7 @@ public class RepairController {
 	@RequestMapping("/getRepairOrderPDF")
 	@ResponseBody
 	public Object getRepairOrderPDF(HttpServletRequest request, Integer start,
-			Integer limit, Integer type[]) {
+			Integer limit, Integer type[]) throws Exception{
 		rDao = new RepairDaoImp();
 		List<VRepairOrderId> list = rDao.getList(start, limit, type);
 		if (list == null || list.size() == 0) {
@@ -78,7 +78,7 @@ public class RepairController {
 	 */
 	@RequestMapping("/deleteRepairOrder")
 	@ResponseBody
-	public Object deleteRepairOrder(HttpServletRequest request, Long[] id) {
+	public Object deleteRepairOrder(HttpServletRequest request, Long[] id)throws Exception {
 		rDao = new RepairDaoImp();
 		if(id==null||id.length==0){
 			return ResultUtils.toJson(101, "参数错误", "");

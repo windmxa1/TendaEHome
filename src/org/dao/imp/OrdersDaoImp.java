@@ -362,4 +362,24 @@ public class OrdersDaoImp implements OrdersDao {
 
 	}
 
+	@Override
+	public Boolean updateOrdersStaffId(String staffId, String orderNum) {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			Transaction ts = session.beginTransaction();
+			String sql = "update Orders set staffId=? where orderNum=?";
+			Query query = session.createQuery(sql);
+			query.setParameter(0, staffId);
+			query.setParameter(1, orderNum);
+			query.executeUpdate();
+			ts.commit();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
 }

@@ -26,7 +26,7 @@ public class AdminController {
 	@RequestMapping("/login")
 	@ResponseBody
 	public Object login(HttpServletRequest request, String username,
-			String password) {
+			String password) throws Exception{
 		aDao = new AdminDaoImp();		
 		Admin a = aDao.getAdmin(username, password);
 		if (a != null) {
@@ -47,7 +47,7 @@ public class AdminController {
 
 	@RequestMapping("/register")
 	@ResponseBody
-	public Object register(String username, String password) {
+	public Object register(String username, String password) throws Exception {
 		aDao = new AdminDaoImp();
 		Admin a = aDao.getAdmin(username);
 		if (a != null) {

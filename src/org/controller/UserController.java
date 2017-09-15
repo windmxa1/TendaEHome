@@ -31,7 +31,7 @@ public class UserController {
 	@RequestMapping("/getUserList")
 	@ResponseBody
 	public Object getUserList(HttpServletRequest request, Integer start,
-			Integer limit) {
+			Integer limit) throws Exception{
 		uDao = new UserDaoImp();
 		List<VUserId> list = uDao.getUsers(start, limit);
 		data = new HashMap<String, Object>();
@@ -43,7 +43,7 @@ public class UserController {
 	@RequestMapping("/getFeedbackList")
 	@ResponseBody
 	public Object getFeedbackList(HttpServletRequest request, Integer start,
-			Integer limit, Integer read) {
+			Integer limit, Integer read) throws Exception{
 		uFeedbackDao = new UserFeedbackDaoImp();
 		List<VUserFeedbackId> list = uFeedbackDao.getList(read, start, limit);
 		data = new HashMap<String, Object>();
@@ -54,7 +54,7 @@ public class UserController {
 
 	@RequestMapping("/deleteFeedback")
 	@ResponseBody
-	public Object deleteFeedback(HttpServletRequest request, Integer id) {
+	public Object deleteFeedback(HttpServletRequest request, Integer id)throws Exception {
 		uFeedbackDao = new UserFeedbackDaoImp();
 		if (uFeedbackDao.delete(id)) {
 			return ResultUtils.toJson(100, "删除成功", "");
@@ -64,7 +64,7 @@ public class UserController {
 
 	@RequestMapping("/updateFeedbackState")
 	@ResponseBody
-	public Object updateFeedbackState(HttpServletRequest request, Integer id) {
+	public Object updateFeedbackState(HttpServletRequest request, Integer id)throws Exception {
 		uFeedbackDao = new UserFeedbackDaoImp();
 		if (uFeedbackDao.updateRead(id)) {
 			return ResultUtils.toJson(100, "修改成功", "");

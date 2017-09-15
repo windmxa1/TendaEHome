@@ -37,7 +37,7 @@ public class OrdersController {
 	@RequestMapping("/getOrdersList")
 	@ResponseBody
 	public Object getOrdersList(HttpServletRequest request, Integer start,
-			Integer limit) {
+			Integer limit) throws Exception{
 		oDao = new OrdersDaoImp();
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");
@@ -59,7 +59,7 @@ public class OrdersController {
 
 	@RequestMapping("/getOrdersDetailList")
 	@ResponseBody
-	public Object getOrdersDetailList(Long orderId, Integer start, Integer limit) {
+	public Object getOrdersDetailList(Long orderId, Integer start, Integer limit)throws Exception {
 		oDao = new OrdersDaoImp();
 		List<VOrdersDetailsId> list = oDao.getDetailList(orderId, start, limit);
 		data = new HashMap<>();
@@ -74,7 +74,7 @@ public class OrdersController {
 	@RequestMapping("/getOrders")
 	@ResponseBody
 	public Object getOrders(HttpServletRequest request, Integer start,
-			Integer limit) {
+			Integer limit) throws Exception{
 		oDao = new OrdersDaoImp();
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");
@@ -93,7 +93,7 @@ public class OrdersController {
 
 	@RequestMapping("/cancelOrder")
 	@ResponseBody
-	public Object cancelOrder(HttpServletRequest request, Long id) {
+	public Object cancelOrder(HttpServletRequest request, Long id) throws Exception{
 		oDao = new OrdersDaoImp();
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");
@@ -109,7 +109,7 @@ public class OrdersController {
 
 	@RequestMapping("/addOrder")
 	@ResponseBody
-	public Object addOrder(HttpServletRequest request, @RequestBody OrderModel o) {
+	public Object addOrder(HttpServletRequest request, @RequestBody OrderModel o) throws Exception{
 		oDao = new OrdersDaoImp();
 		uAddressDao = new UserAddressDaoImp();
 		/**** 获取header中的token并取出userid ****/

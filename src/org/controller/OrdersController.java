@@ -37,7 +37,7 @@ public class OrdersController {
 	@RequestMapping("/getOrdersList")
 	@ResponseBody
 	public Object getOrdersList(HttpServletRequest request, Integer start,
-			Integer limit, Integer state) {
+			Integer limit, Integer state) throws Exception{
 		oDao = new OrdersDaoImp();
 		data = new HashMap<String, Object>();
 		List<VOrdersId> list = oDao.getListByState(start, limit, state);
@@ -52,7 +52,7 @@ public class OrdersController {
 
 	@RequestMapping("/getOrdersPDF")
 	@ResponseBody
-	public Object getOrdersPDF(HttpServletRequest request, Integer state) {
+	public Object getOrdersPDF(HttpServletRequest request, Integer state)throws Exception {
 		oDao = new OrdersDaoImp();
 		List<VOrdersId> list = oDao.getListByState(0, -1, state);
 		for (VOrdersId v : list) {
@@ -70,7 +70,7 @@ public class OrdersController {
 
 	@RequestMapping("/getOrdersDetails")
 	@ResponseBody
-	public Object getOrdersDetails(Long orderId, Integer start, Integer limit) {
+	public Object getOrdersDetails(Long orderId, Integer start, Integer limit) throws Exception{
 		oDao = new OrdersDaoImp();
 		data = new HashMap<>();
 		List<VOrdersDetailsId> list = oDao.getDetailList(orderId, start, limit);
@@ -85,7 +85,7 @@ public class OrdersController {
 
 	@RequestMapping("/updateOrder")
 	@ResponseBody
-	public Object updateOrder(HttpServletRequest request, Long id, Integer state) {
+	public Object updateOrder(HttpServletRequest request, Long id, Integer state)throws Exception {
 		oDao = new OrdersDaoImp();
 		if (oDao.updateOrder(id, state)) {
 			return ResultUtils.toJson(100, "修改成功", "");
@@ -97,7 +97,7 @@ public class OrdersController {
 	@RequestMapping("/getOrderByOrderNum")
 	@ResponseBody
 	public Object getOrderByOrderNum(String orderNum, Integer start,
-			Integer limit) {
+			Integer limit) throws Exception{
 		oDao = new OrdersDaoImp();
 		data = new HashMap<>();
 		VOrdersId v = oDao.getOrder(orderNum);
@@ -115,7 +115,7 @@ public class OrdersController {
 
 	@RequestMapping("/deleteOrder")
 	@ResponseBody
-	public Object deleteOrder(Long id) {// 仅允许删除被取消的订单
+	public Object deleteOrder(Long id)throws Exception {// 仅允许删除被取消的订单
 		oDao = new OrdersDaoImp();
 		if (oDao.deleteOrder(id) > 0) {
 			return ResultUtils.toJson(100, "删除成功", "");
@@ -123,11 +123,23 @@ public class OrdersController {
 			return ResultUtils.toJson(101, "删除失败", "");
 		}
 	}
+	
+	@RequestMapping("/staffDeliverOrder")
+	@ResponseBody
+	public Object staffDeliverOrder(String staffId,String orderNum) throws Exception{
+		oDao = new OrdersDaoImp();
+		if (oDao.updateOrdersStaffId(staffId,orderNum)) {
+			return ResultUtils.toJson(100, "绑定成功", "");
+		} else {
+			return ResultUtils.toJson(101, "绑定失败，请重试", "");
+		}
+	}
+	
 
 	@RequestMapping("/notifyWxPay")
 	@ResponseBody
 	public Object notifyWxPay(HttpServletRequest request,
-			@RequestBody WXNotify xml, HttpServletResponse response) {
+			@RequestBody WXNotify xml, HttpServletResponse response) throws Exception{
 		oDao = new OrdersDaoImp();
 		try {
 			// System.out.println(mapper.writeValueAsString(xml));

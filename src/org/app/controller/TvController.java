@@ -22,7 +22,7 @@ public class TvController {
 
 	@RequestMapping("/getTvList")
 	@ResponseBody
-	public Object getGarousels(Integer start, Integer limit) {
+	public Object getGarousels(Integer start, Integer limit)throws Exception {
 		tDao = new TvDaoImp();
 		data = new HashMap<>();
 		List<VTvId> list = tDao.getTVList(start, limit);

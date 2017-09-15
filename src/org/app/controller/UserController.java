@@ -12,9 +12,12 @@ import javax.servlet.http.HttpServletRequest;
 import org.dao.UserAddressDao;
 import org.dao.UserDao;
 import org.dao.UserFeedbackDao;
+import org.dao.VersionDao;
 import org.dao.imp.UserAddressDaoImp;
 import org.dao.imp.UserDaoImp;
 import org.dao.imp.UserFeedbackDaoImp;
+import org.dao.imp.VersionDaoImp;
+import org.model.AppVersion;
 import org.model.User;
 import org.model.UserAddress;
 import org.model.UserFeedback;
@@ -40,7 +43,7 @@ public class UserController {
 	@RequestMapping("/login")
 	@ResponseBody
 	public Object login(HttpServletRequest request, String phone,
-			String password) {
+			String password) throws Exception {
 		uDao = new UserDaoImp();
 		VUserId u = uDao.getVUser(phone, password);
 		if (u != null) {
@@ -60,7 +63,7 @@ public class UserController {
 
 	@RequestMapping("/getUserInfo")
 	@ResponseBody
-	public Object getUserInfo(HttpServletRequest request) {
+	public Object getUserInfo(HttpServletRequest request) throws Exception {
 		uDao = new UserDaoImp();
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");
@@ -80,7 +83,8 @@ public class UserController {
 
 	@RequestMapping("/phoneVerify")
 	@ResponseBody
-	public Object phoneVerify(HttpServletRequest request, String phone) {
+	public Object phoneVerify(HttpServletRequest request, String phone)
+			throws Exception {
 		uDao = new UserDaoImp();
 		User u = uDao.getUser(phone);
 		if (u != null) {
@@ -99,7 +103,8 @@ public class UserController {
 
 	@RequestMapping("/updatePassword")
 	@ResponseBody
-	public Object updatePassword(HttpServletRequest request, String newPwd) {
+	public Object updatePassword(HttpServletRequest request, String newPwd)
+			throws Exception {
 		uDao = new UserDaoImp();
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");
@@ -115,7 +120,7 @@ public class UserController {
 
 	@RequestMapping("/register")
 	@ResponseBody
-	public Object register(String phone, String password) {
+	public Object register(String phone, String password) throws Exception {
 		uDao = new UserDaoImp();
 		User u = uDao.getUser(phone);
 		if (u != null) {
@@ -132,7 +137,7 @@ public class UserController {
 	@RequestMapping("/updateUserInfo")
 	@ResponseBody
 	public Object updateUserInfo(HttpServletRequest request, String password,
-			String newPwd, String nickname) {
+			String newPwd, String nickname) throws Exception {
 		uDao = new UserDaoImp();
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");
@@ -158,15 +163,14 @@ public class UserController {
 	@RequestMapping("/updateHead")
 	@ResponseBody
 	public Object updateHead(@RequestParam CommonsMultipartFile file,
-			HttpServletRequest request) throws IllegalStateException,
-			IOException {
+			HttpServletRequest request) throws Exception {
 		String path = request.getSession().getServletContext()
 				.getRealPath("/upload/headimg/");
 		String filename = (System.currentTimeMillis() / 1000) + "_"
 				+ file.getOriginalFilename();
 		String filePath = path + File.separator + filename;
 		File newFile = new File(filePath);
-		
+
 		if (!newFile.getParentFile().exists()) {
 			System.out.println("目标文件的目录不存在，准备创建目录...");
 			if (!newFile.getParentFile().mkdirs()) {
@@ -202,7 +206,7 @@ public class UserController {
 
 	@RequestMapping("/getAddresses")
 	@ResponseBody
-	public Object getAddresses(HttpServletRequest request) {
+	public Object getAddresses(HttpServletRequest request) throws Exception {
 		uAddressDao = new UserAddressDaoImp();
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");
@@ -220,7 +224,7 @@ public class UserController {
 	@RequestMapping("/insertAddress")
 	@ResponseBody
 	public Object insertAddress(HttpServletRequest request, String address,
-			String receiver, String tel, String sex) {
+			String receiver, String tel, String sex) throws Exception {
 		uAddressDao = new UserAddressDaoImp();
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");
@@ -239,7 +243,8 @@ public class UserController {
 
 	@RequestMapping("/deleteAddress")
 	@ResponseBody
-	public Object deleteAddress(HttpServletRequest request, Long id) {
+	public Object deleteAddress(HttpServletRequest request, Long id)
+			throws Exception {
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");
 		Long userid = Long.parseLong(""
@@ -256,7 +261,7 @@ public class UserController {
 	@ResponseBody
 	public Object updateAddress(HttpServletRequest request, Long id,
 			String address, String receiver, String tel, String sex,
-			Short default_) {
+			Short default_) throws Exception {
 		uAddressDao = new UserAddressDaoImp();
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");
@@ -280,7 +285,7 @@ public class UserController {
 	@RequestMapping("/updateDefaultAddress")
 	@ResponseBody
 	public Object updateDefaultAddress(HttpServletRequest request, Long id,
-			Boolean default_) {
+			Boolean default_) throws Exception {
 		uAddressDao = new UserAddressDaoImp();
 		// System.out.println(default_);
 		if (uAddressDao.updateDefault(id, default_)) {
@@ -291,11 +296,30 @@ public class UserController {
 	}
 
 	/**
+	 * 检测版本是否为最新版
+	 */
+	@RequestMapping("/checkVersion")
+	@ResponseBody
+	public Object checkVersion(HttpServletRequest request, String version)
+			throws Exception {
+		VersionDao vDao = new VersionDaoImp();
+		AppVersion v = vDao.getLastVersion();
+		if (v == null || v.getVersion().equals(version)) {
+			return ResultUtils.toJson(100, "", "");
+		}
+		data = new HashMap<>();
+		data.put("version", v);
+		return ResultUtils.toJson(101, "生态宜家的最新版本" + v.getVersion()
+				+ "已发布,当前版本为" + version, data);
+	}
+
+	/**
 	 * 获取默认地址
 	 */
 	@RequestMapping("/getDefaultAddress")
 	@ResponseBody
-	public Object getDefaultAddress(HttpServletRequest request) {
+	public Object getDefaultAddress(HttpServletRequest request)
+			throws Exception {
 		uAddressDao = new UserAddressDaoImp();
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");
@@ -317,7 +341,8 @@ public class UserController {
 	 */
 	@RequestMapping("/addFeedback")
 	@ResponseBody
-	public Object addFeedback(HttpServletRequest request, String message) {
+	public Object addFeedback(HttpServletRequest request, String message)
+			throws Exception {
 		uFeedbackDao = new UserFeedbackDaoImp();
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");

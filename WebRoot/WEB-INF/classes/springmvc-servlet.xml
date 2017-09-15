@@ -18,7 +18,6 @@
 	<mvc:resources mapping="/upload/**" location="/upload/" />
 	<mvc:resources mapping="/fonts/**" location="/fonts/**" />
 	<mvc:resources mapping="/img/**" location="/img/" />
-	<mvc:resources location="/" mapping="/*.html" />
 
 	<mvc:interceptors>
 		<mvc:interceptor>
@@ -39,6 +38,7 @@
 			<mvc:exclude-mapping path="/back/admin/login" />
 			<mvc:exclude-mapping path="/back/admin/register" />
 			<mvc:exclude-mapping path="/back/staff/addStaffPromotion" />
+			<mvc:exclude-mapping path="/back/orders/staffDeliverOrder" />
 			<bean class="org.interceptor.BackInterceptor"></bean>
 		</mvc:interceptor>
 	</mvc:interceptors>	

@@ -34,7 +34,7 @@ public class GarouselController {
 
 	@RequestMapping("/getGarousels")
 	@ResponseBody
-	public Object getGarousels(Integer start, Integer limit) {
+	public Object getGarousels(Integer start, Integer limit)throws Exception {
 		gDao = new GarouselDaoImp();
 		data = new HashMap<String, Object>();
 		List<VGarouselId> list = gDao.getList(start, limit);
@@ -48,7 +48,7 @@ public class GarouselController {
 
 	@RequestMapping("/getCatalog")
 	@ResponseBody
-	public Object getCatalog(Integer start, Integer limit) {
+	public Object getCatalog(Integer start, Integer limit)throws Exception {
 		gcDao = new GarouselCatalogDaoImp();
 		data = new HashMap<String, Object>();
 		List<GarouselCatalog> list = gcDao.getCatalog(start, limit);
@@ -63,7 +63,7 @@ public class GarouselController {
 
 	@RequestMapping("/deleteGarousel")
 	@ResponseBody
-	public Object deleteGarousel(Long id) {
+	public Object deleteGarousel(Long id)throws Exception {
 		gDao = new GarouselDaoImp();
 		if (gDao.delete(id)) {
 			return ResultUtils.toJson(100, "删除成功", "");
@@ -76,7 +76,7 @@ public class GarouselController {
 	@ResponseBody
 	public Object insertGarousel(HttpServletRequest request, String title,
 			@RequestParam CommonsMultipartFile file, Integer catalogId,
-			String hyperlink) throws IllegalStateException, IOException {
+			String hyperlink) throws Exception {
 		gDao = new GarouselDaoImp();
 
 		Long time = System.currentTimeMillis() / 1000;
@@ -103,8 +103,7 @@ public class GarouselController {
 	public Object updateGarousel(HttpServletRequest request, Long id,
 			String title,
 			@RequestParam(required = false) CommonsMultipartFile file,
-			Integer catalogId, String hyperlink) throws IllegalStateException,
-			IOException {
+			Integer catalogId, String hyperlink)  throws Exception {
 		String path = request.getSession().getServletContext()
 				.getRealPath("/upload/garousel/");
 		gDao = new GarouselDaoImp();
@@ -137,7 +136,7 @@ public class GarouselController {
 
 	@RequestMapping("/addCatalog")
 	@ResponseBody
-	public Object insertCatalog(String catalog) {
+	public Object insertCatalog(String catalog) throws Exception{
 		gcDao = new GarouselCatalogDaoImp();
 		GarouselCatalog gCatalog = new GarouselCatalog(catalog);
 		if (gcDao.saveOrUpdate(gCatalog) > 0) {
@@ -149,7 +148,7 @@ public class GarouselController {
 
 	@RequestMapping("/updateCatalog")
 	@ResponseBody
-	public Object updateCatalog(Integer id, String catalog) {
+	public Object updateCatalog(Integer id, String catalog) throws Exception{
 		gcDao = new GarouselCatalogDaoImp();
 		GarouselCatalog gCatalog = new GarouselCatalog(catalog);
 		gCatalog.setId(id);
@@ -162,7 +161,7 @@ public class GarouselController {
 
 	@RequestMapping("/deleteCatalog")
 	@ResponseBody
-	public Object deleteCatalog(Integer id) {
+	public Object deleteCatalog(Integer id) throws Exception{
 		gcDao = new GarouselCatalogDaoImp();
 		if (gcDao.delete(id)) {
 			return ResultUtils.toJson(100, "删除成功", "");

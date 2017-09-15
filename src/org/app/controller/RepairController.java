@@ -29,7 +29,7 @@ public class RepairController {
 	@ResponseBody
 	public Object addRepairOrder(HttpServletRequest request,
 			String appointmentTime, String address, String description,
-			String phone) {
+			String phone) throws Exception{
 		rDao = new RepairDaoImp();
 
 		/**** 获取header中的token并取出userid ****/
@@ -51,7 +51,7 @@ public class RepairController {
 	@RequestMapping("/getRepairOrderList")
 	@ResponseBody
 	public Object getRepairOrderList(HttpServletRequest request, Integer start,
-			Integer limit) {
+			Integer limit)throws Exception {
 		rDao = new RepairDaoImp();
 		
 		/**** 获取header中的token并取出userid ****/
@@ -73,7 +73,7 @@ public class RepairController {
 	@RequestMapping("/addRepairComment")
 	@ResponseBody
 	public Object addRepairComment(HttpServletRequest request, Integer point,
-			String description, String suggestion, String staffId) {
+			String description, String suggestion, String staffId)throws Exception {
 		rDao = new RepairDaoImp();
 
 		/**** 获取header中的token并取出userid ****/

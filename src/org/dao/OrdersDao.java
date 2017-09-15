@@ -82,5 +82,9 @@ public interface OrdersDao {
 	 * 获取订单中商品种数
 	 */
 	public Long getDetailsCount(Long orderId);
+	/**
+	 * 修改订单对应的配送员编号
+	 */
+	public Boolean updateOrdersStaffId(String staffId,String orderNum);
 
 }

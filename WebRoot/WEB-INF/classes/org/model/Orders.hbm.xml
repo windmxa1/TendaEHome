@@ -27,5 +27,8 @@
         <property name="orderNum" type="java.lang.String">
             <column name="order_num" length="20" not-null="true" />
         </property>
+        <property name="staffId" type="java.lang.String">
+            <column name="staff_id" length="11" />
+        </property>
     </class>
 </hibernate-mapping>

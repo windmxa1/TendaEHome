@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>promotion.html</title>
+<meta charset="utf-8" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+<link rel="stylesheet" href="../css/bootstrap.min.css">
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="../js/bootstrap.min.js"></script>
+<script type="text/javascript">
+	function hideTips() {
+		$("#success_alert").hide();
+		$("#error_alert").hide();
+	}
+	$(function() {
+		$("#form1").submit(
+				function() {
+					if ($("#content").val() === '') {
+						$("#error_alert").show();
+						$("#error_alert").html(
+								'<a href="#" class="close" data-dismiss="alert">&times;</a> <strong>'
+										+ '不允许输入空值' + '</strong>');
+						setTimeout("hideTips()", 1000);
+						return;
+					}
+					$.ajax({
+						type : "post",
+						url : "../back/staff/addStaffPromotion",
+						data : {
+							content : $("#content").val()
+						},
+						cache : false,
+						async : false,
+						success : function(data) {
+							if (data.code == 100) {
+								$("#success_alert").show();
+								$("#success_alert").html(
+										'<a href="#" class="close" data-dismiss="alert">&times;</a> <strong>'
+												+ data.msg + '</strong>');
+							} else {
+								$("#error_alert").show();
+								$("#error_alert").html(
+										'<a href="#" class="close" data-dismiss="alert">&times;</a> <strong>'
+												+ data.msg + '</strong>');
+							}
+							setTimeout("hideTips()", 1000);
+						},
+						error : function(data) {
+							alert("error");
+						}
+					});
+				});
+	});
+</script>
+</head>
+
+<body>
+	<div class="container-fluid" style="margin:0px; padding:0px; ">
+		<form id="form1" method="post" target="iframe1">
+			<div class="input-group">
+				<input name="content" id="content" type="text" class="form-control"
+					placeholder="填写格式：x小区x栋x单元x号，员工号" pattern=".*小区.*栋.*单元.*号.\d+" />
+				<span class="input-group-btn">
+					<button class="btn btn-default" id="btn1" type="submit">提交</button>
+				</span>
+			</div>
+			<div id="success_alert" style="display: none"
+				class="alert alert-success">
+				<a href="#" class="close" data-dismiss="alert">&times;</a> <strong>提交成功！</strong>
+			</div>
+			<div id="error_alert" style="display: none"
+				class="alert alert-warning">
+				<a href="#" class="close" data-dismiss="alert">&times;</a> <strong>提交失败，请重试！</strong>
+			</div>
+			<iframe id="iframe1" name="iframe1" style="display:none;"></iframe>
+		</form>
+	</div>
+</body>
+</html>

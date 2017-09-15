@@ -9,22 +9,24 @@ var pageNo = 1;
 $(function() {
 	// 加载目录列表
 	$.ajax({
-		type: "post",
-		url: "back/goods/getCatalog",
-		dataType: "json",
-		async: false,
-		cache: false,
-		headers: {
-			"token": getCookie('token')
+		type : "post",
+		url : "back/goods/getCatalog",
+		dataType : "json",
+		async : false,
+		cache : false,
+		headers : {
+			"token" : getCookie('token')
 		},
-		data: {
-			orderNum: $('#seek_text').val()
+		data : {
+			orderNum : $('#seek_text').val()
 		},
-		success: function(data) {
-			if(data.code == 100) {
+		success : function(data) {
+			if (data.code == 100) {
 				var directoryList = '';
-				for(var i = 0; i < data.data.list.length; i++) {
-					directoryList += "<li><p>" + data.data.list[i].catalog + "</p><span class='ddId' style='display: none;'>" + data.data.list[i].id + "</span></li>"
+				for ( var i = 0; i < data.data.list.length; i++) {
+					directoryList += "<li><p>" + data.data.list[i].catalog
+							+ "</p><span class='ddId' style='display: none;'>"
+							+ data.data.list[i].id + "</span></li>"
 
 				}
 				$('#directory').html(directoryList);
@@ -32,7 +34,7 @@ $(function() {
 				alert(data.msg)
 			}
 		},
-		error: function(data) {
+		error : function(data) {
 			alert("error");
 		}
 	});
@@ -47,39 +49,57 @@ $(function() {
 		$('#directory li').removeClass('addLiba');
 		$(this).addClass('addLiba');
 	});
-	
+
 	// 修改商品提交
 	$('#xgsp_btn').click(function() {
 		var formData = new FormData(document.getElementById("xgsp_form"));
-		$.ajax({
-			type: "post",
-			url: "back/goods/updateGoods",
-			data: formData,
-			async: false,
-			cache: false,
-			contentType: false,
-			processData: false,
-			headers: {
-				"token": getCookie('token')
-			},
-			success: function(data) {
-				if(data.code == 100) {
-					location.reload();
-					alert('修改成功');
-				} else {
-					alert(data.msg);
+		var description = document.getElementById('xg_description').value;
+		var name = document.getElementById('xg_name').value;
+		var price = document.getElementById('xg_price').value;
+		var unit = $('#xg_unit').val();
+		var _reg = /^\S{0,50}$/;
+		var gg = /^[0-9]+(.[0-9]{1,2})?$/;
+		var unit_reg = /\d+\D+/;
+		if (name == '' || price == '') {
+			alert('请完善信息！');
+		} else if (!(_reg.test(description))) {
+			alert("描述为50个字以内");
+		} else if (!(gg.test(price))) {
+			alert("单价格式：整数或整数后精确1~2位");
+		} else if (!unit_reg.test(unit)) {
+			alert("单位格式:数字+中文或字母");
+		} else {
+			$.ajax({
+				type : "post",
+				url : "back/goods/updateGoods",
+				data : formData,
+				async : false,
+				cache : false,
+				contentType : false,
+				processData : false,
+				headers : {
+					"token" : getCookie('token')
+				},
+				success : function(data) {
+					if (data.code == 100) {
+						location.reload();
+						alert('修改成功');
+					} else {
+						alert(data.msg);
+					}
+				},
+				error : function(data) {
+					alert("网络不给力哦！");
 				}
-			},
-			error: function(data) {
-				alert("网络不给力哦！");
-			}
-		});
+			});
+		}
 	});
-	
+
 	// 初始化商品分页列表
 
-	var obj_lis = document.getElementById("directory").getElementsByTagName("li");
-	for(i = 0; i < obj_lis.length; i++) {
+	var obj_lis = document.getElementById("directory").getElementsByTagName(
+			"li");
+	for (i = 0; i < obj_lis.length; i++) {
 		obj_lis[i].onclick = function() {
 			indexId = $(this).find("span").eq(0).text()
 			$('#xg_catalog').val($(this).find("p").eq(0).text());
@@ -88,13 +108,13 @@ $(function() {
 			var totalRecords = total;
 			// 生成分页控件 根据分页的形式在这里设置
 			kkpager.init({
-				pno: pageNo,
+				pno : pageNo,
 				// 总页码
-				total: totalPage,
+				total : totalPage,
 				// 总数据条数
-				totalRecords: totalRecords,
+				totalRecords : totalRecords,
 				// 页面条数
-				pageSize: pageSize
+				pageSize : pageSize
 			});
 			kkpager.generPageHtml();
 		}
@@ -104,13 +124,13 @@ $(function() {
 	var totalRecords = total;
 	// 生成分页控件 根据分页的形式在这里设置
 	kkpager.init({
-		pno: pageNo,
+		pno : pageNo,
 		// 总页码
-		total: totalPage,
+		total : totalPage,
 		// 总数据条数
-		totalRecords: totalRecords,
+		totalRecords : totalRecords,
 		// 页面条数
-		pageSize: pageSize
+		pageSize : pageSize
 	});
 	kkpager.generPageHtml();
 });
@@ -118,23 +138,23 @@ $(function() {
 // 添加商品目录
 function tjspml() {
 	var catalog = document.getElementById('catalog').value;
-	if(catalog == '') {
+	if (catalog == '') {
 		alert('目录名不能为空');
 	} else {
 		var formData = new FormData(document.getElementById("tjspml_form"));
 		$.ajax({
-			type: "post",
-			url: "back/goods/addCatalog",
-			data: formData,
-			async: false,
-			cache: false,
-			contentType: false,
-			processData: false,
-			headers: {
-				"token": getCookie('token')
+			type : "post",
+			url : "back/goods/addCatalog",
+			data : formData,
+			async : false,
+			cache : false,
+			contentType : false,
+			processData : false,
+			headers : {
+				"token" : getCookie('token')
 			},
-			success: function(data) {
-				if(data.code == 100) {
+			success : function(data) {
+				if (data.code == 100) {
 					$('#tjspml').modal('hide');
 					location.reload();
 					alert('添加成功');
@@ -142,7 +162,7 @@ function tjspml() {
 					alert(data.msg);
 				}
 			},
-			error: function(data) {
+			error : function(data) {
 				alert("error");
 			}
 		});
@@ -153,30 +173,30 @@ function tjspml() {
 // 修改商品目录
 function xgspml() {
 	var xg_catalog = document.getElementById('xg_catalog').value;
-	if(xg_catalog == '') {
+	if (xg_catalog == '') {
 		alert('目录名不能为空');
 	} else {
 		$.ajax({
-			type: "post",
-			url: "back/goods/updateCatalog",
-			async: false,
-			cache: false,
-			headers: {
-				"token": getCookie('token')
+			type : "post",
+			url : "back/goods/updateCatalog",
+			async : false,
+			cache : false,
+			headers : {
+				"token" : getCookie('token')
 			},
-			data: {
-				"catalog": xg_catalog,
-				"id": indexId
+			data : {
+				"catalog" : xg_catalog,
+				"id" : indexId
 			},
-			success: function(data) {
-				if(data.code == 100) {
+			success : function(data) {
+				if (data.code == 100) {
 					$('#xgspml').modal('hide');
 					location.reload();
 				} else {
 					alert(data.msg);
 				}
 			},
-			error: function(data) {
+			error : function(data) {
 				alert("error");
 			}
 		});
@@ -186,30 +206,30 @@ function xgspml() {
 
 // 删除商品目录
 function scspml() {
-	if(indexId < 0) {
+	if (indexId < 0) {
 		alert('请先选中要删除的目录！')
 	} else {
-		if(confirm("确定要删除该目录？")) {
+		if (confirm("确定要删除该目录？")) {
 			$.ajax({
-				type: "post",
-				url: "back/goods/delCatalog",
-				data: {
-					id: indexId
+				type : "post",
+				url : "back/goods/delCatalog",
+				data : {
+					id : indexId
 				},
-				async: false,
-				cache: false,
-				headers: {
-					"token": getCookie('token')
+				async : false,
+				cache : false,
+				headers : {
+					"token" : getCookie('token')
 				},
-				success: function(data) {
-					if(data.code == 100) {
+				success : function(data) {
+					if (data.code == 100) {
 						location.reload();
 						alert('删除成功');
 					} else {
 						alert(data.msg);
 					}
 				},
-				error: function(data) {
+				error : function(data) {
 					alert("error");
 				}
 			});
@@ -225,36 +245,36 @@ function tjsp() {
 	var price = document.getElementById('price').value;
 	var unit = $('#unit').val();
 	var _reg = /^\S{0,50}$/;
-	var gg = /^[0-9]+(.[0-9]{1,2})?$/;		      	
-	var unit_reg= /\d+\D+/;
-	if(indexId < 0) {
+	var gg = /^[0-9]+(.[0-9]{1,2})?$/;
+	var unit_reg = /\d+\D+/;
+	if (indexId < 0) {
 		alert('请选择商品目录');
-	} else if(name == '' || price == '') {
+	} else if (name == '' || price == '') {
 		alert('请完善信息！');
-	} else if(!(_reg.test(description))) {
+	} else if (!(_reg.test(description))) {
 		alert("描述为50个字以内");
-	} else if(!(gg.test(price))) {
+	} else if (!(gg.test(price))) {
 		alert("单价格式：整数或整数后精确1~2位");
-	} else if(!unit_reg.test(unit)){
+	} else if (!unit_reg.test(unit)) {
 		alert("单位格式:数字+中文或字母");
-	}else if(spFile == '') {
+	} else if (spFile == '') {
 		alert('请上传商品图！');
 	} else {
 		var formData = new FormData(document.getElementById("tjsp_form"));
 		formData.append("catalogId", indexId);
 		$.ajax({
-			type: "post",
-			url: "back/goods/addGoods",
-			data: formData,
-			async: false,
-			cache: false,
-			contentType: false,
-			processData: false,
-			headers: {
-				"token": getCookie('token')
+			type : "post",
+			url : "back/goods/addGoods",
+			data : formData,
+			async : false,
+			cache : false,
+			contentType : false,
+			processData : false,
+			headers : {
+				"token" : getCookie('token')
 			},
-			success: function(data) {
-				if(data.code == 100) {
+			success : function(data) {
+				if (data.code == 100) {
 					$('#tjsp').modal('hide');
 					location.reload();
 					alert('添加成功');
@@ -262,7 +282,7 @@ function tjsp() {
 					alert(data.msg);
 				}
 			},
-			error: function(data) {
+			error : function(data) {
 				alert("error");
 			}
 		});
@@ -279,34 +299,33 @@ function updateCommodity(v) {
 	$('#xg_price').val(v.price);
 	$('#xg_unit').val(v.unit);
 	$('#xg_state').val(v.state);
-// $('#xg_file').val(v.goodsUrl);
+	// $('#xg_file').val(v.goodsUrl);
 	$('#xg_origin').val(v.origin);
 	$('#xg_description').val(v.description);
-	
 
 }
-function upDownCommodity(state,id){
+function upDownCommodity(state, id) {
 	$.ajax({
-		type: "post",
-		url: "back/goods/updateGoodsState",
-		data: {	
-				state:state,
-				id:id
-			},
-		async: false,
-		cache: false,
-		headers: {
-			"token": getCookie('token')
+		type : "post",
+		url : "back/goods/updateGoodsState",
+		data : {
+			state : state,
+			id : id
 		},
-		success: function(data) {
-			if(data.code == 100) {				
+		async : false,
+		cache : false,
+		headers : {
+			"token" : getCookie('token')
+		},
+		success : function(data) {
+			if (data.code == 100) {
 				location.reload();
 				alert('操作成功');
 			} else {
 				alert(data.msg);
 			}
 		},
-		error: function(data) {
+		error : function(data) {
 			alert("error");
 		}
 	});
@@ -314,27 +333,27 @@ function upDownCommodity(state,id){
 
 // 删除商品
 function deleteCommodity(v) {
-	if(confirm("确定要删除该商品？")) {
+	if (confirm("确定要删除该商品？")) {
 		$.ajax({
-			type: "post",
-			url: "back/goods/deleteGoods",
-			data: {
-				id: v
+			type : "post",
+			url : "back/goods/deleteGoods",
+			data : {
+				id : v
 			},
-			async: false,
-			cache: false,
-			headers: {
-				"token": getCookie('token')
+			async : false,
+			cache : false,
+			headers : {
+				"token" : getCookie('token')
 			},
-			success: function(data) {
-				if(data.code == 100) {
+			success : function(data) {
+				if (data.code == 100) {
 					location.reload();
 					alert('删除成功');
 				} else {
 					alert(data.msg);
 				}
 			},
-			error: function(data) {
+			error : function(data) {
 				alert("网络不给力哦！");
 			}
 		});
@@ -349,13 +368,13 @@ function qbsp() {
 	var totalRecords = total;
 	// 生成分页控件 根据分页的形式在这里设置
 	kkpager.init({
-		pno: pageNo,
+		pno : pageNo,
 		// 总页码
-		total: totalPage,
+		total : totalPage,
 		// 总数据条数
-		totalRecords: totalRecords,
+		totalRecords : totalRecords,
 		// 页面条数
-		pageSize: pageSize
+		pageSize : pageSize
 	});
 	kkpager.generPageHtml();
 
@@ -369,13 +388,13 @@ function seek() {
 	var totalRecords = total;
 	// 生成分页控件 根据分页的形式在这里设置
 	kkpager.init({
-		pno: pageNo,
+		pno : pageNo,
 		// 总页码
-		total: totalPage,
+		total : totalPage,
 		// 总数据条数
-		totalRecords: totalRecords,
+		totalRecords : totalRecords,
 		// 页面条数
-		pageSize: pageSize
+		pageSize : pageSize
 	});
 	kkpager.generPageHtml();
 
@@ -388,65 +407,65 @@ function seek() {
  * @returns {number}
  */
 var getTotllePage = function(pageSize) {
-		var jsonCount = total;
-		var shang = jsonCount / pageSize;
-		var yushu = jsonCount % pageSize;
-		if(yushu > 0) {
-			shang++;
-		}
-		return shang;
+	var jsonCount = total;
+	var shang = jsonCount / pageSize;
+	var yushu = jsonCount % pageSize;
+	if (yushu > 0) {
+		shang++;
 	}
-	/**
-	 * 获取分页后的数据
-	 * 
-	 * @param pageSize分页后的条目数
-	 * @param pageNo当前第几页
-	 * @returns {*}
-	 */
+	return shang;
+}
+/**
+ * 获取分页后的数据
+ * 
+ * @param pageSize分页后的条目数
+ * @param pageNo当前第几页
+ * @returns {*}
+ */
 var getJsonArrayByPageSize = function(pageSize, pageNo) {
 	// indexId等于-2是搜索商品，等于-1是加载全部商品，否则按目录搜索
-	if(indexId == -2) {
+	if (indexId == -2) {
 		$.ajax({
-			type: "post",
-			url: "back/goods/searchGoods",
-			dataType: "json",
-			async: false,
-			cache: false,
-			headers: {
-				"token": getCookie('token')
+			type : "post",
+			url : "back/goods/searchGoods",
+			dataType : "json",
+			async : false,
+			cache : false,
+			headers : {
+				"token" : getCookie('token')
 			},
-			data: {
-				"key": $('#seek_text').val()
+			data : {
+				"key" : $('#seek_text').val()
 			},
-			success: function(data) {
-				if(data.code == 100) {
+			success : function(data) {
+				if (data.code == 100) {
 					json = data.data.list;
 					total = data.data.total
 				} else {
 					alert(data.msg)
 				}
 			},
-			error: function(data) {
+			error : function(data) {
 				alert("error");
 			}
 		});
 
-	} else if(indexId == -1) {
+	} else if (indexId == -1) {
 		$.ajax({
-			type: "post",
-			url: "back/goods/getGoodsList",
-			dataType: "json",
-			async: false,
-			cache: false,
-			headers: {
-				"token": getCookie('token')
+			type : "post",
+			url : "back/goods/getGoodsList",
+			dataType : "json",
+			async : false,
+			cache : false,
+			headers : {
+				"token" : getCookie('token')
 			},
-			data: {
-				'start': (pageNo - 1) * pageSize,
-				'limit': pageSize
+			data : {
+				'start' : (pageNo - 1) * pageSize,
+				'limit' : pageSize
 			},
-			success: function(data) {
-				if(data.code == 100) {
+			success : function(data) {
+				if (data.code == 100) {
 					json = data.data.list;
 					total = data.data.total
 				} else {
@@ -456,27 +475,27 @@ var getJsonArrayByPageSize = function(pageSize, pageNo) {
 				// builderUQTQueryMsg(data);
 
 			},
-			error: function(jqXHR) {
+			error : function(jqXHR) {
 				alert("网络异常");
 			}
 		});
 	} else {
 		$.ajax({
-			type: "post",
-			url: "back/goods/getCataGoods",
-			dataType: "json",
-			async: false,
-			cache: false,
-			headers: {
-				"token": getCookie('token')
+			type : "post",
+			url : "back/goods/getCataGoods",
+			dataType : "json",
+			async : false,
+			cache : false,
+			headers : {
+				"token" : getCookie('token')
 			},
-			data: {
-				'start': (pageNo - 1) * pageSize,
-				'limit': pageSize,
-				'catalogId': indexId
+			data : {
+				'start' : (pageNo - 1) * pageSize,
+				'limit' : pageSize,
+				'catalogId' : indexId
 			},
-			success: function(data) {
-				if(data.code == 100) {
+			success : function(data) {
+				if (data.code == 100) {
 					json = data.data.list;
 					total = data.data.total
 				} else {
@@ -486,7 +505,7 @@ var getJsonArrayByPageSize = function(pageSize, pageNo) {
 				// builderUQTQueryMsg(data);
 
 			},
-			error: function(jqXHR) {
+			error : function(jqXHR) {
 				alert("网络异常");
 			}
 		});
@@ -514,13 +533,13 @@ function refreshData(pageSize, pageNo) {
 	var totalRecords = total;
 	// 生成分页控件 根据分页的形式在这里设置
 	kkpager.init({
-		pno: pageNo,
+		pno : pageNo,
 		// 总页码
-		total: totalPage,
+		total : totalPage,
 		// 总数据条数
-		totalRecords: totalRecords,
+		totalRecords : totalRecords,
 		// 页面条数
-		pageSize: pageSize
+		pageSize : pageSize
 	});
 	kkpager.generPageHtml();
 
@@ -536,43 +555,72 @@ var builderUQTQueryMsg = function(UQTQueryMsg) {
 
 	UQT_detailTable.append(th);
 	var tr;
-	$.each(UQTQueryMsg, function(i, eachData) {
-		tr = $('<tr>');
-		var listId = eachData.goodsId;
-		var name = eachData.name; // 名称
-		var price = eachData.price; // 单价
-		var unit = eachData.unit; // 单位
-		var description = eachData.description; // 描述
-		var createTime = eachData.createTime; // 最新修改时间
-		var catalog = eachData.catalog; // 商品种类
-		var count = eachData.count; // 商品已售数目
-		var goodsUrl = eachData.goodsUrl; // 商品图片地址
-		var status   = eachData.status;
-		var state = eachData.state;
-		var trString = "<td class='eng_name'>" + name + "</td>" +
-		"<td class='query_pro'>" + price + "</td>" +
-		"<td class='query_pro'>" + unit + "</td>" +
-		"<td class='match_type'>" + catalog + "</td>" +
-		"<td class='match_type'>" + count + "</td>" +
-		"<td class='match_type' style='cursor:pointer;' title='" + goodsUrl + "'><a href=" + goodsUrl + ">" + goodsUrl + "</a>" + +"</td>" +
-		"<td class='match_type'>" + createTime + "</td>" +
-		"<td class='dis_dta' style='width:100px !important'>"
-		;
-		if(state==1){
-			trString=trString+"<button class='btn btn-info' style='height:30px ;margin-right:10px' onclick='upDownCommodity("+state+","+listId+")' >下架</button>";
-		}else{
-			trString=trString+"<button class='btn btn-warning' style='height:30px; margin-right:10px' onclick='upDownCommodity("+state+","+listId+")' >上架</button>";
-		}
-		trString = trString +"<button class='btn' style='height:30px;margin-right:10px' data-toggle='modal' data-target='#xgsp' onclick='updateCommodity(" + JSON.stringify(eachData) + ")'>修改</button>" +
-		"<button class='btn' style='height:30px;margin-right:10px' href='javascript:void(0);' onclick='deleteCommodity(" + listId + ")'>删除</button>"		
-		+"</td>" +
-		"<td class='dis_hidden' style='display: none'>"
-		+
-		"</td>";
-		tr.append(trString);
-			
-		UQT_detailTable.append(tr);
-	});
+	$
+			.each(
+					UQTQueryMsg,
+					function(i, eachData) {
+						tr = $('<tr>');
+						var listId = eachData.goodsId;
+						var name = eachData.name; // 名称
+						var price = eachData.price; // 单价
+						var unit = eachData.unit; // 单位
+						var description = eachData.description; // 描述
+						var createTime = eachData.createTime; // 最新修改时间
+						var catalog = eachData.catalog; // 商品种类
+						var count = eachData.count; // 商品已售数目
+						var goodsUrl = eachData.goodsUrl; // 商品图片地址
+						var status = eachData.status;
+						var state = eachData.state;
+						var trString = "<td class='eng_name'>"
+								+ name
+								+ "</td>"
+								+ "<td class='query_pro'>"
+								+ price
+								+ "</td>"
+								+ "<td class='query_pro'>"
+								+ unit
+								+ "</td>"
+								+ "<td class='match_type'>"
+								+ catalog
+								+ "</td>"
+								+ "<td class='match_type'>"
+								+ count
+								+ "</td>"
+								+ "<td class='match_type' style='cursor:pointer;' title='"
+								+ goodsUrl
+								+ "'><a href="
+								+ goodsUrl
+								+ ">"
+								+ goodsUrl
+								+ "</a>"
+								+ +"</td>"
+								+ "<td class='match_type'>"
+								+ createTime
+								+ "</td>"
+								+ "<td class='dis_dta' style='width:100px !important'>";
+						if (state == 1) {
+							trString = trString
+									+ "<button class='btn btn-info' style='height:30px ;margin-right:10px' onclick='upDownCommodity("
+									+ state + "," + listId + ")' >下架</button>";
+						} else {
+							trString = trString
+									+ "<button class='btn btn-warning' style='height:30px; margin-right:10px' onclick='upDownCommodity("
+									+ state + "," + listId + ")' >上架</button>";
+						}
+						trString = trString
+								+ "<button class='btn' style='height:30px;margin-right:10px' data-toggle='modal' data-target='#xgsp' onclick='updateCommodity("
+								+ JSON.stringify(eachData)
+								+ ")'>修改</button>"
+								+ "<button class='btn' style='height:30px;margin-right:10px' href='javascript:void(0);' onclick='deleteCommodity("
+								+ listId
+								+ ")'>删除</button>"
+								+ "</td>"
+								+ "<td class='dis_hidden' style='display: none'>"
+								+ "</td>";
+						tr.append(trString);
+
+						UQT_detailTable.append(tr);
+					});
 }
 
 /**
@@ -583,7 +631,7 @@ var optionCheckBoxes = function(data) {
 	var checkType = $(data).is(':checked');
 	var trs = $(data).parent().parent().parent().nextAll();
 
-	if(checkType) {
+	if (checkType) {
 		// 全部选择
 		trs.each(function(trNode) {
 			var currentCheck = $(this).find('>td span input[type="checkbox"]');
@@ -611,25 +659,25 @@ function changeTime(ts) { // 时间戳转时间函数
 	var getHours = date.getHours(); // 时
 	var getMinutes = date.getMinutes(); // 分
 	var getSeconds = date.getSeconds(); // 秒
-	if(month >= 1 && month <= 9) {
+	if (month >= 1 && month <= 9) {
 		month = "0" + month;
 	}
-	if(strDate >= 0 && strDate <= 9) {
+	if (strDate >= 0 && strDate <= 9) {
 		strDate = "0" + strDate;
 	}
 
-	if(getHours >= 1 && getHours <= 9) {
+	if (getHours >= 1 && getHours <= 9) {
 		getHours = "0" + getHours;
 	}
-	if(getMinutes >= 1 && getMinutes <= 9) {
+	if (getMinutes >= 1 && getMinutes <= 9) {
 		getMinutes = "0" + getMinutes;
 	}
-	if(getSeconds >= 1 && getSeconds <= 9) {
+	if (getSeconds >= 1 && getSeconds <= 9) {
 		getSeconds = "0" + getSeconds;
 	}
-	var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate +
-		" " + getHours + seperator2 + getMinutes +
-		seperator2 + getSeconds;
+	var currentdate = date.getFullYear() + seperator1 + month + seperator1
+			+ strDate + " " + getHours + seperator2 + getMinutes + seperator2
+			+ getSeconds;
 	// $('#eTime').val(currentdate.substr(0,10));
 	return currentdate.substr(0, 10);
 
@@ -640,48 +688,48 @@ function changeTime(ts) { // 时间戳转时间函数
  */
 var kkpager = {
 	// divID
-	pagerid: 'div_pager',
+	pagerid : 'div_pager',
 	// 当前页码
-	pno: 1,
+	pno : 1,
 	// 总页码
-	total: 1,
+	total : 1,
 	// 总数据条数
-	totalRecords: 0,
+	totalRecords : 0,
 	// 是否显示总页数
-	isShowTotalPage: true,
+	isShowTotalPage : true,
 	// 是否显示总记录数
-	isShowTotalRecords: true,
+	isShowTotalRecords : true,
 	// 是否显示页码跳转输入框
-	isGoPage: true,
+	isGoPage : true,
 	// 页面条数默认大小
-	pagesize: 20,
+	pagesize : 20,
 	// 链接前部
-	hrefFormer: '',
+	hrefFormer : '',
 	// 链接尾部
-	hrefLatter: '',
+	hrefLatter : '',
 	/** **链接算法*** */
-	getLink: function(n) {
+	getLink : function(n) {
 		// 这里的算法适用于比如：
 		// hrefFormer=http://baidu.com/news/20131212
 		// hrefLatter=.html
 		// 那么首页（第1页）就是http://baidu.com/news/20131212.html
 		// 第2页就是http://baidu.com/news/20131212_2.html
 		// 第n页就是http://baidu.com/news/20131212_n.html
-		if(n == 1) {
+		if (n == 1) {
 			return this.hrefFormer + this.hrefLatter;
 		} else {
 			return this.hrefFormer + '_' + n + this.hrefLatter;
 		}
 	},
 	// 跳转框得到输入焦点时
-	focus_gopage: function() {
+	focus_gopage : function() {
 		var btnGo = $('#btn_go');
 		$('#btn_go_input').attr('hideFocus', true);
 		btnGo.show();
 		btnGo.css('left', '0px');
 		$('#go_page_wrap').css('border-color', '#6694E3');
 		btnGo.animate({
-			left: '+=44'
+			left : '+=44'
 		}, 50, function() {
 			// $('#go_page_wrap').css('width','88px');
 		});
@@ -689,12 +737,12 @@ var kkpager = {
 
 	// 跳转框失去输入焦点时
 
-	blur_gopage: function() {
+	blur_gopage : function() {
 		setTimeout(function() {
 			var btnGo = $('#btn_go');
 			// $('#go_page_wrap').css('width','44px');
 			btnGo.animate({
-				left: '-=44'
+				left : '-=44'
 			}, 100, function() {
 				$('#btn_go').css('left', '0px');
 				$('#btn_go').hide();
@@ -703,14 +751,14 @@ var kkpager = {
 		}, 400);
 	},
 	// 根据页数刷新页面数据
-	gopage: function(data) {
+	gopage : function(data) {
 		var currentPage = '';
-		if(data.tagName == 'A') {
+		if (data.tagName == 'A') {
 			// 点击的是a标签，这里写你的代码
 			var tempPage = $(data).html();
-			if(tempPage == '下一页') {
+			if (tempPage == '下一页') {
 				currentPage = parseInt(this.pno) + 1;
-			} else if(tempPage == '上一页') {
+			} else if (tempPage == '上一页') {
 				currentPage = parseInt(this.pno) - 1;
 			} else {
 				currentPage = tempPage;
@@ -718,12 +766,12 @@ var kkpager = {
 		} else {
 			// 手动输入要跳转的页数
 			var str_page = $("#btn_go_input").val();
-			if(isNaN(str_page)) {
+			if (isNaN(str_page)) {
 				$("#btn_go_input").val(this.next);
 				return;
 			}
 			var n = parseInt(str_page);
-			if(n < 1 || n > this.total) {
+			if (n < 1 || n > this.total) {
 				$("#btn_go_input").val(this.next);
 				return;
 			}
@@ -733,7 +781,7 @@ var kkpager = {
 		// 不管是点击页码还是手动输入页码，都要将下一页的页码选中
 		// 此时，只需要重新加载本组件即可
 	},
-	changepageSize: function(data) {
+	changepageSize : function(data) {
 		// 更改每页显示条数
 		// 刷新数据时初始化页数为1，
 		var pageSize = $(data).val();
@@ -741,35 +789,38 @@ var kkpager = {
 		refreshData(pageSize, 1);
 	},
 	// 分页按钮控件初始化
-	init: function(config) {
+	init : function(config) {
 
 		// 页面条数初始化
 		this.pagesize = config.pageSize;
 		// 赋值
 		this.pno = isNaN(config.pno) ? 1 : parseInt(config.pno);
 		this.total = isNaN(config.total) ? 1 : parseInt(config.total);
-		this.totalRecords = isNaN(config.totalRecords) ? 0 : parseInt(config.totalRecords);
-		if(config.pagerid) {
+		this.totalRecords = isNaN(config.totalRecords) ? 0
+				: parseInt(config.totalRecords);
+		if (config.pagerid) {
 			this.pagerid = pagerid;
 		}
-		if(config.isShowTotalPage != undefined) {
+		if (config.isShowTotalPage != undefined) {
 			this.isShowTotalPage = config.isShowTotalPage;
 		}
-		if(config.isShowTotalRecords != undefined) {
+		if (config.isShowTotalRecords != undefined) {
 			this.isShowTotalRecords = config.isShowTotalRecords;
 		}
-		if(config.isGoPage != undefined) {
+		if (config.isGoPage != undefined) {
 			this.isGoPage = config.isGoPage;
 		}
 		this.hrefFormer = config.hrefFormer || '';
 		this.hrefLatter = config.hrefLatter || '';
-		if(config.getLink && typeof(config.getLink) == 'function') {
+		if (config.getLink && typeof (config.getLink) == 'function') {
 			this.getLink = config.getLink;
 		}
 		// 验证
-		if(this.pno < 1) this.pno = 1;
+		if (this.pno < 1)
+			this.pno = 1;
 		this.total = (this.total <= 1) ? 1 : this.total;
-		if(this.pno > this.total) this.pno = this.total;
+		if (this.pno > this.total)
+			this.pno = this.total;
 		this.prv = (this.pno <= 2) ? 1 : (this.pno - 1);
 		this.next = (this.pno >= this.total - 1) ? this.total : (this.pno + 1);
 		this.hasPrv = (this.pno > 1);
@@ -778,14 +829,13 @@ var kkpager = {
 		this.inited = true;
 	},
 	// 生成分页控件Html
-	generPageHtml: function() {
-		if(!this.inited) {
+	generPageHtml : function() {
+		if (!this.inited) {
 			return;
 		}
 
-		var str_prv = '',
-			str_next = '';
-		if(this.hasPrv) {
+		var str_prv = '', str_next = '';
+		if (this.hasPrv) {
 			str_prv = '<a href="javascript:void(0);"  onclick="kkpager.gopage(this);" title="上一页">上一页</a>';
 			// str_prv = '<a href="javascript:void(0);""javascript:void(0);""' +
 			// this.getLink(this.prv) + '" title="上一页">上一页</a>';
@@ -793,7 +843,7 @@ var kkpager = {
 			str_prv = '<span class="disabled">上一页</span>';
 		}
 
-		if(this.hasNext) {
+		if (this.hasNext) {
 			str_next = '<a href="javascript:void(0);" onclick="kkpager.gopage(this);"  title="下一页">下一页</a>';
 			// str_next = '<a href="javascript:void(0);""javascript:void(0);""'
 			// + this.getLink(this.next) + '" title="下一页">下一页</a>';
@@ -804,15 +854,15 @@ var kkpager = {
 		var str = '';
 		var dot = '<span>...</span>';
 		var total_info = '';
-		if(this.isShowTotalPage || this.isShowTotalRecords) {
+		if (this.isShowTotalPage || this.isShowTotalRecords) {
 			total_info = '<span class="normalsize">共';
-			if(this.isShowTotalPage) {
+			if (this.isShowTotalPage) {
 				total_info += this.total + '页';
-				if(this.isShowTotalRecords) {
+				if (this.isShowTotalRecords) {
 					total_info += '&nbsp;/&nbsp;';
 				}
 			}
-			if(this.isShowTotalRecords) {
+			if (this.isShowTotalRecords) {
 				total_info += this.totalRecords + '条数据';
 			}
 
@@ -821,17 +871,17 @@ var kkpager = {
 
 		var pageSize = '<select id="select_pagesize" onchange="kkpager.changepageSize(this)">';
 
-		if(this.pagesize == 5)
+		if (this.pagesize == 5)
 			pageSize += '<option selected="selected" value="5" >5</option>';
-		else if(this.pagesize == 10)
+		else if (this.pagesize == 10)
 			pageSize += '<option selected="selected" value="10" >10</option>';
 		else
 			pageSize += '<option  value="10" >10</option>';
-		if(this.pagesize == 15)
+		if (this.pagesize == 15)
 			pageSize += '<option selected="selected" value="15" >15</option>';
 		else
 			pageSize += '<option  value="15" >15</option>';
-		if(this.pagesize == 20)
+		if (this.pagesize == 20)
 			pageSize += '<option selected="selected" value="20" >20</option>';
 		else
 			pageSize += '<option  value="20" >20</option>';
@@ -850,28 +900,32 @@ var kkpager = {
 		pageSize += '</select><span class="normalsize" >条/页</span>';
 
 		var gopage_info = '';
-		if(this.isGoPage) {
-			gopage_info = '&nbsp;<span class="normalsize" >转到</span><span id="go_page_wrap" style="display:inline-block;width:44px;height:18px;border:1px solid #DFDFDF;margin:0px 1px;padding:0px;position:relative;left:0px;top:5px;">' +
-				'<input type="button" id="btn_go" onclick="kkpager.gopage(this);" style="width:44px;height:20px;line-height:20px;padding:0px;font-family:arial,宋体,sans-serif;text-align:center;border:0px;background-color:#0063DC;color:#FFF;position:absolute;left:0px;top:-1px;display:none;" value="确定" />' +
-				'<input type="text" id="btn_go_input" onfocus="kkpager.focus_gopage()" onkeypress="if(event.keyCode<48 || event.keyCode>57)return false;" onblur="kkpager.blur_gopage()" style="width:42px;height:23px;text-align:center;border:0px;position:absolute;left:0px;top:0px;outline:none;" value="' + this.pno + '" /></span><span class="normalsize" >页</span>';
+		if (this.isGoPage) {
+			gopage_info = '&nbsp;<span class="normalsize" >转到</span><span id="go_page_wrap" style="display:inline-block;width:44px;height:18px;border:1px solid #DFDFDF;margin:0px 1px;padding:0px;position:relative;left:0px;top:5px;">'
+					+ '<input type="button" id="btn_go" onclick="kkpager.gopage(this);" style="width:44px;height:20px;line-height:20px;padding:0px;font-family:arial,宋体,sans-serif;text-align:center;border:0px;background-color:#0063DC;color:#FFF;position:absolute;left:0px;top:-1px;display:none;" value="确定" />'
+					+ '<input type="text" id="btn_go_input" onfocus="kkpager.focus_gopage()" onkeypress="if(event.keyCode<48 || event.keyCode>57)return false;" onblur="kkpager.blur_gopage()" style="width:42px;height:23px;text-align:center;border:0px;position:absolute;left:0px;top:0px;outline:none;" value="'
+					+ this.pno
+					+ '" /></span><span class="normalsize" >页</span>';
 		}
 
 		// 分页处理
-		if(this.total <= 8) {
-			for(var i = 1; i <= this.total; i++) {
-				if(this.pno == i) {
+		if (this.total <= 8) {
+			for ( var i = 1; i <= this.total; i++) {
+				if (this.pno == i) {
 					str += '<span class="curr">' + i + '</span>';
 				} else {
-					str += '<a href="javascript:void(0);" onclick="kkpager.gopage(this);" title="第' + i + '页">' + i + '</a>';
+					str += '<a href="javascript:void(0);" onclick="kkpager.gopage(this);" title="第'
+							+ i + '页">' + i + '</a>';
 				}
 			}
 		} else {
-			if(this.pno <= 5) {
-				for(var i = 1; i <= 7; i++) {
-					if(this.pno == i) {
+			if (this.pno <= 5) {
+				for ( var i = 1; i <= 7; i++) {
+					if (this.pno == i) {
 						str += '<span class="curr">' + i + '</span>';
 					} else {
-						str += '<a href="javascript:void(0);" onclick="kkpager.gopage(this);" title="第' + i + '页">' + i + '</a>';
+						str += '<a href="javascript:void(0);" onclick="kkpager.gopage(this);" title="第'
+								+ i + '页">' + i + '</a>';
 					}
 				}
 				str += dot;
@@ -882,29 +936,31 @@ var kkpager = {
 
 				var begin = this.pno - 2;
 				var end = this.pno + 2;
-				if(end > this.total) {
+				if (end > this.total) {
 					end = this.total;
 					begin = end - 4;
-					if(this.pno - begin < 2) {
+					if (this.pno - begin < 2) {
 						begin = begin - 1;
 					}
-				} else if(end + 1 == this.total) {
+				} else if (end + 1 == this.total) {
 					end = this.total;
 				}
-				for(var i = begin; i <= end; i++) {
-					if(this.pno == i) {
+				for ( var i = begin; i <= end; i++) {
+					if (this.pno == i) {
 						str += '<span class="curr">' + i + '</span>';
 					} else {
-						str += '<a href="javascript:void(0);" onclick="kkpager.gopage(this);" title="第' + i + '页">' + i + '</a>';
+						str += '<a href="javascript:void(0);" onclick="kkpager.gopage(this);" title="第'
+								+ i + '页">' + i + '</a>';
 					}
 				}
-				if(end != this.total) {
+				if (end != this.total) {
 					str += dot;
 				}
 			}
 		}
 
-		str = "&nbsp;" + pageSize + "&nbsp;" + str_prv + str + str_next + total_info + gopage_info;
+		str = "&nbsp;" + pageSize + "&nbsp;" + str_prv + str + str_next
+				+ total_info + gopage_info;
 		$("#" + this.pagerid).html(str);
 	}
 };
@@ -912,7 +968,8 @@ var kkpager = {
 function getParameter(name) {
 	var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
 	var r = window.location.search.substr(1).match(reg);
-	if(r != null) return unescape(r[2]);
+	if (r != null)
+		return unescape(r[2]);
 	return null;
 };
 

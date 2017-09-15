@@ -36,7 +36,7 @@ public class GoodsController {
 	// 获取商品信息
 	@RequestMapping("/getGoodsList")
 	@ResponseBody
-	public Object getGoodsList(Integer start, Integer limit) {
+	public Object getGoodsList(Integer start, Integer limit)throws Exception {
 		gDao = new GoodsDaoImp();
 		data = new HashMap<String, Object>();
 		Short[] state = { (short) 1, (short) 0 };
@@ -53,7 +53,7 @@ public class GoodsController {
 	// 搜索商品
 	@RequestMapping("/searchGoods")
 	@ResponseBody
-	public Object searchGoods(Integer start, Integer limit, String key) {
+	public Object searchGoods(Integer start, Integer limit, String key)throws Exception {
 		gDao = new GoodsDaoImp();
 		data = new HashMap<String, Object>();
 		List<VGoodsId> list = gDao.getGoodsByKey(start, limit, key, (short) 1);
@@ -69,7 +69,7 @@ public class GoodsController {
 	// 获取目录列表
 	@RequestMapping("/getCatalog")
 	@ResponseBody
-	public Object getCatalog() {
+	public Object getCatalog()throws Exception {
 		gDao = new GoodsDaoImp();
 		data = new HashMap<String, Object>();
 		List<GoodsCatalog> list = gDao.getCatalog();
@@ -84,7 +84,7 @@ public class GoodsController {
 
 	@RequestMapping("/addCatalog")
 	@ResponseBody
-	public Object addCatalog(String catalog) {
+	public Object addCatalog(String catalog)throws Exception {
 		gcDao = new GoodsCatalogDaoImp();
 		if (gcDao.getCatalog(catalog) != null) {
 			return ResultUtils.toJson(101, "添加失败,该目录已存在", "");
@@ -99,7 +99,7 @@ public class GoodsController {
 	// 删除商品目录，伪删除，但会删除图片
 	@RequestMapping("/delCatalog")
 	@ResponseBody
-	public Object delCatalog(HttpServletRequest request, @RequestParam Long id) {
+	public Object delCatalog(HttpServletRequest request, @RequestParam Long id) throws Exception{
 		gcDao = new GoodsCatalogDaoImp();
 		if (gcDao.delete(id)) {
 			try {
@@ -120,7 +120,7 @@ public class GoodsController {
 	@RequestMapping("/updateGoodsState")
 	@ResponseBody
 	public Object updateGoodsState(HttpServletRequest request, Long id,
-			Short state) {
+			Short state) throws Exception{
 		gDao = new GoodsDaoImp();
 		if (gDao.updateGoodsState(id, (short) Math.abs(state-1))) {
 			return ResultUtils.toJson(100, "操作成功", "");
@@ -131,7 +131,7 @@ public class GoodsController {
 	@RequestMapping("/updateCatalog")
 	@ResponseBody
 	public Object updateCatalog(@RequestParam Long id,
-			@RequestParam String catalog) {
+			@RequestParam String catalog)throws Exception {
 		gcDao = new GoodsCatalogDaoImp();
 		GoodsCatalog goodsCatalog = new GoodsCatalog(catalog);
 		goodsCatalog.setId(id);
@@ -146,7 +146,7 @@ public class GoodsController {
 	public Object addGoods(HttpServletRequest request, String name,
 			Double price, @RequestParam CommonsMultipartFile file,
 			Long catalogId, String description, String origin, String unit)
-			throws IllegalStateException, IOException {
+					throws Exception{
 		Long time = System.currentTimeMillis() / 1000;
 
 		String path = request.getSession().getServletContext()
@@ -194,7 +194,7 @@ public class GoodsController {
 	// 删除商品，伪删除
 	@RequestMapping("/deleteGoods")
 	@ResponseBody
-	public Object deleteGoods(HttpServletRequest request, Long id) {
+	public Object deleteGoods(HttpServletRequest request, Long id)throws Exception {
 		gDao = new GoodsDaoImp();
 		// 删除之前上传的商品图片
 		Goods g = gDao.getGoods(id);
@@ -218,7 +218,7 @@ public class GoodsController {
 			Double price,
 			@RequestParam(required = false) CommonsMultipartFile file,
 			Long catalogId, String description, String origin, String unit,Short state)
-			throws IllegalStateException, IOException {
+					throws Exception{
 		Long time = System.currentTimeMillis() / 1000;
 		gDao = new GoodsDaoImp();
 		String url = "";
@@ -278,7 +278,7 @@ public class GoodsController {
 	// 获取目录对应的商品列表
 	@RequestMapping("/getCataGoods")
 	@ResponseBody
-	public Object getCataGoods(Integer start, Integer limit, Long catalogId) {
+	public Object getCataGoods(Integer start, Integer limit, Long catalogId) throws Exception{
 		gDao = new GoodsDaoImp();
 		data = new HashMap<String, Object>();
 		List<VGoodsId> list = gDao.getCataGoods(start, limit, catalogId,
