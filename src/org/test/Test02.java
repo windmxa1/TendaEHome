@@ -1,5 +1,7 @@
 package org.test;
 
+import java.util.List;
+
 import org.dao.AdminDao;
 import org.dao.GarouselCatalogDao;
 import org.dao.GarouselDao;
@@ -22,6 +24,8 @@ import org.hibernate.Transaction;
 import org.model.GarouselCatalog;
 import org.util.HibernateSessionFactory;
 import org.util.JsonUtils;
+import org.util.PDFUtil;
+import org.view.VOrdersId;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -39,22 +43,10 @@ public class Test02 {
 
 	public static void main(String[] args) throws JsonProcessingException,
 			InterruptedException {
-		GarouselCatalog gCatalog = new GarouselCatalog("asdas");
-		gCatalog.setId(5);
-		// GC_DAO.saveOrUpdate(gCatalog);
-		Long time = System.currentTimeMillis();
-		System.out.println(oDao.getOrder("0132"));
-		// Thread.sleep(5*1000);
-		System.out.println(System.currentTimeMillis() - time);
-		time = System.currentTimeMillis();
-		System.out.println(System.currentTimeMillis() - time);
-		System.out.println(oDao.getCountByState(2));
-
-		System.out.println(gDao.delete(8L));
-		System.out.println(oDao.getUrlList(3L));
-
-		// gDao.delete((long) 3);
-		// gcDao.delete(3L);
-
+		List<VOrdersId> list = oDao.getListByState(0, -1,null);
+		for (VOrdersId v : list) {
+			v.setDetails(oDao.getDetailList(v.getId(), 0, -1));
+		}
+		PDFUtil.buidPDF("", list, 0);
 	}
 }

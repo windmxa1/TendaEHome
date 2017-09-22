@@ -6,12 +6,14 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.table.TableColumn;
 
 import org.apache.commons.io.FileUtils;
 import org.view.VOrdersDetailsId;
 import org.view.VOrdersId;
 import org.view.VRepairOrderId;
 
+import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.FontFactory;
@@ -85,7 +87,6 @@ public class PDFUtil {
 
 		return Constants.pdfUrl + currentDate + "/" + filename + ".pdf";
 	}
-
 	/**
 	 * 删除今天以前的所有临时文件夹
 	 * 
@@ -130,46 +131,81 @@ public class PDFUtil {
 			Font cf1 = FontFactory.getFont("STSong-Light", "UniGB-UCS2-H",
 					BaseFont.NOT_EMBEDDED, 10);
 			selector.addFont(cf1);
-			Font cf2 = FontFactory.getFont("STSong-Light", "UniGB-UCS2-H",
-					BaseFont.NOT_EMBEDDED, 14);
+			// Font cf2 = FontFactory.getFont("STSong-Light", "UniGB-UCS2-H",
+			// BaseFont.NOT_EMBEDDED, 14);
 
-			// 设置标题显示字体STSong-Light及大小
-			Font headerFont = FontFactory.getFont("STSong-Light",
-					"UniGB-UCS2-H", BaseFont.NOT_EMBEDDED, 18);
-			PdfPTable table = new PdfPTable(3);
-
-			PdfPCell cell = new PdfPCell(new Paragraph("订单信息", headerFont));
-			cell.setHorizontalAlignment(1);
-			cell.setColspan(3);
-			table.addCell(cell);
-			for (VOrdersId v : list) {
-				table.addCell(selector.process("订单编号"));
-				table.addCell(selector.process("收货地址"));
-				table.addCell(selector.process("下单时间"));
-				table.addCell(selector.process("" + v.getOrderNum()));
-				table.addCell(selector.process("" + v.getAddress()));
-				table.addCell(selector.process("" + v.getCreateTime()));
-				PdfPCell cell2 = new PdfPCell(new Paragraph("订单明细", cf2));
-				cell2.setHorizontalAlignment(0);
-				cell2.setColspan(3);
-				table.addCell(cell2);
-				table.addCell(selector.process("商品名"));
-				table.addCell(selector.process("商品数目"));
-				table.addCell(selector.process(""));
-				for (VOrdersDetailsId vDetails : v.getDetails()) {
-					table.addCell(selector.process("" + vDetails.getGoodsName()));
-					table.addCell(selector.process("" + vDetails.getNum()));
-					table.addCell(selector.process(""));
+//			// 设置标题显示字体STSong-Light及大小
+//			Font headerFont = FontFactory.getFont("STSong-Light",
+//					"UniGB-UCS2-H", BaseFont.NOT_EMBEDDED, 18);
+			for (int index=0;index<list.size();index+=2) {
+				PdfPTable table2 = new PdfPTable(4);
+				PdfPCell nocell1 = new PdfPCell(selector.process("订单编号:"+list.get(index).getOrderNum()));
+				nocell1.setColspan(2);
+				table2.addCell(nocell1);
+				PdfPCell nocell2 = new PdfPCell(selector.process("订单编号:"+list.get(index+1).getOrderNum()));
+				nocell2.setColspan(2);
+				table2.addCell(nocell2);
+				
+				PdfPCell acell1 = new PdfPCell(selector.process("收货地址:"+list.get(index).getAddress()));
+				acell1.setColspan(2);
+				table2.addCell(acell1);
+				PdfPCell acell2 = new PdfPCell(selector.process("收货地址:"+list.get(index+1).getAddress()));
+				acell2.setColspan(2);
+				table2.addCell(acell2);
+				
+				String content1  = "";
+				for (VOrdersDetailsId vDetails :list.get(index).getDetails()) {
+					content1 = content1+vDetails.getGoodsName()+" "+vDetails.getTotalNum()+"\n";
 				}
-				Image jpg = Image.getInstance("D:\\1.png");
-				jpg.setAlignment(Image.ALIGN_CENTER);
-				table.addCell(jpg);
-				PdfPCell cell1 = new PdfPCell(new Paragraph(""));
-				cell1.setFixedHeight(20f);
-				cell1.setColspan(3);
-				table.addCell(cell1);
+				table2.addCell(selector.process(content1));
+				String pic1 = MatrixToImageWriter.buildQRCode("http://192.168.1.150:8080/TendaEHome/demo2.html?orderNum="+list.get(index).getOrderNum());
+				Image jpg1 = Image.getInstance(pic1);
+				jpg1.setAlignment(Image.ALIGN_CENTER);
+				jpg1.scaleAbsolute(50, 50);
+				PdfPCell pcell1 = new PdfPCell(jpg1, false);
+				pcell1.setHorizontalAlignment(1);
+				table2.addCell(pcell1);
+				
+				String content2  = "";
+				for (VOrdersDetailsId vDetails :list.get(index+1).getDetails()) {
+					content2 = content2+vDetails.getGoodsName()+" "+vDetails.getTotalNum()+"\n";
+				}
+				table2.addCell(selector.process(content2));
+				String pic2 = MatrixToImageWriter.buildQRCode("http://192.168.1.150:8080/TendaEHome/demo2.html?orderNum="+list.get(index+1).getOrderNum());
+				Image jpg2 = Image.getInstance(pic2);
+				jpg2.setAlignment(Image.ALIGN_CENTER);
+				jpg2.scaleAbsolute(50, 50);
+				PdfPCell pcell2 = new PdfPCell(jpg2, false);
+				pcell2.setHorizontalAlignment(1);
+				table2.addCell(pcell2);
+				table2.setHeaderRows(2);//防止表头被分割
+				doc.add(table2);
 			}
-			doc.add(table);
+//			for (VOrdersId v : list) {
+//				PdfPTable table2 = new PdfPTable(2);
+//				PdfPCell cell = new PdfPCell(selector.process("订单编号:"+v.getOrderNum()));
+//				cell.setColspan(2);
+//				table2.addCell(cell);
+//				
+//				PdfPCell cell1 = new PdfPCell(selector.process("收货地址:"+v.getAddress()));
+//				cell1.setColspan(2);
+//				table2.addCell(cell1);
+//				
+//				String content  = "";
+//				for (VOrdersDetailsId vDetails : v.getDetails()) {
+//					content = content+vDetails.getGoodsName()+" "+vDetails.getTotalNum()+"\n";
+//				}
+//				table2.addCell(selector.process(content));
+//				String pic = MatrixToImageWriter.buildQRCode("http://192.168.1.150:8080/TendaEHome/demo2.html?orderNum="+v.getOrderNum());
+//				Image jpg = Image.getInstance(pic);
+//				jpg.setAlignment(Image.ALIGN_CENTER);
+//				jpg.scaleAbsolute(50, 50);
+//				PdfPCell cell2 = new PdfPCell(jpg, false);
+//				cell2.setHorizontalAlignment(1);
+//				table2.addCell(cell2);
+//				table2.setHeaderRows(2);//防止表头被分割
+//				doc.add(table2);
+//			}
 			doc.close();
 			return true;
 		} catch (Exception e) {

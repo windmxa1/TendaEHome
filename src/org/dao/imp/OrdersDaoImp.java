@@ -13,6 +13,7 @@ import org.hibernate.Transaction;
 import org.hibernate.jdbc.Work;
 import org.model.Orders;
 import org.model.OrdersDetail;
+import org.util.ChangeTime;
 import org.util.HibernateSessionFactory;
 import org.view.VOrders;
 import org.view.VOrdersDetails;
@@ -87,20 +88,25 @@ public class OrdersDaoImp implements OrdersDao {
 		}
 	}
 
-	public boolean cancel(Long userid, Long id) {
+	public int cancel(Long userid, Long id) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
 			Transaction ts = session.beginTransaction();
-			String sql = "update Orders set state=0 where userid=? and id = ? ";
+			String sql = "from Orders where userid=? and id = ? ";
 			Query query = session.createQuery(sql);
 			query.setParameter(0, userid);
 			query.setParameter(1, id);
-			query.executeUpdate();
+			Orders o = (Orders) query.uniqueResult();
+			if (System.currentTimeMillis() / 1000 > ChangeTime.hourTimeStamp(
+					21, o.getTime())) {// 晚于下单当天9点则不更新
+				return -2;
+			}
+			o.setState(0);
 			ts.commit();
-			return true;
+			return 0;
 		} catch (Exception e) {
 			e.printStackTrace();
-			return false;
+			return -1;
 		} finally {
 			HibernateSessionFactory.closeSession();
 		}
@@ -188,6 +194,46 @@ public class OrdersDaoImp implements OrdersDao {
 	}
 
 	@Override
+	public List<VOrdersId> getListByState1(Integer start, Integer limit,
+			Integer state) {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			String sql = "";
+			Query query = null;
+			if (state == null) {
+				sql = "from VOrders v  where date(v.id.createTime) = curdate() order by v.id.time desc";
+				query = session.createQuery(sql);
+			} else {
+				sql = "from VOrders v where v.id.state=? and date(v.id.createTime) = curdate() order by v.id.time desc";
+				query = session.createQuery(sql);
+				query.setParameter(0, state);
+			}
+			if (start == null) {
+				start = 0;
+			}
+			if (limit == null) {
+				limit = 15;
+				query.setMaxResults(limit);
+			} else if (limit == -1) {
+			} else {
+				query.setMaxResults(limit);
+			}
+			query.setFirstResult(start);
+			List<VOrders> vOrders = query.list();
+			List<VOrdersId> list = new ArrayList<VOrdersId>();
+			for (VOrders v : vOrders) {
+				list.add(v.getId());
+			}
+			return list;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
+	@Override
 	public List<VOrdersId> getListByState(Integer start, Integer limit,
 			Integer state) {
 		try {
@@ -198,7 +244,7 @@ public class OrdersDaoImp implements OrdersDao {
 				sql = "from VOrders v order by v.id.time desc";
 				query = session.createQuery(sql);
 			} else {
-				sql = "from VOrders v where v.id.state=? order by v.id.time desc";
+				sql = "from VOrders v where v.id.state=?  order by v.id.time desc";
 				query = session.createQuery(sql);
 				query.setParameter(0, state);
 			}
@@ -367,13 +413,13 @@ public class OrdersDaoImp implements OrdersDao {
 		try {
 			Session session = HibernateSessionFactory.getSession();
 			Transaction ts = session.beginTransaction();
-			String sql = "update Orders set staffId=? where orderNum=?";
+			String sql = "update Orders set staffId=?,state=3  where orderNum=? and state<3";
 			Query query = session.createQuery(sql);
 			query.setParameter(0, staffId);
 			query.setParameter(1, orderNum);
-			query.executeUpdate();
+			int r = query.executeUpdate();
 			ts.commit();
-			return true;
+			return r > 0 ? true : false;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;

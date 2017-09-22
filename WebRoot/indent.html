@@ -6,59 +6,61 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 
-	<head>
-		<meta charset="utf-8" />
-		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<title></title>
-		<!--jquery库-->
-		<script src="js/jquery.min.js"></script>
-		<!--bootstrap库-->
-		<link href="css/bootstrap.min.css" rel="stylesheet" />
-		<script src="js/bootstrap/bootstrap.min.js"></script>
-		<!--font-awesome字体库-->
-		<link href="css/font-awesome.min.css" rel="stylesheet" />
-		<!--平滑滚动到顶部库-->
-		<script src="js/jquery.scrolltopcontrol/scrolltopcontrol.js" type="text/javascript"></script>
-		<!--主要写的jquery拓展方法-->
-		<script src="js/jquery.extend.js" type="text/javascript"></script>
-		<!--主要写的css代码-->
-		<link href="css/default.css" rel="stylesheet" type="text/css" />
-		<script src="js/default.js" type="text/javascript"></script>
-		<link href="css/query_startic_pro.css" rel="stylesheet" type="text/css" />
-		<script src="js/indent.js" type="text/javascript"></script>
-		<style>
-			.webdesigntuts-workshop span:hover {
-				color: #337ab7;
-				cursor: pointer;
-				border-bottom: 2px solid #337ab7;
-			}
-		</style>
-	</head>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title></title>
+<!--jquery库-->
+<script src="js/jquery.min.js"></script>
+<!--bootstrap库-->
+<link href="css/bootstrap.min.css" rel="stylesheet" />
+<script src="js/bootstrap/bootstrap.min.js"></script>
+<!--font-awesome字体库-->
+<link href="css/font-awesome.min.css" rel="stylesheet" />
+<!--平滑滚动到顶部库-->
+<script src="js/jquery.scrolltopcontrol/scrolltopcontrol.js"
+	type="text/javascript"></script>
+<!--主要写的jquery拓展方法-->
+<script src="js/jquery.extend.js" type="text/javascript"></script>
+<!--主要写的css代码-->
+<link href="css/default.css" rel="stylesheet" type="text/css" />
+<script src="js/default.js" type="text/javascript"></script>
+<link href="css/query_startic_pro.css" rel="stylesheet" type="text/css" />
+<script src="js/indent.js" type="text/javascript"></script>
+<style>
+.webdesigntuts-workshop span:hover {
+	color: #337ab7;
+	cursor: pointer;
+	border-bottom: 2px solid #337ab7;
+}
+</style>
+</head>
 
-	<body>
-		<div class="main-ontent" style="position: absolute;">
-			<div class="webdesigntuts-workshop" style="margin:10px; height: 30px;">
-				<div style="float: left;">
-					<span style="margin-right: 20px;" onclick="indent(-1)">全部订单</span>
-					<span style="margin-right: 20px;" onclick="indent(4)">已签收</span>
-					<span style="margin-right: 20px;" onclick="indent(3)">发货未签收</span>
-					<span style="margin-right: 20px;" onclick="indent(2)">支付未发货</span>
-					<span style="margin-right: 20px;" onclick="indent(1)">未支付</span>
-					<span style="margin-right: 20px;" onclick="indent(0)">取消</span>
-					<input type="search" id="seek_text" placeholder="请按订单号搜索">
-					<button onclick="seek()" style="background: #0066CC; border: none; outline: none; color: #FFFFFF;">搜索</button>
-				</div>
+<body>
+	<div class="main-ontent" style="position: absolute;">
+		<div class="webdesigntuts-workshop" style="margin:10px; height: 30px;">
+			<div style="float: left;">
+				<span style="margin-right: 20px;" onclick="indent(-1)">全部订单</span> <span
+					style="margin-right: 20px;" onclick="indent(4)">已签收</span> <span
+					style="margin-right: 20px;" onclick="indent(3)">发货未签收</span> <span
+					style="margin-right: 20px;" onclick="indent(2)">支付未发货</span> <span
+					style="margin-right: 20px;" onclick="indent(1)">未支付</span> <span
+					style="margin-right: 20px;" onclick="indent(0)">取消</span> <input
+					type="search" id="seek_text" placeholder="请按订单号搜索">
+				<button onclick="seek()"
+					style="background: #0066CC; border: none; outline: none; color: #FFFFFF;">搜索</button>
 			</div>
-			<div id="browser" class="tbtree" style="text-align: center;">
-				<div id="mainTbtable" class='uqt_detail'>
-					<table id="UQT_detailTable" class="">
-					</table>
-				</div>
-				<div id="div_pager" class="page_con">
-				</div>
+		</div>
+		<div id="browser" class="tbtree" style="text-align: center;">
+			<div id="mainTbtable" class='uqt_detail'>
+				<table id="UQT_detailTable" class="">
+				</table>
 			</div>
-			<!--------------------------------修改订单(开始)---------------------------------------->
+			<div id="div_pager" class="page_con"></div>
+		</div>
+		<!--------------------------------修改订单(开始)---------------------------------------->
+		<!-- 
 			<div class="modal fade" id="xgdd" tabindex="-1" role="dialog" aria-labelledby="xgddLabel" aria-hidden="true">
 				<div class="modal-dialog" style="width: 400px;">
 					<div class="modal-content">
@@ -79,10 +81,7 @@
 											<label>订单状态:</label>
 											<select id="state">
 												<option value="4">已签收</option>
-												<option value="3">发货未签收</option>
-												<!--<option value="2">支付未发货</option>
-												<option value="1">未支付</option>
-												<option value="0">取消</option>-->
+												<option value="3">发货未签收</option>												
 											</select>
 										</td>
 									</tr>
@@ -100,9 +99,10 @@
 					</div>
 				</div>
 			</div>
-			<!--------------------------------修改订单(结束)---------------------------------------->
-			<!--------------------------------订单详情(开始)---------------------------------------->
-			<!--<div class="modal fade" id="ddxq" tabindex="-1" role="dialog" aria-labelledby="ddxqLabel" aria-hidden="true">
+			 -->
+		<!--------------------------------修改订单(结束)---------------------------------------->
+		<!--------------------------------订单详情(开始)---------------------------------------->
+		<!--<div class="modal fade" id="ddxq" tabindex="-1" role="dialog" aria-labelledby="ddxqLabel" aria-hidden="true">
 				<div class="modal-dialog" style="width: 900px;">
 					<div class="modal-content">
 						<div class="modal-header" style="text-align: center; font-weight:bold;">
@@ -121,8 +121,8 @@
 					</div>
 				</div>
 			</div>-->
-			<!--------------------------------订单详情(结束)---------------------------------------->
-		</div>
-	</body>
+		<!--------------------------------订单详情(结束)---------------------------------------->
+	</div>
+</body>
 
 </html>

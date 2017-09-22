@@ -15,6 +15,7 @@ public class Orders implements java.io.Serializable {
 	private String address;
 	private String orderNum;
 	private String staffId;
+	private Integer isExport;
 
 	// Constructors
 
@@ -30,7 +31,6 @@ public class Orders implements java.io.Serializable {
 		this.orderNum = orderNum;
 	}
 
-	/** full constructor */
 	public Orders(Long userid, Long time, Integer state, String address,
 			String orderNum) {
 		this.userid = userid;
@@ -39,15 +39,16 @@ public class Orders implements java.io.Serializable {
 		this.address = address;
 		this.orderNum = orderNum;
 	}
-
+	/** full constructor */
 	public Orders(Long userid, Long time, Integer state, String address,
-			String orderNum, String staffId) {
+			String orderNum, String staffId, Integer isExport) {
 		this.userid = userid;
 		this.time = time;
 		this.state = state;
 		this.address = address;
 		this.orderNum = orderNum;
 		this.staffId = staffId;
+		this.isExport = isExport;
 	}
 
 	// Property accessors
@@ -106,6 +107,14 @@ public class Orders implements java.io.Serializable {
 
 	public void setStaffId(String staffId) {
 		this.staffId = staffId;
+	}
+
+	public Integer getIsExport() {
+		return this.isExport;
+	}
+
+	public void setIsExport(Integer isExport) {
+		this.isExport = isExport;
 	}
 
 }

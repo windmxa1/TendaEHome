@@ -7,6 +7,7 @@ import org.dao.StaffDao;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.model.Staff;
 import org.model.StaffPromotion;
 import org.util.HibernateSessionFactory;
 import org.view.VGoods;
@@ -112,6 +113,90 @@ public class StaffDaoImp implements StaffDao {
 		try {
 			Session session = HibernateSessionFactory.getSession();
 			String sql = "select count(id.id) from VStaffPromotion v";
+			Query query = session.createQuery(sql);
+			query.setMaxResults(1);
+			Long count = (Long) query.uniqueResult();
+			return count;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 0L;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
+	@Override
+	public Integer saveOrUpdate(Staff staff) {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			Transaction ts = session.beginTransaction();
+			Integer id = 0;
+			if (staff.getId() != null) {
+				session.update(staff);
+			} else {
+				id = (Integer) session.save(staff);
+			}
+			ts.commit();
+			return id;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return -1;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
+	@Override
+	public boolean deleteStaff(Integer id) {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			Transaction ts = session.beginTransaction();
+			String sql = "delete from Staff where id  = ?";
+			Query query = session.createQuery(sql);
+			query.setParameter(0, id);
+			query.executeUpdate();
+			ts.commit();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
+	@Override
+	public List<Staff> getStaffList(Integer start, Integer limit) {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			String sql = "from Staff";
+			Query query = session.createQuery(sql);
+			if (start == null) {
+				start = 0;
+			}
+			if (limit == null) {
+				limit = 15;
+				query.setMaxResults(limit);
+			} else if (limit == -1) {
+			} else {
+				query.setMaxResults(limit);
+			}
+			query.setFirstResult(start);
+			List<Staff> list = query.list();
+			return list;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
+	@Override
+	public Long getStaffCount() {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			String sql = "select count(id) from Staff";
 			Query query = session.createQuery(sql);
 			query.setMaxResults(1);
 			Long count = (Long) query.uniqueResult();

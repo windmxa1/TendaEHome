@@ -2,6 +2,7 @@ package org.util;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -11,13 +12,6 @@ import java.util.Set;
 import com.sun.org.apache.bcel.internal.generic.NEW;
 
 public class ChangeTime {
-	// public static String TimeStamp2Date(String timestampString, String
-	// formats) {
-	// Long timestamp = Long.parseLong(timestampString) * 1000;
-	// String date = new java.text.SimpleDateFormat(formats)
-	// .format(new java.util.Date(timestamp));
-	// return date;
-	// }
 	/**
 	 * 日期格式字符串转换成时间戳
 	 * 
@@ -38,6 +32,18 @@ public class ChangeTime {
 	}
 
 	/**
+	 * 取得当天的指定时间的时间戳
+	 */
+	public static long hourTimeStamp(Integer hour,Long time) {
+		Calendar c = Calendar.getInstance();
+		c.setTimeInMillis(time*1000);
+		c.set(Calendar.HOUR_OF_DAY, hour);
+		c.set(Calendar.MINUTE, 0);//分  
+		c.set(Calendar.SECOND, 0);//秒 
+		return c.getTimeInMillis()/1000;
+	}
+
+	/**
 	 * 取得当前时间戳（精确到秒）
 	 * 
 	 * @return
@@ -45,7 +51,6 @@ public class ChangeTime {
 	public static String timeStamp() {
 		long time = System.currentTimeMillis();
 		String t = String.valueOf(time / 1000);
-
 		return t;
 	}
 
@@ -54,7 +59,6 @@ public class ChangeTime {
 	 */
 	public static Integer currentMon() {
 		return Integer.parseInt(new SimpleDateFormat("MM").format(new Date()));
-		// return 11;
 	}
 
 	/**
@@ -77,34 +81,27 @@ public class ChangeTime {
 	 * 取得前十二个月份的数组
 	 */
 	public static List<String> current() {
-		// Map<String, String> map = new HashMap<String, String>();
 		List<String> list = new ArrayList<>();
 		if (currentMon() - 12 == 0) {
 			for (int i = 1; i <= 12; i++) {
 				if (i < 10) {
-					// map.put(currentYear() + "-0" + i, "");
 					list.add(currentYear() + "-0" + i);
 				} else {
-					// map.put(currentYear() + "-" + i, "");
 					list.add(currentYear() + "-" + i);
 				}
 			}
 		} else {
 			for (int i = currentMon() + 1; i <= 12; i++) {
 				if (i < 10) {
-					// map.put(currentYear() - 1 + "-0" + i, "");
 					list.add(currentYear() - 1 + "-0" + i);
 				} else {
-					// map.put(currentYear() - 1 + "-" + i, "");
 					list.add(currentYear() - 1 + "-" + i);
 				}
 			}
 			for (int i = 1; i <= currentMon(); i++) {
 				if (i < 10) {
-					// map.put(currentYear() + "-0" + i, "");
 					list.add(currentYear() + "-0" + i);
 				} else {
-					// map.put(currentYear() + "-" + i, "");
 					list.add(currentYear() + "-" + i);
 				}
 			}

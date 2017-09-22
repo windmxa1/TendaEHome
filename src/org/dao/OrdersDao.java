@@ -42,7 +42,7 @@ public interface OrdersDao {
 	/**
 	 * 取消订单
 	 */
-	public boolean cancel(Long userid, Long id);
+	public int cancel(Long userid, Long id);
 
 	/**
 	 * 根据状态获取订单列表,NULL所有,0取消订单,1未支付，2已支付未发货，3发货未签收，4发货已签收
@@ -86,5 +86,9 @@ public interface OrdersDao {
 	 * 修改订单对应的配送员编号
 	 */
 	public Boolean updateOrdersStaffId(String staffId,String orderNum);
+	/**
+	 * 获取当天订单列表，用于订单导出
+	 */
+	List<VOrdersId> getListByState1(Integer start, Integer limit, Integer state);
 
 }

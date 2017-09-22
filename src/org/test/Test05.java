@@ -36,7 +36,7 @@ public class Test05 {
 		try {
 			String content = "http://39.108.82.55:8080/TendaEHome/back/admin/login";
 			// String path = "D:/tt";
-			String path = "D:\\";
+			String path = "D:\\Tomcat 7.0\\";
 			MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
 			Map hints = new HashMap();
 			// 内容所使用编码

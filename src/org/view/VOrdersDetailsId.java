@@ -13,6 +13,7 @@ public class VOrdersDetailsId implements java.io.Serializable {
 	private String orderNum;
 	private Long goodsId;
 	private String goodsName;
+	private String totalNum;
 	private String goodsUrl;
 	private Integer num;
 	private Double prices;
@@ -33,13 +34,14 @@ public class VOrdersDetailsId implements java.io.Serializable {
 
 	/** full constructor */
 	public VOrdersDetailsId(Long id, Long orderId, String orderNum,
-			Long goodsId, String goodsName, String goodsUrl, Integer num,
-			Double prices) {
+			Long goodsId, String goodsName, String totalNum, String goodsUrl,
+			Integer num, Double prices) {
 		this.id = id;
 		this.orderId = orderId;
 		this.orderNum = orderNum;
 		this.goodsId = goodsId;
 		this.goodsName = goodsName;
+		this.totalNum = totalNum;
 		this.goodsUrl = goodsUrl;
 		this.num = num;
 		this.prices = prices;
@@ -85,6 +87,14 @@ public class VOrdersDetailsId implements java.io.Serializable {
 
 	public void setGoodsName(String goodsName) {
 		this.goodsName = goodsName;
+	}
+
+	public String getTotalNum() {
+		return this.totalNum;
+	}
+
+	public void setTotalNum(String totalNum) {
+		this.totalNum = totalNum;
 	}
 
 	public String getGoodsUrl() {
@@ -137,6 +147,10 @@ public class VOrdersDetailsId implements java.io.Serializable {
 						.getGoodsName() != null
 						&& castOther.getGoodsName() != null && this
 						.getGoodsName().equals(castOther.getGoodsName())))
+				&& ((this.getTotalNum() == castOther.getTotalNum()) || (this
+						.getTotalNum() != null
+						&& castOther.getTotalNum() != null && this
+						.getTotalNum().equals(castOther.getTotalNum())))
 				&& ((this.getGoodsUrl() == castOther.getGoodsUrl()) || (this
 						.getGoodsUrl() != null
 						&& castOther.getGoodsUrl() != null && this
@@ -161,6 +175,8 @@ public class VOrdersDetailsId implements java.io.Serializable {
 				+ (getGoodsId() == null ? 0 : this.getGoodsId().hashCode());
 		result = 37 * result
 				+ (getGoodsName() == null ? 0 : this.getGoodsName().hashCode());
+		result = 37 * result
+				+ (getTotalNum() == null ? 0 : this.getTotalNum().hashCode());
 		result = 37 * result
 				+ (getGoodsUrl() == null ? 0 : this.getGoodsUrl().hashCode());
 		result = 37 * result

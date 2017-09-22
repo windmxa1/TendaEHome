@@ -1,14 +1,14 @@
 /**
- * 订单模块
+ * 订单数据请求(取消列表)
  */
 var json = null;
 var total = null;
-var pageSize = 20;
-var pageNo = 1;
-var indexState = -1;
-// 加载默认列表（全部订单）
 $(function() {
+	// refreshData(20,1,10,json.length);
+	var pageSize = 20;
+	var pageNo = 1;
 	builderUQTQueryMsg(getJsonArrayByPageSize(pageSize, pageNo));
+
 	var totalPage = getTotllePage(pageSize);
 	var totalRecords = total;
 	// 生成分页控件 根据分页的形式在这里设置
@@ -22,10 +22,12 @@ $(function() {
 		pageSize : pageSize
 	});
 	kkpager.generPageHtml();
+
 });
-// 切换订单状态
-function indent(v) {
-	indexState = v;
+
+function selectOrder() {
+	var pageSize = 20;
+	var pageNo = 1;
 	builderUQTQueryMsg(getJsonArrayByPageSize(pageSize, pageNo));
 	var totalPage = getTotllePage(pageSize);
 	var totalRecords = total;
@@ -41,62 +43,8 @@ function indent(v) {
 	});
 	kkpager.generPageHtml();
 };
+/** *******************************列表分页************************************** */
 
-// 按订单号搜索
-function seek() {
-	indexState = -2;
-	builderUQTQueryMsg(getJsonArrayByPageSize(pageSize, pageNo));
-	var totalPage = getTotllePage(pageSize);
-	var totalRecords = total;
-	// 生成分页控件 根据分页的形式在这里设置
-	kkpager.init({
-		pno : pageNo,
-		// 总页码
-		total : totalPage,
-		// 总数据条数
-		totalRecords : totalRecords,
-		// 页面条数
-		pageSize : pageSize
-	});
-	kkpager.generPageHtml();
-
-};
-
-// 修改订单
-function updateIndent(v) {
-	$('#id').val(v);
-	$('#xgdd_btn').click(function() {
-		$.ajax({
-			type : "post",
-			url : "back/orders/updateOrder",
-			dataType : "json",
-			async : false,
-			cache : false,
-			headers : {
-				"token" : getCookie('token')
-			},
-			data : {
-				id : $('#id').val(),
-				state : $('#state').val()
-			},
-			success : function(data) {
-				if (data.code == 100) {
-					location.reload();
-				}
-			},
-			error : function(jqXHR) {
-				alert("网络异常");
-			}
-		})
-	});
-};
-
-// 详情
-function details(v) {
-	SetCookie('details', v);
-	window.location.href="details.html";
-};
-/** ******************************商品列表分页************************************** */
 /**
  * 获取总页数
  * 
@@ -119,82 +67,30 @@ var getTotllePage = function(pageSize) {
  * @returns {*}
  */
 var getJsonArrayByPageSize = function(pageSize, pageNo) {
-	if (indexState == -2) { // 搜索订单
-		$.ajax({
-			type : "post",
-			url : "back/orders/getOrderByOrderNum",
-			dataType : "json",
-			async : false,
-			cache : false,
-			headers : {
-				"token" : getCookie('token')
-			},
-			data : {
-				orderNum : $('#seek_text').val()
-			},
-			success : function(data) {
-				if (data.code == 100) {
-					var list = [];
-					list.push(data.data.list);
-					json = list;
-					total = data.data.total;
-				}
-			},
-			error : function(jqXHR) {
-				alert("网络异常");
+	$.ajax({
+		type : "post",
+		url : "back/staff/getStaffList",
+		dataType : "json",
+		async : false,
+		cache : false,
+		headers : {
+			"token" : getCookie('token')
+		},
+		data : {
+			'start' : (pageNo - 1) * pageSize,
+			'limit' : pageSize,
+			'type' : $('.selectType option:selected').val() || null
+		},
+		success : function(data) {
+			if (data.code == 100) {
+				json = data.data.list;
+				total = data.data.total;
 			}
-		})
-	} else if (indexState == -1) { // 全部订单
-		$.ajax({
-			type : "post",
-			url : "back/orders/getOrdersList",
-			dataType : "json",
-			async : false,
-			cache : false,
-			headers : {
-				"token" : getCookie('token')
-			},
-			data : {
-				'start' : (pageNo - 1) * pageSize,
-				'limit' : pageSize,
-			},
-			success : function(data) {
-				if (data.code == 100) {
-					json = data.data.list;
-					total = data.data.total
-				}
-			},
-			error : function(data) {
-				alert("error");
-			}
-		});
-	} else { // 按订单状态搜索
-		$.ajax({
-			type : "post",
-			url : "back/orders/getOrdersList",
-			dataType : "json",
-			async : false,
-			cache : false,
-			headers : {
-				"token" : getCookie('token')
-			},
-			data : {
-				'start' : (pageNo - 1) * pageSize,
-				'limit' : pageSize,
-				"state" : indexState
-			},
-			success : function(data) {
-				if (data.code == 100) {
-					json = data.data.list;
-					total = data.data.total
-				}
-			},
-			error : function(data) {
-				alert("error");
-			}
-		});
-	}
-
+		},
+		error : function(jqXHR) {
+			alert("网络异常");
+		}
+	});
 	var jsonCount = total;
 	var shang = getTotllePage(pageSize);
 	// var startIndex = (pageNo);
@@ -235,43 +131,175 @@ function refreshData(pageSize, pageNo) {
 var builderUQTQueryMsg = function(UQTQueryMsg) {
 	var UQT_detailTable = $('#UQT_detailTable');
 	UQT_detailTable.empty();
-	var th = '<tr><th scope="col" class="eng_name" >订单编号</th><th scope="col" class="query_pro" >地址</th><th class="match_type" scope="col">订单状态</th><th scope="col"  class="dis_order">时间</th><th scope="col"  class="dis_dta">操作</th><th class="dis_hidden" style="display: none">隐藏属性</th></tr>';
+	var th = '<tr><th scope="col"  class="dis_order">员工编号</th><th scope="col" class="match_type" >姓名</th><th scope="col" class="match_type">工龄</th><th scope="col" class="query_pro">服务范围</th><th scope="col" class="dis_dta">操作</th><th class="dis_hidden" style="display: none">隐藏属性</th></tr>';
 
 	UQT_detailTable.append(th);
 	var tr;
-	$.each(UQTQueryMsg, function(i, eachData) {
-		tr = $('<tr>');
-		var id = eachData.id;
-		var orderNum = eachData.orderNum;
-		var status = eachData.status;
-		var address = eachData.address;
-		var createTime = eachData.createTime;
-		var trString = "<td class='eng_name'>" + orderNum + "</td>"
-				+ "<td class='query_pro'>" + address + "</td>"
-				+ "<td class='match_type'>" + status + "</td>"
-				+ "<td class='match_type'>" + createTime + "</td>"
-				+ "<td class='dis_dta'>"
-				+
-				"<button class='btn' style='height:30px;margin-right:10px'  onclick='details("
-				+ id
-				+ ")'>订单详情</button>";
-		if (eachData.state == 3) {
-			trString = trString + "<button class='btn btn-info' style='height:30px; margin-right:10px' onclick='upDownCommodity("
-			+ 4 + "," + id + ")' >完成订单</button>";
-		}else if(eachData.state <3){
-			trString = trString + "<button class='btn btn-warning' style='height:30px; margin-right:10px' onclick='upDownCommodity("
-			+ 0 + "," + id + ")' >取消订单</button>";
-		}else{
-			trString = trString + "<button class='btn btn-info' disabled='disabled' style='height:30px; margin-right:10px' onclick='upDownCommodity("
-			+ 4 + "," + id + ")' >完成订单</button>";
+	$
+			.each(
+					UQTQueryMsg,
+					function(i, eachData) {
+						tr = $('<tr>');
+						var id = eachData.id;
+						var staffNo = eachData.staffNo;
+						var staffName = eachData.staffName;
+						var year = eachData.year;
+						var serviceVange = eachData.serviceVange;
+						tr
+								.append("<td class='dis_order'>"
+										+ staffNo
+										+ "</td>"
+										+ "<td class='match_type'>"
+										+ staffName
+										+ "</td>"
+										+ "<td class='match_type'>"
+										+ year
+										+ "</td>"
+										+ "<td class='match_type'>"
+										+ serviceVange
+										+ "</td>"
+										+ "<td class='dis_dta'><button data-toggle='modal' id='modStaff' data-target='#modOrder' style='height:30px;margin-right:10px' class='btn' data-order='"
+										+ JSON.stringify(eachData)
+										+ "'>修改</button><button class='btn' id='delStaff' style='height:30px;margin-right:10px' data-oid='"
+										+ id + "'>删除</button></td>");
+						UQT_detailTable.append(tr);
+					});
+};
+
+// 修改员工信息
+$(document).on('click', '#modStaff', function() {
+	var order = $(this).data('order');
+	$('#id').val(order.id);
+	$('#staffNo').val(order.staffNo);
+	$('#staffName').val(order.staffName);
+	$('#year').val(order.year);
+	$('#serviceVange').val(order.serviceVange);
+});
+
+function toJson(x) {
+	var o = {};
+	var a = x.serializeArray();
+	$.each(a, function() {
+		if (o[this.name]) {
+			if (!o[this.name].push) {
+				o[this.name] = [ o[this.name] ];
+			}
+			o[this.name].push(this.value || '');
+		} else {
+			o[this.name] = this.value || '';
 		}
-		trString = trString 
-		+"</td>"
-		+ "<td class='dis_hidden' style='display: none'></td>";
-		tr.append(trString);
-		UQT_detailTable.append(tr);
 	});
+	return JSON.stringify(o);
 }
+
+$(document).on('click', '#modOrder_btn', function() {
+	var staffNo = $('#staffNo').val();
+	var staffName = $('#staffName').val();
+	var year = $('#year').val();
+	var serviceVange = $('#serviceVange').val();
+	var _reg = /^\d+$/;
+	if (staffNo == '' || staffName == '' || year == '' || serviceVange == '') {
+		alert("您有未填写的必填项，请补充完整后提交");
+	} else if (!_reg.test(year)) {
+		alert("工龄请填写数字");
+	} else if (!_reg.test(staffNo)) {
+		alert("工号请填写数字");
+	} else {
+		$.ajax({
+			type : "post",
+			url : "back/staff/updateStaff",
+			data : toJson($("#modOrder_form")),
+			dataType : "json",
+			contentType : "application/json;charset=utf-8",
+			processData : false,
+			beforeSend : function(request) {
+				request.setRequestHeader("token", getCookie('token'));
+			},
+			success : function(data) {
+				if (data.code == 100) {
+					alert('修改成功');
+					location.reload();
+				} else {
+					alert(data.msg);
+				}
+			},
+			error : function(data) {
+				alert("网络不给力,修改失败");
+			}
+		});
+	}
+});
+// 添加员工信息
+function tjyg(){
+	var formData = new FormData(document.getElementById("tjyg_form"));
+	var staffNo = $('#xg_staffNo').val();
+	var staffName = $('#xg_staffName').val();
+	var year = $('#xg_year').val();
+	var serviceVange = $('#xg_serviceVange').val();
+	var _reg = /^\d+$/;
+	if (staffNo == '' || staffName == '' || year == '' || serviceVange == '') {
+		alert("您有未填写的必填项，请补充完整后提交");
+	} else if (!_reg.test(year)) {
+		alert("工龄请填写数字");
+	} else if (!_reg.test(staffNo)) {
+		alert("员工编号请填写数字");
+	} else {
+		$.ajax({
+			type : "post",
+			url : "back/staff/addStaff",
+			data : formData,
+			dataType : "json",
+			async : false,
+			cache : false,
+			contentType : false,
+			processData : false,
+			beforeSend : function(request) {
+				request.setRequestHeader("token", getCookie('token'));
+			},
+			success : function(data) {
+				if (data.code == 100) {
+					alert('添加成功');
+					location.reload();
+				} else {
+					alert(data.msg);
+				}
+			},
+			error : function(data) {
+				alert("网络不给力,修改失败");
+			}
+		});
+	}
+}
+
+// 删除员工信息
+$(document).on('click', '#delStaff', function() {
+	var oId = $(this).data('oid');
+	if (confirm('确定要删除这个员工信息吗')) {
+		$.ajax({
+			type : "post",
+			url : "back/staff/deleteStaff",
+			data : {
+				'id' : oId
+			},
+			async : false,
+			cache : false,
+			headers : {
+				"token" : getCookie('token')
+			},
+			success : function(data) {
+				if (data.code == 100) {
+					alert('删除成功');
+					location.reload();
+				} else {
+					alert(data.msg);
+				}
+			},
+			error : function(data) {
+				alert("网络不给力,删除失败");
+			}
+		});
+	}
+});
 
 /**
  * 选择左侧checkbox
@@ -521,9 +549,7 @@ var kkpager = {
 
 		var pageSize = '<select id="select_pagesize" onchange="kkpager.changepageSize(this)">';
 
-		if (this.pagesize == 5)
-			pageSize += '<option selected="selected" value="5" >5</option>';
-		else if (this.pagesize == 10)
+		if (this.pagesize == 10)
 			pageSize += '<option selected="selected" value="10" >10</option>';
 		else
 			pageSize += '<option  value="10" >10</option>';
@@ -623,4 +649,4 @@ function getParameter(name) {
 	return null;
 };
 
-/** *******************************订单列表分页************************************** */
+/** *******************************列表分页************************************** */

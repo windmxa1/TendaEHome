@@ -555,8 +555,7 @@ var builderUQTQueryMsg = function(UQTQueryMsg) {
 
 	UQT_detailTable.append(th);
 	var tr;
-	$
-			.each(
+	$.each(
 					UQTQueryMsg,
 					function(i, eachData) {
 						tr = $('<tr>');

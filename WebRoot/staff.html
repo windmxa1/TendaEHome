@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title></title>
+<!--jquery库-->
+<script src="js/jquery.min.js"></script>
+<!--bootstrap库-->
+<link href="css/bootstrap.min.css" rel="stylesheet" />
+<script src="js/bootstrap/bootstrap.min.js"></script>
+<!--font-awesome字体库-->
+<link href="css/font-awesome.min.css" rel="stylesheet" />
+<!--平滑滚动到顶部库-->
+<script src="js/jquery.scrolltopcontrol/scrolltopcontrol.js"
+	type="text/javascript"></script>
+<!--主要写的jquery拓展方法-->
+<script src="js/jquery.extend.js" type="text/javascript"></script>
+<!--主要写的css代码-->
+<link href="css/default.css" rel="stylesheet" type="text/css" />
+<script src="js/default.js" type="text/javascript"></script>
+<link href="css/query_startic_pro.css" rel="stylesheet" type="text/css" />
+<script src="js/staff.js" type="text/javascript"></script>
+</head>
+<body>
+	<div class="webdesigntuts-workshop" style="margin:10px; height: 30px;">
+		<div style="float: left;">
+			<button data-toggle='modal' data-target='#tjyg'
+				style="background: #0066CC; border: none; outline: none; color: #FFFFFF;">添加员工信息</button>
+		</div>
+	</div>
+	<div id="browser" class="tbtree" style="text-align: center;">
+		<div id="mainTbtable" class='uqt_detail'>
+			<table id="UQT_detailTable" class="">
+			</table>
+		</div>
+
+		<div id="div_pager" class="page_con"></div>
+	</div>
+
+	<!--------------------------------修改员工信息(开始)---------------------------------------->
+	<div class="modal fade" id="modOrder" tabindex="-1" role="dialog"
+		aria-labelledby="xgspLabel" aria-hidden="true">
+		<div class="modal-dialog" style="width: 350px;">
+			<div class="modal-content">
+				<div class="modal-header"
+					style="text-align: center; font-weight:bold;">
+					<h4 class="modal-title" id="xgspLabel">修改员工信息</h4>
+				</div>
+				<div class="modal-body">
+					<form role="form" id="modOrder_form">
+						<div style="display: none;">
+							<input type="text" class="form-control" name="id" id="id"
+								aria-describedby="stmp">
+						</div>
+						<div class="form-group has-feedback">
+							<label for="id">员工编号(必填)</label> <input type="text"
+								class="form-control" name="staffNo" id="staffNo"
+								placeholder="请填写员工编号" aria-describedby="stmp">
+						</div>
+						<div class="form-group has-feedback">
+							<label for="id">姓名(必填)</label> <input type="text"
+								class="form-control" name="staffName" id="staffName"
+								placeholder="请填写员工姓名" aria-describedby="stmp">
+						</div>
+						<div class="form-group has-feedback">
+							<label for="name">工龄(必填)</label> <input type="text"
+								class="form-control" name="year" id="year" maxlength="2"
+								placeholder="请填写工龄" aria-describedby="stmp">
+						</div>
+						<div class="form-group">
+							<label for="price">服务范围(必填)</label> <input type="text"
+								class="form-control" name="serviceVange" id="serviceVange"
+								placeholder="请输入服务范围" aria-describedby="stmp">
+						</div>
+
+						<input type="reset" name="reset" style="display: none;" />
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					<button type="button" id="modOrder_btn" class="btn btn-info"
+						style="border: none;outline: none;">确认</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--------------------------------修改员工信息(结束)---------------------------------------->
+	<!--------------------------------添加员工信息(开始)---------------------------------------->
+	<div class="modal fade" id="tjyg" tabindex="-1" role="dialog"
+		aria-labelledby="tjspLabel" aria-hidden="true">
+		<div class="modal-dialog" style="width: 350px;">
+			<div class="modal-content">
+				<div class="modal-header"
+					style="text-align: center; font-weight:bold;">
+					<h4 class="modal-title" id="tjspLabel">添加直播</h4>
+				</div>
+				<div class="modal-body">
+					<form role="form" id="tjyg_form">
+						<div class="form-group has-feedback">
+							<label for="name">员工编号(必填)</label> <input type="text"
+								class="form-control" name="staffNo" id="xg_staffNo"
+								placeholder="请输入员工编号" aria-describedby="stmp">
+						</div>
+						<div class="form-group">
+							<label for="price">姓名(必填)</label> <input type="text"
+								class="form-control" name="staffName" id="xg_staffName"
+								placeholder="请输入员工姓名" aria-describedby="stmp">
+						</div>
+						<div class="form-group">
+							<label for="price">工龄(必填)</label> <input type="text"
+								class="form-control" name="year" id="xg_year" maxlength="2"
+								placeholder="请输入工龄" aria-describedby="stmp">
+						</div>
+						<div class="form-group">
+							<label for="price">服务范围(必填)</label> <input type="text"
+								class="form-control" name="serviceVange" id="xg_serviceVange"
+								placeholder="请输入服务范围" aria-describedby="stmp">
+						</div>
+						<!-- 
+						<div class="form-group">
+							<label for="price">台标(必填)</label> <input type="file"
+								class="form-control" name="file" id="file">
+						</div> 
+						
+						<div class="form-group">
+							<label for="price">状态(必选)</label> <select class="form-control"
+								id="available" name="available">
+								<option value="1">可见</option>
+								<option value="0">不可见</option>
+							</select>
+						</div>
+						-->
+
+						<input type="reset" name="reset" style="display: none;" />
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+					</button>
+					<button type="button" onclick="tjyg()" class="btn btn-info"
+						style="border: none;outline: none;">添加</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--------------------------------添加员工信息(结束)---------------------------------------->
+
+</body>
+</html>

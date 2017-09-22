@@ -1,5 +1,9 @@
 package org.model;
 
+import java.io.File;
+
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
+
 /**
  * Tv entity. @author MyEclipse Persistence Tools
  */

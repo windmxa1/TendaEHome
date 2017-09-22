@@ -1,6 +1,7 @@
 package org.app.controller;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +38,7 @@ public class OrdersController {
 	@RequestMapping("/getOrdersList")
 	@ResponseBody
 	public Object getOrdersList(HttpServletRequest request, Integer start,
-			Integer limit) throws Exception{
+			Integer limit) throws Exception {
 		oDao = new OrdersDaoImp();
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");
@@ -59,7 +60,8 @@ public class OrdersController {
 
 	@RequestMapping("/getOrdersDetailList")
 	@ResponseBody
-	public Object getOrdersDetailList(Long orderId, Integer start, Integer limit)throws Exception {
+	public Object getOrdersDetailList(Long orderId, Integer start, Integer limit)
+			throws Exception {
 		oDao = new OrdersDaoImp();
 		List<VOrdersDetailsId> list = oDao.getDetailList(orderId, start, limit);
 		data = new HashMap<>();
@@ -74,7 +76,7 @@ public class OrdersController {
 	@RequestMapping("/getOrders")
 	@ResponseBody
 	public Object getOrders(HttpServletRequest request, Integer start,
-			Integer limit) throws Exception{
+			Integer limit) throws Exception {
 		oDao = new OrdersDaoImp();
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");
@@ -93,23 +95,37 @@ public class OrdersController {
 
 	@RequestMapping("/cancelOrder")
 	@ResponseBody
-	public Object cancelOrder(HttpServletRequest request, Long id) throws Exception{
+	public Object cancelOrder(HttpServletRequest request, Long id)
+			throws Exception {
 		oDao = new OrdersDaoImp();
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");
 		Long userid = Long.parseLong(""
 				+ TokenUtils.getValue(token, TokenUtils.getKey(), "userid"));
 		/*********************************/
-		if (oDao.cancel(userid, id)) {
+		switch (oDao.cancel(userid, id)) {
+		case 0:
 			return ResultUtils.toJson(100, "取消订单成功", "");
-		} else {
+		case -1:
+			return ResultUtils.toJson(101, "取消订单失败", "");
+		case -2:
+			return ResultUtils.toJson(101, "该订单在当天9点后无法取消", "");
+		default:
 			return ResultUtils.toJson(101, "取消订单失败", "");
 		}
 	}
 
 	@RequestMapping("/addOrder")
 	@ResponseBody
-	public Object addOrder(HttpServletRequest request, @RequestBody OrderModel o) throws Exception{
+	public Object addOrder(HttpServletRequest request, @RequestBody OrderModel o)
+			throws Exception {
+		return ResultUtils.toJson(101, "该功能将在月底开通，请您耐心等待", "");
+	}
+
+	@RequestMapping("/addOrder1")
+	@ResponseBody
+	public Object addOrder1(HttpServletRequest request,
+			@RequestBody OrderModel o) throws Exception {
 		oDao = new OrdersDaoImp();
 		uAddressDao = new UserAddressDaoImp();
 		/**** 获取header中的token并取出userid ****/
@@ -121,7 +137,7 @@ public class OrdersController {
 		/*********************************/
 		Orders orders = new Orders(userid, time / 1000, 1,
 				uAddressDao.getAddressById(o.getAddressId()), orderNum);
-		System.out.println(o.getAddressId()+"|||"+orders.getAddress());
+		System.out.println(o.getAddressId() + "|||" + orders.getAddress());
 		Long id = oDao.generateOrder(orders, o.getDetails());
 		if (id > 0) {
 			Double Realtotal = oDao.getTotal(orderNum);
@@ -149,6 +165,9 @@ public class OrdersController {
 				break;
 			}
 			// data.put("orderNum", orderNum);
+			if (Calendar.getInstance().get(Calendar.HOUR_OF_DAY) > 21) {
+				return ResultUtils.toJson(100, "生成订单成功，超过21点的订单将隔天下午送达", "");
+			}
 			return ResultUtils.toJson(100, "生成订单成功", "");
 		} else {
 			return ResultUtils.toJson(101, "生成订单失败，请重试", "");

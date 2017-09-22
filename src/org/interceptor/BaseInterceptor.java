@@ -32,7 +32,7 @@ public class BaseInterceptor implements HandlerInterceptor {
 				.getRealPath("/");
 		Constants.pdfDir = TokenUtils.rootPath + "pdf" + File.separator;
 		Constants.pdfUrl = "http://" + request.getLocalAddr() + ":"
-				+ request.getLocalPort() + "/" + request.getContextPath() + "/"
+				+ request.getLocalPort() + request.getContextPath() + "/"
 				+ "pdf/";
 		return true;
 	}

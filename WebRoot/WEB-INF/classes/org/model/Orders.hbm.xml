@@ -30,5 +30,8 @@
         <property name="staffId" type="java.lang.String">
             <column name="staff_id" length="11" />
         </property>
+        <property name="isExport" type="java.lang.Integer">
+            <column name="is_export" />
+        </property>
     </class>
 </hibernate-mapping>

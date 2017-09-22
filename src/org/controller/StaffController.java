@@ -8,9 +8,11 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.dao.StaffDao;
 import org.dao.imp.StaffDaoImp;
+import org.model.Staff;
 import org.model.StaffPromotion;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -52,8 +54,8 @@ public class StaffController {
 	 */
 	@RequestMapping("/getStaffPromotionList")
 	@ResponseBody
-	public Object getStaffPromotionList(HttpServletRequest request, Integer start,
-			Integer limit) throws Exception {
+	public Object getStaffPromotionList(HttpServletRequest request,
+			Integer start, Integer limit) throws Exception {
 		sDao = new StaffDaoImp();
 		List<VStaffPromotionId> list = sDao.getStaffPromotionList(start, limit);
 		if (list == null) {
@@ -63,6 +65,66 @@ public class StaffController {
 		data.put("total", sDao.getStaffPromotionCount());
 		data.put("list", list);
 		return ResultUtils.toJson(100, "", data);
+	}
+
+	/**
+	 * 查看员工列表
+	 */
+	@RequestMapping("/getStaffList")
+	@ResponseBody
+	public Object getStaffList(HttpServletRequest request, Integer start,
+			Integer limit) throws Exception {
+		sDao = new StaffDaoImp();
+		List<Staff> list = sDao.getStaffList(start, limit);
+		if (list == null) {
+			return ResultUtils.toJson(101, "后台错误，请重试", "");
+		}
+		data = new HashMap<>();
+		data.put("total", sDao.getStaffPromotionCount());
+		data.put("list", list);
+		return ResultUtils.toJson(100, "", data);
+	}
+
+	/**
+	 * 删除员工
+	 */
+	@RequestMapping("/deleteStaff")
+	@ResponseBody
+	public Object getStaffList(HttpServletRequest request, Integer id)
+			throws Exception {
+		sDao = new StaffDaoImp();
+		if (sDao.deleteStaff(id)) {
+			return ResultUtils.toJson(100, "", "");
+		}
+		return ResultUtils.toJson(101, "操作失败，请重试", "");
+	}
+
+	/**
+	 * 修改员工信息
+	 */
+	@RequestMapping("/updateStaff")
+	@ResponseBody
+	public Object updateStaff(HttpServletRequest request,
+			@RequestBody Staff staff) throws Exception {
+		sDao = new StaffDaoImp();
+		if (sDao.saveOrUpdate(staff) == 0) {
+			return ResultUtils.toJson(100, "", "");
+		}
+		return ResultUtils.toJson(101, "操作失败，请重试", "");
+	}
+
+	/**
+	 * 新增员工
+	 */
+	@RequestMapping("/addStaff")
+	@ResponseBody
+	public Object addStaff(HttpServletRequest request,  Staff staff)
+			throws Exception {
+		sDao = new StaffDaoImp();
+		if (sDao.saveOrUpdate(staff) > 0) {
+			return ResultUtils.toJson(100, "", "");
+		}
+		return ResultUtils.toJson(101, "操作失败，请重试", "");
 	}
 
 }

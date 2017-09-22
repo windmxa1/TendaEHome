@@ -36,7 +36,7 @@ public class GoodsController {
 	// 获取商品信息
 	@RequestMapping("/getGoodsList")
 	@ResponseBody
-	public Object getGoodsList(Integer start, Integer limit)throws Exception {
+	public Object getGoodsList(Integer start, Integer limit) throws Exception {
 		gDao = new GoodsDaoImp();
 		data = new HashMap<String, Object>();
 		Short[] state = { (short) 1, (short) 0 };
@@ -53,7 +53,8 @@ public class GoodsController {
 	// 搜索商品
 	@RequestMapping("/searchGoods")
 	@ResponseBody
-	public Object searchGoods(Integer start, Integer limit, String key)throws Exception {
+	public Object searchGoods(Integer start, Integer limit, String key)
+			throws Exception {
 		gDao = new GoodsDaoImp();
 		data = new HashMap<String, Object>();
 		List<VGoodsId> list = gDao.getGoodsByKey(start, limit, key, (short) 1);
@@ -69,7 +70,7 @@ public class GoodsController {
 	// 获取目录列表
 	@RequestMapping("/getCatalog")
 	@ResponseBody
-	public Object getCatalog()throws Exception {
+	public Object getCatalog() throws Exception {
 		gDao = new GoodsDaoImp();
 		data = new HashMap<String, Object>();
 		List<GoodsCatalog> list = gDao.getCatalog();
@@ -84,7 +85,7 @@ public class GoodsController {
 
 	@RequestMapping("/addCatalog")
 	@ResponseBody
-	public Object addCatalog(String catalog)throws Exception {
+	public Object addCatalog(String catalog) throws Exception {
 		gcDao = new GoodsCatalogDaoImp();
 		if (gcDao.getCatalog(catalog) != null) {
 			return ResultUtils.toJson(101, "添加失败,该目录已存在", "");
@@ -99,7 +100,8 @@ public class GoodsController {
 	// 删除商品目录，伪删除，但会删除图片
 	@RequestMapping("/delCatalog")
 	@ResponseBody
-	public Object delCatalog(HttpServletRequest request, @RequestParam Long id) throws Exception{
+	public Object delCatalog(HttpServletRequest request, @RequestParam Long id)
+			throws Exception {
 		gcDao = new GoodsCatalogDaoImp();
 		if (gcDao.delete(id)) {
 			try {
@@ -120,9 +122,9 @@ public class GoodsController {
 	@RequestMapping("/updateGoodsState")
 	@ResponseBody
 	public Object updateGoodsState(HttpServletRequest request, Long id,
-			Short state) throws Exception{
+			Short state) throws Exception {
 		gDao = new GoodsDaoImp();
-		if (gDao.updateGoodsState(id, (short) Math.abs(state-1))) {
+		if (gDao.updateGoodsState(id, (short) Math.abs(state - 1))) {
 			return ResultUtils.toJson(100, "操作成功", "");
 		}
 		return ResultUtils.toJson(101, "操作失败", "");
@@ -131,7 +133,7 @@ public class GoodsController {
 	@RequestMapping("/updateCatalog")
 	@ResponseBody
 	public Object updateCatalog(@RequestParam Long id,
-			@RequestParam String catalog)throws Exception {
+			@RequestParam String catalog) throws Exception {
 		gcDao = new GoodsCatalogDaoImp();
 		GoodsCatalog goodsCatalog = new GoodsCatalog(catalog);
 		goodsCatalog.setId(id);
@@ -146,13 +148,12 @@ public class GoodsController {
 	public Object addGoods(HttpServletRequest request, String name,
 			Double price, @RequestParam CommonsMultipartFile file,
 			Long catalogId, String description, String origin, String unit)
-					throws Exception{
+			throws Exception {
 		Long time = System.currentTimeMillis() / 1000;
 
 		String path = request.getSession().getServletContext()
 				.getRealPath("/upload/goods/");
-		String filename = (System.currentTimeMillis() / 1000) + "_"
-				+ file.getOriginalFilename();
+		String filename = time + "_" + file.getOriginalFilename();
 		String filePath = path + File.separator + catalogId + File.separator
 				+ filename;
 		// System.out.println(filePath);
@@ -194,7 +195,8 @@ public class GoodsController {
 	// 删除商品，伪删除
 	@RequestMapping("/deleteGoods")
 	@ResponseBody
-	public Object deleteGoods(HttpServletRequest request, Long id)throws Exception {
+	public Object deleteGoods(HttpServletRequest request, Long id)
+			throws Exception {
 		gDao = new GoodsDaoImp();
 		// 删除之前上传的商品图片
 		Goods g = gDao.getGoods(id);
@@ -217,8 +219,8 @@ public class GoodsController {
 	public Object updateGoods(HttpServletRequest request, Long id, String name,
 			Double price,
 			@RequestParam(required = false) CommonsMultipartFile file,
-			Long catalogId, String description, String origin, String unit,Short state)
-					throws Exception{
+			Long catalogId, String description, String origin, String unit,
+			Short state) throws Exception {
 		Long time = System.currentTimeMillis() / 1000;
 		gDao = new GoodsDaoImp();
 		String url = "";
@@ -247,15 +249,15 @@ public class GoodsController {
 			// 通过CommonsMultipartFile的方法直接写文件（注意这个时候）
 			file.transferTo(newFile);
 			url = "upload/goods/" + catalogId + "/" + filename;
-		}
-		// 删除之前上传的商品图片
-		Goods g = gDao.getGoods(id);
-		if (g != null) {
-			File f = new File(request.getSession().getServletContext()
-					.getRealPath("/")
-					+ g.getUrl());
-			if (f.exists()) {
-				f.delete();
+			// 删除之前上传的商品图片
+			Goods g = gDao.getGoods(id);
+			if (g != null) {
+				File f = new File(request.getSession().getServletContext()
+						.getRealPath("/")
+						+ g.getUrl());
+				if (f.exists()) {
+					f.delete();
+				}
 			}
 		}
 		Goods goods = new Goods(name, price, url, catalogId, description, time,
@@ -278,7 +280,8 @@ public class GoodsController {
 	// 获取目录对应的商品列表
 	@RequestMapping("/getCataGoods")
 	@ResponseBody
-	public Object getCataGoods(Integer start, Integer limit, Long catalogId) throws Exception{
+	public Object getCataGoods(Integer start, Integer limit, Long catalogId)
+			throws Exception {
 		gDao = new GoodsDaoImp();
 		data = new HashMap<String, Object>();
 		List<VGoodsId> list = gDao.getCataGoods(start, limit, catalogId,

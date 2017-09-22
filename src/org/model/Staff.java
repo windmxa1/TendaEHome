@@ -1,7 +1,5 @@
 package org.model;
 
-import java.math.BigDecimal;
-
 /**
  * Staff entity. @author MyEclipse Persistence Tools
  */
@@ -13,8 +11,7 @@ public class Staff implements java.io.Serializable {
 	private Integer id;
 	private String staffNo;
 	private String staffName;
-	private String description;
-	private BigDecimal year;
+	private Integer year;
 	private String serviceVange;
 
 	// Constructors
@@ -24,11 +21,10 @@ public class Staff implements java.io.Serializable {
 	}
 
 	/** full constructor */
-	public Staff(String staffNo, String staffName, String description,
-			BigDecimal year, String serviceVange) {
+	public Staff(String staffNo, String staffName, Integer year,
+			String serviceVange) {
 		this.staffNo = staffNo;
 		this.staffName = staffName;
-		this.description = description;
 		this.year = year;
 		this.serviceVange = serviceVange;
 	}
@@ -59,19 +55,11 @@ public class Staff implements java.io.Serializable {
 		this.staffName = staffName;
 	}
 
-	public String getDescription() {
-		return this.description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public BigDecimal getYear() {
+	public Integer getYear() {
 		return this.year;
 	}
 
-	public void setYear(BigDecimal year) {
+	public void setYear(Integer year) {
 		this.year = year;
 	}
 

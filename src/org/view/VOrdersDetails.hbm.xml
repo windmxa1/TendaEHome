@@ -22,8 +22,11 @@
             <key-property name="goodsName" type="java.lang.String">
                 <column name="goods_name" length="200" />
             </key-property>
+            <key-property name="totalNum" type="java.lang.String">
+                <column name="total_num" length="32" />
+            </key-property>
             <key-property name="goodsUrl" type="java.lang.String">
-                <column name="goods_url" length="237" />
+                <column name="goods_url" length="236" />
             </key-property>
             <key-property name="num" type="java.lang.Integer">
                 <column name="num" />

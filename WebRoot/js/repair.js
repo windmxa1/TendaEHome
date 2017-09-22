@@ -181,7 +181,6 @@ function toJson(x) {
 }
 
 $(document).on('click','#modOrder_btn',function(){
-	
 	$.ajax({
 		type : "post",
 		url : "back/repair/updateRepairOrder",

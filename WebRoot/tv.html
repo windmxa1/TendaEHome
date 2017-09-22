@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title></title>
+<!--jquery库-->
+<script src="js/jquery.min.js"></script>
+<!--bootstrap库-->
+<link href="css/bootstrap.min.css" rel="stylesheet" />
+<script src="js/bootstrap/bootstrap.min.js"></script>
+<!--font-awesome字体库-->
+<link href="css/font-awesome.min.css" rel="stylesheet" />
+<!--平滑滚动到顶部库-->
+<script src="js/jquery.scrolltopcontrol/scrolltopcontrol.js"
+	type="text/javascript"></script>
+<!--主要写的jquery拓展方法-->
+<script src="js/jquery.extend.js" type="text/javascript"></script>
+<!--主要写的css代码-->
+<link href="css/default.css" rel="stylesheet" type="text/css" />
+<script src="js/default.js" type="text/javascript"></script>
+<link href="css/query_startic_pro.css" rel="stylesheet" type="text/css" />
+<script src="js/tv.js" type="text/javascript"></script>
+</head>
+<body>
+	<div class="webdesigntuts-workshop" style="margin:10px; height: 30px;">
+		<div style="float: left;">
+			<button data-toggle='modal' data-target='#tjtv'
+				style="background: #0066CC; border: none; outline: none; color: #FFFFFF;">添加直播节目</button>
+		</div>
+	</div>
+	<div id="browser" class="tbtree" style="text-align: center;">
+		<div id="mainTbtable" class='uqt_detail'>
+			<table id="UQT_detailTable" class="">
+			</table>
+		</div>
+
+		<div id="div_pager" class="page_con"></div>
+	</div>
+
+	<!--------------------------------修改直播(开始)---------------------------------------->
+	<div class="modal fade" id="modOrder" tabindex="-1" role="dialog"
+		aria-labelledby="xgspLabel" aria-hidden="true">
+		<div class="modal-dialog" style="width: 350px;">
+			<div class="modal-content">
+				<div class="modal-header"
+					style="text-align: center; font-weight:bold;">
+					<h4 class="modal-title" id="xgspLabel">修改直播</h4>
+				</div>
+				<div class="modal-body">
+					<form role="form" id="modTv_form">
+						<div style="display: none;">
+							<input type="text" class="form-control" name="id" id="xg_id"
+								aria-describedby="stmp">
+						</div>
+						<div class="form-group has-feedback">
+							<label for="id">名称(必填,20字以内)</label> <input type="text"
+								maxlength="20" class="form-control" name="name" id="xg_name"
+								placeholder="请填写节目名称" aria-describedby="stmp">
+						</div>
+						<div class="form-group">
+							<label for="price">台标</label> <input type="file"
+								class="form-control" name="file" id="xg_file">
+						</div>
+						<div class="form-group">
+							<label for="price">状态(必选)</label> <select class="form-control"
+								id="xg_available" name="available">
+								<option value="1">可见</option>
+								<option value="0">不可见</option>
+							</select>
+						</div>
+						<div class="form-group has-feedback">
+							<label for="name">直播地址(必填)</label> <input type="text"
+								class="form-control" name="tvUrl" id="xg_tvUrl" 
+								placeholder="请填写直播地址" aria-describedby="stmp">
+						</div>
+						<input type="reset" name="reset" style="display: none;" />
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					<button type="button" id="modTv_btn" class="btn btn-info"
+						style="border: none;outline: none;">确认</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--------------------------------修改直播(结束)---------------------------------------->
+	<!--------------------------------添加直播(开始)---------------------------------------->
+	<div class="modal fade" id="tjtv" tabindex="-1" role="dialog"
+		aria-labelledby="tjspLabel" aria-hidden="true">
+		<div class="modal-dialog" style="width: 350px;">
+			<div class="modal-content">
+				<div class="modal-header"
+					style="text-align: center; font-weight:bold;">
+					<h4 class="modal-title" id="tjspLabel">添加直播</h4>
+				</div>
+				<div class="modal-body">
+					<form role="form" id="tjtv_form">
+						<div class="form-group has-feedback">
+							<label for="name">名称(必填)</label> <input type="text"
+								class="form-control" name="name" id="name" placeholder="请输入名称"
+								placeholder="请输入节目名称" aria-describedby="stmp">
+						</div>
+						<div class="form-group">
+							<label for="price">直播地址(必填)</label> <input type="text"
+								class="form-control" name="tvUrl" id="tvUrl"
+								placeholder="请输入直播地址" aria-describedby="stmp">
+						</div>
+						<div class="form-group">
+							<label for="price">台标(必填)</label> <input type="file"
+								class="form-control" name="file" id="file">
+						</div>
+						<div class="form-group">
+							<label for="price">状态(必选)</label> <select class="form-control"
+								id="available" name="available">
+								<option value="1">可见</option>
+								<option value="0">不可见</option>
+							</select>
+						</div>
+
+						<input type="reset" name="reset" style="display: none;" />
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+					</button>
+					<button type="button" onclick="tjtv()" class="btn btn-info"
+						style="border: none;outline: none;">添加</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--------------------------------添加直播(结束)---------------------------------------->
+</body>
+</html>
