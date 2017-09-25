@@ -26,7 +26,7 @@ public class GoodsController {
 	// 获取商品信息
 	@RequestMapping("/getGoodsList")
 	@ResponseBody
-	public Object getGoodsList(Integer start, Integer limit)throws Exception {
+	public Object getGoodsList(Integer start, Integer limit) throws Exception {
 		gDao = new GoodsDaoImp();
 		data = new HashMap<String, Object>();
 		Short[] state = { (short) 1 };
@@ -41,7 +41,7 @@ public class GoodsController {
 
 	@RequestMapping("/checkGoods")
 	@ResponseBody
-	public Object checkGoods(@RequestBody OrderModel o) throws Exception{
+	public Object checkGoods(@RequestBody OrderModel o) throws Exception {
 		StringBuffer list = new StringBuffer();
 		gDao = new GoodsDaoImp();
 		for (OrdersDetail od : o.getDetails()) {
@@ -63,7 +63,7 @@ public class GoodsController {
 	// 获取销量最高的10个商品
 	@RequestMapping("/getBestSell")
 	@ResponseBody
-	public Object getGoodsList() throws Exception{
+	public Object getGoodsList() throws Exception {
 		gDao = new GoodsDaoImp();
 		data = new HashMap<String, Object>();
 		Short[] state = { (short) 1 };
@@ -79,7 +79,7 @@ public class GoodsController {
 	// 获取折扣商品信息
 	@RequestMapping("/getDiscounts")
 	@ResponseBody
-	public Object getDiscounts(Integer start, Integer limit) throws Exception{
+	public Object getDiscounts(Integer start, Integer limit) throws Exception {
 		gDao = new GoodsDaoImp();
 		data = new HashMap<String, Object>();
 		List<VGoodsId> list = gDao.getDiscounts(start, limit);
@@ -94,7 +94,8 @@ public class GoodsController {
 	// 搜索商品
 	@RequestMapping("/searchGoods")
 	@ResponseBody
-	public Object searchGoods(Integer start, Integer limit, String key)throws Exception {
+	public Object searchGoods(Integer start, Integer limit, String key)
+			throws Exception {
 		gDao = new GoodsDaoImp();
 		data = new HashMap<String, Object>();
 		List<VGoodsId> list = gDao.getGoodsByKey(start, limit, key, (short) 1);
@@ -109,7 +110,7 @@ public class GoodsController {
 	// 最新上架
 	@RequestMapping("/getNewArrival")
 	@ResponseBody
-	public Object getNewArrival() throws Exception{
+	public Object getNewArrival() throws Exception {
 		gDao = new GoodsDaoImp();
 		data = new HashMap<String, Object>();
 		List<VGoodsId> list = gDao.getNewArrival();
@@ -124,7 +125,7 @@ public class GoodsController {
 	// 获取目录列表
 	@RequestMapping("/getCatalog")
 	@ResponseBody
-	public Object getCatalog() throws Exception{
+	public Object getCatalog() throws Exception {
 		gDao = new GoodsDaoImp();
 		data = new HashMap<String, Object>();
 		List<GoodsCatalog> list = gDao.getCatalog();
@@ -139,11 +140,12 @@ public class GoodsController {
 	// 获取目录对应的商品列表
 	@RequestMapping("/getCataGoods")
 	@ResponseBody
-	public Object getCataGoods(Integer start, Integer limit, Long catalogId) throws Exception{
+	public Object getCataGoods(Integer start, Integer limit, Long catalogId)
+			throws Exception {
 		gDao = new GoodsDaoImp();
 		data = new HashMap<String, Object>();
-		List<VGoodsId> list = gDao.getCataGoods(start, limit, catalogId,
-				(short) 1);
+		Short[] state = { (short) 1 };
+		List<VGoodsId> list = gDao.getCataGoods(start, limit, catalogId, state);
 		if (list != null) {
 			data.put("list", list);
 		} else {

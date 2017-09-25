@@ -84,14 +84,16 @@ public class RepairDaoImp implements RepairDao {
 			Session session = HibernateSessionFactory.getSession();
 			String sql = "from VRepairOrder where id.userid= ?";
 			Query query = session.createQuery(sql);
-			if (start == null) {
+			if (start == null)
 				start = 0;
-			}
 			if (limit == null) {
 				limit = 15;
+				query.setMaxResults(limit);
+			} else if (limit == -1) {
+			} else {
+				query.setMaxResults(limit);
 			}
 			query.setFirstResult(start);
-			query.setMaxResults(limit);
 			query.setParameter(0, userid);
 			List<VRepairOrder> repairOrders = query.list();
 			List<VRepairOrderId> list = new ArrayList<>();

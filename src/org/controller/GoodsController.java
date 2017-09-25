@@ -283,12 +283,12 @@ public class GoodsController {
 	public Object getCataGoods(Integer start, Integer limit, Long catalogId)
 			throws Exception {
 		gDao = new GoodsDaoImp();
+		Short[] state = { (short) 1, (short) 0 };
 		data = new HashMap<String, Object>();
-		List<VGoodsId> list = gDao.getCataGoods(start, limit, catalogId,
-				(short) 1);
+		List<VGoodsId> list = gDao.getCataGoods(start, limit, catalogId, state);
 		if (list != null) {
 			data.put("list", list);
-			data.put("total", gDao.getCountByCatalog(catalogId, (short) 1));
+			data.put("total", gDao.getCountByCatalog(catalogId, state));
 		} else {
 			data.put("list", new ArrayList<>());
 		}

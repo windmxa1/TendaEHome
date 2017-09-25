@@ -36,7 +36,7 @@ public interface GoodsDao {
 	 */
 	public Long getCount(Short[] state);
 
-	public Long getCountByCatalog(Long catalogId, Short state);
+	public Long getCountByCatalog(Long catalogId, Short[] state);
 
 	/**
 	 * 获取折扣商品列表
@@ -62,7 +62,7 @@ public interface GoodsDao {
 	 * 获取目录对应的商品列表
 	 */
 	public List<VGoodsId> getCataGoods(Integer start, Integer limit,
-			Long catalogId, Short state);
+			Long catalogId, Short[] state);
 
 	/**
 	 * 获取指定名称的商品
