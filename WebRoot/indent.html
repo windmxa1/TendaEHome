@@ -50,6 +50,10 @@
 					type="search" id="seek_text" placeholder="请按订单号搜索">
 				<button onclick="seek()"
 					style="background: #0066CC; border: none; outline: none; color: #FFFFFF;">搜索</button>
+				<button onclick="getOrderPDF('生态城')"
+					style="background: #0066CC; border: none; outline: none; color: #FFFFFF;">生态城订单导出</button>
+				<button onclick="getOrderPDF('开发区')"
+					style="background: #0066CC; border: none; outline: none; color: #FFFFFF;">开发区订单导出</button>
 			</div>
 		</div>
 		<div id="browser" class="tbtree" style="text-align: center;">
@@ -102,25 +106,24 @@
 			 -->
 		<!--------------------------------修改订单(结束)---------------------------------------->
 		<!--------------------------------订单详情(开始)---------------------------------------->
-		<!--<div class="modal fade" id="ddxq" tabindex="-1" role="dialog" aria-labelledby="ddxqLabel" aria-hidden="true">
-				<div class="modal-dialog" style="width: 900px;">
-					<div class="modal-content">
-						<div class="modal-header" style="text-align: center; font-weight:bold;">
-							<h4 class="modal-title" id="ddxqLabel">订单详情</h4>
-						</div>
-						<div class="modal-body">
-							<iframe name="d" frameborder="no" border="0" style="width: 100%;"  src="details.html"></iframe>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-default" data-dismiss="modal">关闭
-				</button>
-							<button type="button" id="xgdd_btn" class="btn btn-info" style="border: none;outline: none;">
-					提交更改
-				</button>
-						</div>
+		<div class="modal fade" id="ddxq" name="ddxq" tabindex="-1" role="dialog" aria-labelledby="ddxqLabel" aria-hidden="true">
+			<div class="modal-dialog" style="width: 1200px">
+				<div class="modal-content" >
+					<div class="modal-header"
+						style="text-align: center; font-weight:bold;">
+						<h4 class="modal-title" id="ddxqLabel">订单详情</h4>
+					</div>
+					<div class="modal-body" style="height:600px" >
+						<iframe name="orderDetailsF" frameborder="no" border="0" style="width: 100%;height: 100%;"
+							src="details.html"></iframe>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+						</button>
 					</div>
 				</div>
-			</div>-->
+			</div>
+		</div>
 		<!--------------------------------订单详情(结束)---------------------------------------->
 	</div>
 </body>

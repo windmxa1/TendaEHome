@@ -27,10 +27,42 @@ public class RepairController {
 	/**
 	 * 查看所有报修单
 	 */
+	@RequestMapping("/getRepairOrderList1")
+	@ResponseBody
+	public Object getRepairOrderList1(HttpServletRequest request,
+			Integer start, Integer limit, Integer type[]) throws Exception {
+		rDao = new RepairDaoImp();
+		List<VRepairOrderId> list = rDao.getList(start, limit, type);
+		if (list == null) {
+			return ResultUtils.toJson(101, "后台错误，请重试", "");
+		}
+		data = new HashMap<>();
+		data.put("total", rDao.getRepairListCount(type));
+		data.put("list", list);
+		return ResultUtils.toJson(100, "", data);
+	}
+
+	/**
+	 * 维修单通知
+	 */
+	@RequestMapping("/repairNotice")
+	@ResponseBody
+	public Object notice() {
+		rDao = new RepairDaoImp();
+		if (rDao.getUnRead() > 0) {
+			return ResultUtils.toJson(100, "有新的维修单提交", "");
+		} else {
+			return ResultUtils.toJson(101, "", "");
+		}
+	}
+
+	/**
+	 * 查看所有报修单
+	 */
 	@RequestMapping("/getRepairOrderList")
 	@ResponseBody
 	public Object getRepairOrderList(HttpServletRequest request, Integer start,
-			Integer limit, Integer type[]) throws Exception{
+			Integer limit, Integer type[]) throws Exception {
 		rDao = new RepairDaoImp();
 		List<VRepairOrderId> list = rDao.getList(start, limit, type);
 
@@ -49,7 +81,7 @@ public class RepairController {
 	@RequestMapping("/updateRepairOrder")
 	@ResponseBody
 	public Object updateRepairOrder(HttpServletRequest request,
-			@RequestBody RepairOrder repair) throws Exception{
+			@RequestBody RepairOrder repair) throws Exception {
 		rDao = new RepairDaoImp();
 		if (rDao.saveOrUpdate(repair) == 0L) {
 			return ResultUtils.toJson(100, "修改成功", "");
@@ -63,7 +95,7 @@ public class RepairController {
 	@RequestMapping("/getRepairOrderPDF")
 	@ResponseBody
 	public Object getRepairOrderPDF(HttpServletRequest request, Integer start,
-			Integer limit, Integer type[]) throws Exception{
+			Integer limit, Integer type[]) throws Exception {
 		rDao = new RepairDaoImp();
 		List<VRepairOrderId> list = rDao.getList(start, limit, type);
 		if (list == null || list.size() == 0) {
@@ -78,9 +110,10 @@ public class RepairController {
 	 */
 	@RequestMapping("/deleteRepairOrder")
 	@ResponseBody
-	public Object deleteRepairOrder(HttpServletRequest request, Long[] id)throws Exception {
+	public Object deleteRepairOrder(HttpServletRequest request, Long[] id)
+			throws Exception {
 		rDao = new RepairDaoImp();
-		if(id==null||id.length==0){
+		if (id == null || id.length == 0) {
 			return ResultUtils.toJson(101, "参数错误", "");
 		}
 		if (rDao.deleteRepairOrder(id)) {

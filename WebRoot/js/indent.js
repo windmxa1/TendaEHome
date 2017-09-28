@@ -59,42 +59,64 @@ function seek() {
 		pageSize : pageSize
 	});
 	kkpager.generPageHtml();
-
 };
+// 导出生态城PDF
+function getOrderPDF(o) {
+	$.ajax({
+		type : "post",
+		url : "back/orders/getOrdersPDF",
+		data : {
+			address : o
+		},
+		dataType : "json",
+		async : false,
+		cache : false,
+		headers : {
+			"token" : getCookie('token')
+		},
+		success : function(data) {
+			if (data.msg == "") {
+				location.href = data.data.pdfUrl;
+			}
+		},
+		error : function(jqXHR) {
+			alert("网络异常");
+		}
+	})
+}
 
 // 修改订单
-function updateIndent(v) {
-	$('#id').val(v);
-	$('#xgdd_btn').click(function() {
-		$.ajax({
-			type : "post",
-			url : "back/orders/updateOrder",
-			dataType : "json",
-			async : false,
-			cache : false,
-			headers : {
-				"token" : getCookie('token')
-			},
-			data : {
-				id : $('#id').val(),
-				state : $('#state').val()
-			},
-			success : function(data) {
-				if (data.code == 100) {
-					location.reload();
-				}
-			},
-			error : function(jqXHR) {
-				alert("网络异常");
+function updateIndent(s, v) {
+	$.ajax({
+		type : "post",
+		url : "back/orders/updateOrder",
+		dataType : "json",
+		async : false,
+		cache : false,
+		headers : {
+			"token" : getCookie('token')
+		},
+		data : {
+			id : v,
+			state : s
+		},
+		success : function(data) {
+			if (data.code == 100) {
+				location.reload();
 			}
-		})
+		},
+		error : function(jqXHR) {
+			alert("网络异常");
+		}
 	});
 };
-
+var order_id_detail;
 // 详情
 function details(v) {
-	SetCookie('details', v);
-	window.location.href="details.html";
+	order_id_detail = v;
+	orderDetailsF.init();
+	// ddxq.window.refreshData();
+	// window.location.href = "details.html";
 };
 /** ******************************商品列表分页************************************** */
 /**
@@ -239,38 +261,55 @@ var builderUQTQueryMsg = function(UQTQueryMsg) {
 
 	UQT_detailTable.append(th);
 	var tr;
-	$.each(UQTQueryMsg, function(i, eachData) {
-		tr = $('<tr>');
-		var id = eachData.id;
-		var orderNum = eachData.orderNum;
-		var status = eachData.status;
-		var address = eachData.address;
-		var createTime = eachData.createTime;
-		var trString = "<td class='eng_name'>" + orderNum + "</td>"
-				+ "<td class='query_pro'>" + address + "</td>"
-				+ "<td class='match_type'>" + status + "</td>"
-				+ "<td class='match_type'>" + createTime + "</td>"
-				+ "<td class='dis_dta'>"
-				+
-				"<button class='btn' style='height:30px;margin-right:10px'  onclick='details("
-				+ id
-				+ ")'>订单详情</button>";
-		if (eachData.state == 3) {
-			trString = trString + "<button class='btn btn-info' style='height:30px; margin-right:10px' onclick='upDownCommodity("
-			+ 4 + "," + id + ")' >完成订单</button>";
-		}else if(eachData.state <3){
-			trString = trString + "<button class='btn btn-warning' style='height:30px; margin-right:10px' onclick='upDownCommodity("
-			+ 0 + "," + id + ")' >取消订单</button>";
-		}else{
-			trString = trString + "<button class='btn btn-info' disabled='disabled' style='height:30px; margin-right:10px' onclick='upDownCommodity("
-			+ 4 + "," + id + ")' >完成订单</button>";
-		}
-		trString = trString 
-		+"</td>"
-		+ "<td class='dis_hidden' style='display: none'></td>";
-		tr.append(trString);
-		UQT_detailTable.append(tr);
-	});
+	$
+			.each(
+					UQTQueryMsg,
+					function(i, eachData) {
+						tr = $('<tr>');
+						var id = eachData.id;
+						var orderNum = eachData.orderNum;
+						var status = eachData.status;
+						var address = eachData.address;
+						var createTime = eachData.createTime;
+						var trString = "<td class='eng_name'>"
+								+ orderNum
+								+ "</td>"
+								+ "<td class='query_pro'>"
+								+ address
+								+ "</td>"
+								+ "<td class='match_type'>"
+								+ status
+								+ "</td>"
+								+ "<td class='match_type'>"
+								+ createTime
+								+ "</td>"
+								+ "<td class='dis_dta'>"
+								+ "<button class='btn' onclick='details("
+								+ id
+								+ ")' data-toggle='modal' data-target='#ddxq' style='height:30px;margin-right:10px'  >订单详情</button>";
+						if (eachData.state == 3) {
+							trString = trString
+									+ "<button class='btn btn-info' style='height:30px; margin-right:10px' onclick='updateIndent("
+									+ 4 + "," + id + ")' >完成订单</button>";
+						} else if (eachData.state < 3) {
+							if (eachData.state == 0) {
+								trString = trString
+										+ "<button class='btn btn-warning' disabled='disabled' style='height:30px; margin-right:10px' >取消订单</button>";
+							} else {
+								trString = trString
+										+ "<button class='btn btn-warning' style='height:30px; margin-right:10px' onclick='updateIndent("
+										+ 0 + "," + id + ")' >取消订单</button>";
+							}
+						} else {
+							trString = trString
+									+ "<button class='btn btn-info' disabled='disabled' style='height:30px; margin-right:10px'>完成订单</button>";
+						}
+						trString = trString
+								+ "</td>"
+								+ "<td class='dis_hidden' style='display: none'></td>";
+						tr.append(trString);
+						UQT_detailTable.append(tr);
+					});
 }
 
 /**

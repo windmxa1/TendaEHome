@@ -17,6 +17,7 @@ public class RepairOrder implements java.io.Serializable {
 	private String handleResult;
 	private Long userid;
 	private String staffId;
+	private Integer isRead;
 
 	// Constructors
 
@@ -37,7 +38,7 @@ public class RepairOrder implements java.io.Serializable {
 	/** full constructor */
 	public RepairOrder(String appointmentTime, String address,
 			String description, String phone, Integer status,
-			String handleResult, Long userid, String staffId) {
+			String handleResult, Long userid, String staffId, Integer isRead) {
 		this.appointmentTime = appointmentTime;
 		this.address = address;
 		this.description = description;
@@ -46,20 +47,7 @@ public class RepairOrder implements java.io.Serializable {
 		this.handleResult = handleResult;
 		this.userid = userid;
 		this.staffId = staffId;
-	}
-
-	public RepairOrder(Long id, String appointmentTime, String address,
-			String description, String phone, Integer status,
-			String handleResult, Long userid, String staffId) {
-		this.id = id;
-		this.appointmentTime = appointmentTime;
-		this.address = address;
-		this.description = description;
-		this.phone = phone;
-		this.status = status;
-		this.handleResult = handleResult;
-		this.userid = userid;
-		this.staffId = staffId;
+		this.isRead = isRead;
 	}
 
 	// Property accessors
@@ -134,6 +122,14 @@ public class RepairOrder implements java.io.Serializable {
 
 	public void setStaffId(String staffId) {
 		this.staffId = staffId;
+	}
+
+	public Integer getIsRead() {
+		return this.isRead;
+	}
+
+	public void setIsRead(Integer isRead) {
+		this.isRead = isRead;
 	}
 
 }

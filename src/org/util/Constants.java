@@ -38,11 +38,11 @@ public class Constants {
 	/**
 	 * pdf在服务器的根目录
 	 */
-	public static String pdfDir = "D:\\Tomcat 7.0\\webapps\\TendaEHome\\pdf\\" ;
+	public static String pdfDir = "" ;
 	/**
 	 * pdf的网络地址
 	 */
-	public static String pdfUrl = "http://192.168.1.150:8080/TendaEHome/pdf";
+	public static String pdfUrl = "";
 	/**
 	 * 水印地址
 	 */

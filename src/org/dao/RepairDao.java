@@ -39,4 +39,9 @@ public interface RepairDao {
 	 */
 	public Long getRepairListCount(Integer[] status);
 
+	/**
+	 * 获取未读消息数目
+	 */
+	public int getUnRead();
+
 }

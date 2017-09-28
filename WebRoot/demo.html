@@ -70,6 +70,9 @@
 			$.ajax({
 				type : "post",
 				url : "back/orders/getOrdersPDF",
+				data : {
+					"address" : $("#address").val()
+				},
 				dataType : "json",
 				processData : false,
 				beforeSend : function(request) {
@@ -99,6 +102,8 @@
 		<input type="text" name="staffId" value="1">
 	</form>
 	<input type="button" value="btn2" id="btn2">
+	<br />
+	<input type="text" id="address" value="生态城">
 	<input type="button" value="btn3" id="btn3">
 </body>
 </html>

@@ -15,24 +15,34 @@
 		$("#success_alert").hide();
 		$("#error_alert").hide();
 	}
+	function GetQueryString(name) {
+		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+		var r = window.location.search.substr(1).match(reg);
+		if (r != null)
+			return unescape(r[2]);
+		return '';
+	}
 	$(function() {
-		$("#orderNum").val("订单编号:"+parent.orderNum);
-		$("#form1").submit(
-				function() {
+		$("#orderNum").val("订单编号:" + parent.orderNum);
+		var num = parent.orderNum;
+		if ($("#orderNum").val() == "订单编号:[object HTMLInputElement]") {
+			num = GetQueryString("orderNum");
+			$("#orderNum").val("订单编号:" + num);
+		}
+		$("#form1").submit(function() {
 					if ($("#content").val() === '') {
 						$("#error_alert").show();
 						$("#error_alert").html(
 								'<a href="#" class="close" data-dismiss="alert">&times;</a> <strong>'
 										+ '不允许输入空值' + '</strong>');
 						setTimeout("hideTips()", 1000);
-						return;
 					}
 					$.ajax({
 						type : "post",
 						url : "../back/orders/staffDeliverOrder",
 						data : {
 							staffId : $("#content").val(),
-							orderNum : parent.orderNum
+							orderNum : num
 						},
 						cache : false,
 						async : false,
@@ -54,6 +64,7 @@
 							alert("error");
 						}
 					});
+
 				});
 	});
 </script>
@@ -62,8 +73,8 @@
 <body>
 	<div class="container-fluid" style="margin:0px; padding:0px; ">
 		<form id="form1" method="post" target="iframe1">
-		<input class="form-control" id="orderNum" type="text" readonly/>
-		<!-- 
+			<input class="form-control" id="orderNum" type="text" readonly />
+			<!-- 
 		<span class="input-group-addon" id="orderNum">订单编号</span>
 		 -->
 			<div class="input-group">

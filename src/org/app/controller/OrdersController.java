@@ -115,16 +115,16 @@ public class OrdersController {
 		}
 	}
 
-	@RequestMapping("/addOrder")
+	@RequestMapping("/addOrder1")
 	@ResponseBody
-	public Object addOrder(HttpServletRequest request, @RequestBody OrderModel o)
+	public Object addOrder1(HttpServletRequest request, @RequestBody OrderModel o)
 			throws Exception {
 		return ResultUtils.toJson(101, "该功能将在月底开通，请您耐心等待", "");
 	}
 
-	@RequestMapping("/addOrder1")
+	@RequestMapping("/addOrder")
 	@ResponseBody
-	public Object addOrder1(HttpServletRequest request,
+	public Object addOrder(HttpServletRequest request,
 			@RequestBody OrderModel o) throws Exception {
 		oDao = new OrdersDaoImp();
 		uAddressDao = new UserAddressDaoImp();

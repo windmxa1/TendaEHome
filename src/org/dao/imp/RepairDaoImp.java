@@ -43,7 +43,7 @@ public class RepairDaoImp implements RepairDao {
 			Session session = HibernateSessionFactory.getSession();
 			Transaction ts = session.beginTransaction();
 			Query query = session
-					.createQuery("delete from RepairOrder where id in (:idList)");			
+					.createQuery("delete from RepairOrder where id in (:idList)");
 			query.setParameterList("idList", id);
 			query.executeUpdate();
 			ts.commit();
@@ -51,6 +51,24 @@ public class RepairDaoImp implements RepairDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
+	@Override
+	public int getUnRead() {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			Transaction ts = session.beginTransaction();
+			Query query = session
+					.createQuery("update RepairOrder set isRead=1 where isRead = 0");
+			int count = query.executeUpdate();
+			ts.commit();
+			return count;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 0;
 		} finally {
 			HibernateSessionFactory.closeSession();
 		}
@@ -82,7 +100,7 @@ public class RepairDaoImp implements RepairDao {
 			Long userid) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
-			String sql = "from VRepairOrder where id.userid= ?";
+			String sql = "from VRepairOrder where id.userid= ? order by id.id desc";
 			Query query = session.createQuery(sql);
 			if (start == null)
 				start = 0;
@@ -118,11 +136,11 @@ public class RepairDaoImp implements RepairDao {
 			String sql = "";
 			Query query = null;
 			if (status != null && status.length > 0) {
-				sql = "from VRepairOrder where id.status in (:typeList)";
+				sql = "from VRepairOrder where id.status in (:typeList) order by id.id desc";
 				query = session.createQuery(sql);
 				query.setParameterList("typeList", status);
 			} else {
-				sql = "from VRepairOrder";
+				sql = "from VRepairOrder order by id.id desc";
 				query = session.createQuery(sql);
 			}
 			if (start == null) {
@@ -156,7 +174,7 @@ public class RepairDaoImp implements RepairDao {
 			Session session = HibernateSessionFactory.getSession();
 			String sql = "";
 			Query query = null;
-			if (status != null&&status.length>0) {
+			if (status != null && status.length > 0) {
 				sql = "select count(id.id) from VRepairOrder where id.status in (:typeList)";
 				query = session.createQuery(sql);
 				query.setParameterList("typeList", status);

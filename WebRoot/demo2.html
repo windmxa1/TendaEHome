@@ -24,7 +24,7 @@
 		orderNum = GetQueryString("orderNum");
 		if (orderNum === '') {
 		} else {
-			$("#f").attr("src", "mobileHtml/staffOrder.html");
+			document.getElementById("staffOrder").click();
 		}
 		$(".nav li").hover(function() {
 			$(".nav li").attr("class", "");
@@ -41,10 +41,13 @@
 				<h3 class="text-center">磐石维护</h3>
 				<ul class="nav nav-pills">
 					<li role="presentation" class=""><a
-						href="mobileHtml/promotion.html" target="f">APP推广信息上报 </a></li>
-					<li role="presentation"><a href="mobileHtml/staffOrder.html"
-						target="f">订单信息绑定</a></li>
-					<li role="presentation"><a href="#">其他</a></li>
+						href="mobileHtml/promotion.html" target="f">APP推广信息上报 </a>
+					</li>
+					<li role="presentation"><a id="staffOrder"
+						href="mobileHtml/staffOrder.html" target="f">订单信息绑定</a>
+					</li>
+					<li role="presentation"><a href="#">其他</a>
+					</li>
 				</ul>
 				<!-- 
 				<ul class="breadcrumb">

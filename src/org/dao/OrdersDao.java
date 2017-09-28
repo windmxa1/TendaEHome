@@ -90,5 +90,10 @@ public interface OrdersDao {
 	 * 获取当天订单列表，用于订单导出
 	 */
 	List<VOrdersId> getListByState1(Integer start, Integer limit, Integer state);
+	/**
+	 * 获取当天订单列表，用于订单导出，分区导出
+	 */
+	List<VOrdersId> getListByState2(Integer start, Integer limit, Integer state,String address);
+
 
 }

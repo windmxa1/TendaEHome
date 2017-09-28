@@ -234,6 +234,48 @@ public class OrdersDaoImp implements OrdersDao {
 	}
 
 	@Override
+	public List<VOrdersId> getListByState2(Integer start, Integer limit,
+			Integer state, String address) {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			String sql = "";
+			Query query = null;
+			if (state == null) {
+				sql = "from VOrders v  where date(v.id.createTime) = curdate() and id.address like ? order by v.id.time desc";
+				query = session.createQuery(sql);
+				query.setParameter(0, "%"+address+"%");
+			} else {
+				sql = "from VOrders v where v.id.state=? and date(v.id.createTime) = curdate() and id.address like ? order by v.id.time desc";
+				query = session.createQuery(sql);
+				query.setParameter(0, state);
+				query.setParameter(1, "%"+address+"%");
+			}
+			if (start == null) {
+				start = 0;
+			}
+			if (limit == null) {
+				limit = 15;
+				query.setMaxResults(limit);
+			} else if (limit == -1) {
+			} else {
+				query.setMaxResults(limit);
+			}
+			query.setFirstResult(start);
+			List<VOrders> vOrders = query.list();
+			List<VOrdersId> list = new ArrayList<VOrdersId>();
+			for (VOrders v : vOrders) {
+				list.add(v.getId());
+			}
+			return list;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
+	@Override
 	public List<VOrdersId> getListByState(Integer start, Integer limit,
 			Integer state) {
 		try {
@@ -287,6 +329,7 @@ public class OrdersDaoImp implements OrdersDao {
 				sql = "update Orders set state=? where id = ? where state=3";
 				break;
 			default:
+				sql = "update Orders set state=? where id = ? where state<3";
 				break;
 			}
 			Query query = session.createQuery(sql);

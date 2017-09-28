@@ -24,6 +24,25 @@ $(function() {
 	kkpager.generPageHtml();
 
 });
+function init(){
+	var pageSize = 20;
+	var pageNo = 1;
+	builderUQTQueryMsg(getJsonArrayByPageSize(pageSize, pageNo));
+
+	var totalPage = getTotllePage(pageSize);
+	var totalRecords = total;
+	//生成分页控件 根据分页的形式在这里设置
+	kkpager.init({
+		pno: pageNo,
+		//总页码
+		total: totalPage,
+		//总数据条数
+		totalRecords: totalRecords,
+		//页面条数
+		pageSize: pageSize
+	});
+	kkpager.generPageHtml();
+}
 
 function fh(){
 		window.parent.location.href = "index.html";
@@ -49,6 +68,7 @@ var getTotllePage = function(pageSize) {
 	 * @returns {*}
 	 */
 var getJsonArrayByPageSize = function(pageSize, pageNo) {
+	//console.log("detail.js:"+parent.order_id_detail);
 	$.ajax({
 		type: "post",
 		url: "back/orders/getOrdersDetails",
@@ -60,10 +80,11 @@ var getJsonArrayByPageSize = function(pageSize, pageNo) {
 		},
 		data: {
 			'start': (pageNo - 1) * pageSize,
-			'limit': pageSize,
-			'orderId':getCookie('details')
+			'limit': -1,
+			'orderId':parent.order_id_detail
 		},
 		success: function(data) {
+			//console.log(JSON.stringify(data));
 			if(data.code == 100) {
 				json = data.data.list;
 				total = data.data.total
@@ -110,7 +131,7 @@ function refreshData(pageSize, pageNo) {
 var builderUQTQueryMsg = function(UQTQueryMsg) {
 	var UQT_detailTable = $('#UQT_detailTable');
 	UQT_detailTable.empty();
-	var th = '<tr><th scope="col" class="eng_name" style="width:100px">订单编号</th><th scope="col" class="eng_name" style="width:100px">名称</th><th scope="col" class="query_pro" >数量</th><th scope="col"  class="match_type">价格</th><th class="match_type" scope="col">商品图片</th><th class="dis_hidden" style="display: none">隐藏属性</th></tr>';
+	var th = '<tr><th scope="col" class="eng_name" style="width:100px">订单编号</th><th scope="col" class="eng_name" style="width:100px">名称</th><th scope="col" class="query_pro" >数量</th><th scope="col"  class="match_type">价格</th><th class="dis_hidden" style="display: none">隐藏属性</th></tr>';
 
 	UQT_detailTable.append(th);
 	var tr;
@@ -126,7 +147,6 @@ var builderUQTQueryMsg = function(UQTQueryMsg) {
 			"<td class='eng_name' title="+goodsName+">" + goodsName + "</td>" +
 			"<td class='query_pro' title="+num+">" + num + "</td>" +
 			"<td class='match_type' title="+prices+">" + prices + "</td>" +
-			"<td class='match_type' title="+goodsUrl+"><a href="+goodsUrl+">"+goodsUrl+"</a></td>" +
 			"<td class='dis_hidden' style='display: none'></td>"
 		);
 		UQT_detailTable.append(tr);

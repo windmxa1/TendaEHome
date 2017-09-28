@@ -43,10 +43,11 @@ public class Test02 {
 
 	public static void main(String[] args) throws JsonProcessingException,
 			InterruptedException {
-		List<VOrdersId> list = oDao.getListByState(0, -1,null);
-		for (VOrdersId v : list) {
-			v.setDetails(oDao.getDetailList(v.getId(), 0, -1));
-		}
-		PDFUtil.buidPDF("", list, 0);
+//		List<VOrdersId> list = oDao.getListByState(0, -1,null);
+//		for (VOrdersId v : list) {
+//			v.setDetails(oDao.getDetailList(v.getId(), 0, -1));
+//		}
+//		PDFUtil.buidPDF("", list, 0);
+//		System.out.println(mapper.writeValueAsString(oDao.getListByState2(0, -1, null, "开发区")));
 	}
 }
