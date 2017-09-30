@@ -2,10 +2,38 @@ package org.bean;
 
 import javax.xml.bind.annotation.XmlRootElement;
 /**
- * 微信支付回调接口接收 ---实体类
+ * 微信支付回调接口接收 ---实体类 ，用实体接收xml数据
  * @author MARSHALL
  */
-
+//@RequestMapping("/notifyWxPay")
+//@ResponseBody
+//public Object notifyWxPay(HttpServletRequest request, WXNotify xml,
+//		HttpServletResponse response) throws Exception {
+//	oDao = new OrdersDaoImp();
+//	ObjectMapper mapper = JsonUtils.getMapperInstance();
+//	try {
+//		System.out.println(mapper.writeValueAsString(xml));
+//		LinkedHashMap<String, Object> map = Utils.objectToMap(xml);
+//		System.out.println(mapper.writeValueAsString(map));
+//		if (xml.getReturn_code().equals("SUCCESS")) {// 通信成功
+//			if (xml.getResult_code().equals("SUCCESS")) {// 交易成功
+//				boolean checkSign = WXAPI.makeSign(map).equals(
+//						xml.getSign());// 验签防止第三方篡改数据
+//				if (checkSign && oDao.updateOrder(xml.getOut_trade_no(), 2)) {// 验签成功且修改成功返回SUCCESS
+//					return new WXRETURN("SUCCESS", "");
+//				}
+//			}
+//		}
+//	} catch (DocumentException e) {
+//		e.printStackTrace();
+//	} catch (IOException e) {
+//		e.printStackTrace();
+//	} catch (Exception e) {
+//		// TODO Auto-generated catch block
+//		e.printStackTrace();
+//	}
+//	return new WXRETURN("FAIL", "校验失败，请重试");
+//}
 @XmlRootElement(name = "xml")
 public class WXNotify {
 	private String appid;			//应用ID		

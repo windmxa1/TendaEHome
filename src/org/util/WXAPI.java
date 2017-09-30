@@ -16,6 +16,8 @@ import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 public class WXAPI {
 	// public static void main(String[] args) throws JsonProcessingException {
 	//
@@ -24,7 +26,7 @@ public class WXAPI {
 	// // 商户订单号，同一商户下唯一
 	// String out_trade_no = "321654";
 	// // 订单总金额，单位为分
-	// Integer total_fee = (int) (100 * 0.00);
+	// Integer total_fee = (int) (100 * 454.15);
 	// // 用户端实际ip
 	// String spbill_create_ip = "192.168.1.115";
 	//
@@ -34,6 +36,58 @@ public class WXAPI {
 	// System.out.println(connect(Constants.payUrl, xml));
 	//
 	// }
+	/**
+	 * 签名校验
+	 */
+	public static Boolean validSign(Map map) {
+		String appid = (String) map.get("appid");// 应用ID
+//		String attach = (String) map.get("attach");// 商家数据包
+		String bank_type = (String) map.get("bank_type");// 付款银行
+		String cash_fee = (String) map.get("cash_fee");// 现金支付金额
+		String fee_type = (String) map.get("fee_type");// 货币种类
+		String is_subscribe = (String) map.get("is_subscribe");//是否关注公众账号  
+		String mch_id = (String) map.get("mch_id");// 商户号
+		String nonce_str = (String) map.get("nonce_str");// 随机字符串
+		String openid = (String) map.get("openid");// 用户标识
+		String out_trade_no = (String) map.get("out_trade_no");// 获取商户订单号
+		String result_code = (String) map.get("result_code");// 业务结果
+		String return_code = (String) map.get("return_code");// SUCCESS/FAIL
+		String time_end = (String) map.get("time_end");// 支付完成时间
+		String total_fee = (String) map.get("total_fee");// 获取订单金额
+		String trade_type = (String) map.get("trade_type");// 交易类型
+		String transaction_id = (String) map.get("transaction_id");// 微信支付订单号
+
+		LinkedHashMap<String, Object> linkedHashMap = new LinkedHashMap<>();
+		linkedHashMap.put("appid", appid);
+//		linkedHashMap.put("attach", attach);
+		linkedHashMap.put("bank_type", bank_type);
+		linkedHashMap.put("cash_fee", cash_fee);
+		linkedHashMap.put("fee_type", fee_type);
+		linkedHashMap.put("is_subscribe", is_subscribe);
+		linkedHashMap.put("mch_id", mch_id);
+		linkedHashMap.put("nonce_str", nonce_str);
+		linkedHashMap.put("openid", openid);
+		linkedHashMap.put("out_trade_no", out_trade_no);
+		linkedHashMap.put("result_code", result_code);
+		linkedHashMap.put("return_code", return_code);
+		linkedHashMap.put("time_end", time_end);
+		linkedHashMap.put("total_fee", total_fee);
+		linkedHashMap.put("trade_type", trade_type);
+		linkedHashMap.put("transaction_id", transaction_id);
+
+		String sign = (String) map.get("sign");// 获取签名
+		Boolean isOk= makeSign(linkedHashMap).equals(sign);
+		return isOk;
+	}
+
+	/**
+	 * 返回xml格式的数据给微信
+	 */
+	public static String setXml(String return_code, String return_msg) {
+		return "<xml><return_code><![CDATA[" + return_code + "]]>"
+				+ "</return_code><return_msg><![CDATA[" + return_msg
+				+ "]]></return_msg></xml>";
+	}
 
 	/**
 	 * 发送支付请求获取预付单号
@@ -60,9 +114,9 @@ public class WXAPI {
 							.replace("-", "");
 					String Package = "Sign=WXPay";
 					String partnerId = root.elementText("mch_id");
-					String prepayId = root.elementText("prepayId");
+					String prepayId = root.elementText("prepay_id");
 					String timeStamp = System.currentTimeMillis() / 1000 + "";
-					
+
 					LinkedHashMap<String, Object> data = new LinkedHashMap<>();
 					data.put("appid", appid);
 					data.put("nonceStr", nonceStr);
@@ -80,7 +134,7 @@ public class WXAPI {
 		} catch (DocumentException e) {
 			e.printStackTrace();
 			return null;
-		}	
+		}
 	}
 
 	/**
@@ -90,7 +144,7 @@ public class WXAPI {
 	 * @param requestString
 	 * @return
 	 */
-	private static  String connect(String pathUrl, String requestString) {
+	private static String connect(String pathUrl, String requestString) {
 		// 建立连接
 		URL url;
 		try {

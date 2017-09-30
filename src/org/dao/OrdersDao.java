@@ -70,9 +70,13 @@ public interface OrdersDao {
 	public boolean updateOrder(String orderNum, Integer state);
 
 	/**
-	 * 删除订单,仅允许删除被取消的订单或未付款的订单
+	 * 删除订单,仅允许删除被取消的订单或已完成的订单
 	 */
 	public int deleteOrder(Long id);
+	/**
+	 * 删除订单，用于删除不合法的订单
+	 */
+	public int delOrder(Long id);
 
 	/**
 	 * 获取订单总价

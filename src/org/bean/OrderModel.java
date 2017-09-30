@@ -9,15 +9,15 @@ public class OrderModel {
 	private List<OrdersDetail> details = new ArrayList<>();
 	private Long addressId;
 	private Double total;
-	private Integer payWay;
+//	private Integer payWay;
 
-	public Integer getPayWay() {
-		return payWay;
-	}
-
-	public void setPayWay(Integer payWay) {
-		this.payWay = payWay;
-	}
+//	public Integer getPayWay() {
+//		return payWay;
+//	}
+//
+//	public void setPayWay(Integer payWay) {
+//		this.payWay = payWay;
+//	}
 
 	public List<OrdersDetail> getDetails() {
 		return details;

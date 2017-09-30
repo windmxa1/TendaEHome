@@ -243,12 +243,12 @@ public class OrdersDaoImp implements OrdersDao {
 			if (state == null) {
 				sql = "from VOrders v  where date(v.id.createTime) = curdate() and id.address like ? order by v.id.time desc";
 				query = session.createQuery(sql);
-				query.setParameter(0, "%"+address+"%");
+				query.setParameter(0, "%" + address + "%");
 			} else {
 				sql = "from VOrders v where v.id.state=? and date(v.id.createTime) = curdate() and id.address like ? order by v.id.time desc";
 				query = session.createQuery(sql);
 				query.setParameter(0, state);
-				query.setParameter(1, "%"+address+"%");
+				query.setParameter(1, "%" + address + "%");
 			}
 			if (start == null) {
 				start = 0;
@@ -322,14 +322,14 @@ public class OrdersDaoImp implements OrdersDao {
 			Transaction ts = session.beginTransaction();
 			String sql = "";
 			switch (state) {// 添加情况判断防止数据混乱
-			case 3:
-				sql = "update Orders set state=? where id = ? where state=2";
+			case 3:// 已支付->发货
+				sql = "update Orders set state=? where id = ? and state=2";
 				break;
-			case 4:
-				sql = "update Orders set state=? where id = ? where state=3";
+			case 4:// 发货->完成
+				sql = "update Orders set state=? where id = ? and state=3";
 				break;
-			default:
-				sql = "update Orders set state=? where id = ? where state<3";
+			default:// 取消订单
+				sql = "update Orders set state=? where id = ? ";
 				break;
 			}
 			Query query = session.createQuery(sql);
@@ -390,16 +390,40 @@ public class OrdersDaoImp implements OrdersDao {
 		try {
 			Session session = HibernateSessionFactory.getSession();
 			Transaction ts = session.beginTransaction();
-			String sql = "delete Orders where id=? and (state=0 or state=1)";
+			String sql = "delete Orders where id=? and (state=0 or state=4)";
 			Query query = session.createQuery(sql);
 			query.setParameter(0, id);
 			int a = query.executeUpdate();
+			if (a > 0) {
+				String sql2 = "delete OrdersDetail where orderId = ?";
+				Query query2 = session.createQuery(sql2);
+				query2.setParameter(0, id);
+				query2.executeUpdate();
+			}
+			ts.commit();
+			return a;
+		} catch (Exception e) {
+			return 0;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
 
-			String sql2 = "delete OrdersDetail where orderId = ?";
-			Query query2 = session.createQuery(sql2);
-			query2.setParameter(0, id);
-			query2.executeUpdate();
-
+	@Override
+	public int delOrder(Long id) {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			Transaction ts = session.beginTransaction();
+			String sql = "delete Orders where id=? ";
+			Query query = session.createQuery(sql);
+			query.setParameter(0, id);
+			int a = query.executeUpdate();
+			if (a > 0) {
+				String sql2 = "delete OrdersDetail where orderId = ?";
+				Query query2 = session.createQuery(sql2);
+				query2.setParameter(0, id);
+				query2.executeUpdate();
+			}
 			ts.commit();
 			return a;
 		} catch (Exception e) {

@@ -9,6 +9,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.dao.OrdersDao;
+import org.dao.imp.OrdersDaoImp;
 import org.dom4j.Attribute;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -20,24 +22,32 @@ import org.dom4j.io.XMLWriter;
 import org.w3c.dom.NodeList;
 
 public class XmlUtils {
-	public static void main(String[] args)  {
-		Map<String, Object> data = new HashMap<>();
-		data.put("appid", "123");
-		data.put("mch_id", 1234);
-		
-		try {
-			Document doc = DocumentHelper.parseText(formatXml(map2xml(data, "xml")));
-			
-			System.out.println(doc.getRootElement().elementText("mch_id"));
-			System.out.println();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (DocumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-	}
+//	public static void main(String[] args) {
+//		OrdersDao oDao = new OrdersDaoImp();
+//		String xml ="<xml><appid><![CDATA[wxb895559396a56469]]></appid><bank_type><![CDATA[CCB_DEBIT]]></bank_type><cash_fee><![CDATA[1]]></cash_fee><fee_type><![CDATA[CNY]]></fee_type><is_subscribe><![CDATA[N]]></is_subscribe><mch_id><![CDATA[1489494212]]></mch_id><nonce_str><![CDATA[225ec1bbe9e149b9a2a2c3289816dec6]]></nonce_str><openid><![CDATA[ozPoT02FBuwRl5eZy0hpQe90SxPM]]></openid><out_trade_no><![CDATA[1506739556414205378]]></out_trade_no><result_code><![CDATA[SUCCESS]]></result_code><return_code><![CDATA[SUCCESS]]></return_code><sign><![CDATA[F053CA1B8F9DFA2327CEF86028F2F51B]]></sign><time_end><![CDATA[20170930104619]]></time_end><total_fee>1</total_fee><trade_type><![CDATA[APP]]></trade_type><transaction_id><![CDATA[4200000011201709305101919166]]></transaction_id></xml>";
+//		try {
+//			Map map = xml2map(xml, false);
+//			System.out.println(JsonUtils.getMapperInstance()
+//					.writeValueAsString(map));
+//			if (map.get("return_code").equals("SUCCESS")) {// 通信成功
+//				System.out.println("OK1");
+//				if (map.get("result_code").equals("SUCCESS")) {// 交易成功
+//					System.out.println("OK2");
+//					if (WXAPI.validSign(map)
+//							&& oDao.updateOrder("" + map.get("out_trade_no"), 2)) {// 验签成功且修改成功返回SUCCESS
+//						System.out.println("OK3");
+//						System.out.println(WXAPI.setXml("SUCCESS", "OK"));
+//						
+//					}
+//				}
+//			}
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		} catch (DocumentException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	}
 
 	/**
 	 * xml转map 不带属性

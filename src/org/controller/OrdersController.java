@@ -16,16 +16,21 @@ import org.dao.OrdersDao;
 import org.dao.imp.OrdersDaoImp;
 import org.dom4j.DocumentException;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.util.Constants;
+import org.util.JsonUtils;
 import org.util.PDFUtil;
 import org.util.ResultUtils;
 import org.util.Utils;
 import org.util.WXAPI;
+import org.util.XmlUtils;
 import org.view.VOrdersDetailsId;
 import org.view.VOrdersId;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
 @RequestMapping("/back/orders")
@@ -97,6 +102,16 @@ public class OrdersController {
 		}
 	}
 
+	@RequestMapping("/deleteOrder")
+	@ResponseBody
+	public Object deleteOrder(Long id) throws Exception {
+		oDao = new OrdersDaoImp();
+		if (oDao.deleteOrder(id) > 0) {
+			return ResultUtils.toJson(100, "", "");
+		}
+		return ResultUtils.toJson(101, "不能删除正在进行的订单，如需请联系后台人员", "");
+	}
+
 	@RequestMapping("/getOrderByOrderNum")
 	@ResponseBody
 	public Object getOrderByOrderNum(String orderNum, Integer start,
@@ -116,17 +131,6 @@ public class OrdersController {
 		return ResultUtils.toJson(100, "", data);
 	}
 
-	@RequestMapping("/deleteOrder")
-	@ResponseBody
-	public Object deleteOrder(Long id) throws Exception {// 仅允许删除被取消的订单
-		oDao = new OrdersDaoImp();
-		if (oDao.deleteOrder(id) > 0) {
-			return ResultUtils.toJson(100, "删除成功", "");
-		} else {
-			return ResultUtils.toJson(101, "删除失败", "");
-		}
-	}
-
 	@RequestMapping("/staffDeliverOrder")
 	@ResponseBody
 	public Object staffDeliverOrder(String staffId, String orderNum)
@@ -142,30 +146,48 @@ public class OrdersController {
 	@RequestMapping("/notifyWxPay")
 	@ResponseBody
 	public Object notifyWxPay(HttpServletRequest request,
-			@RequestBody WXNotify xml, HttpServletResponse response)
-			throws Exception {
+			HttpServletResponse response) throws Exception {
 		oDao = new OrdersDaoImp();
+		String result;
+		String inputLine;
+		String notityXml = "";
+		request.setCharacterEncoding("UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html;charset=UTF-8");
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		// 微信给返回的东西
 		try {
-			// System.out.println(mapper.writeValueAsString(xml));
-			LinkedHashMap<String, Object> map = Utils.objectToMap(xml);
-			// System.out.println(mapper.writeValueAsString(map));
-			if (xml.getReturn_code().equals("SUCCESS")) {// 通信成功
-				if (xml.getResult_code().equals("SUCCESS")) {// 交易成功
-					boolean checkSign = WXAPI.makeSign(map).equals(
-							xml.getSign());// 验签防止第三方篡改数据
-					if (checkSign && oDao.updateOrder(xml.getOut_trade_no(), 2)) {// 验签成功且修改成功返回SUCCESS
-						return new WXRETURN("SUCCESS", "");
+			while ((inputLine = request.getReader().readLine()) != null) {
+				notityXml += inputLine;
+			}
+			request.getReader().close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			result = WXAPI.setXml("FAIL", "xml获取失败");
+			return result;
+		}
+		if (StringUtils.isEmpty(notityXml)) {
+			result = WXAPI.setXml("FAIL", "xml为空");
+			System.out.println(result);
+			return result;
+		}
+		try {
+			System.out.println(notityXml);
+			Map map = XmlUtils.xml2map(notityXml, false);
+			if (map.get("return_code").equals("SUCCESS")) {// 通信成功
+				if (map.get("result_code").equals("SUCCESS")) {// 交易成功
+					if (WXAPI.validSign(map)
+							&& oDao.updateOrder("" + map.get("out_trade_no"), 2)) {// 验签成功且修改成功返回SUCCESS
+						return WXAPI.setXml("SUCCESS", "OK");
 					}
 				}
 			}
 		} catch (DocumentException e) {
 			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return new WXRETURN("FAIL", "校验失败，请重试");
+		return WXAPI.setXml("FAIL", "校验失败，请重试");
 	}
+
 }

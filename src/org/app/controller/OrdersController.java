@@ -115,17 +115,20 @@ public class OrdersController {
 		}
 	}
 
-	@RequestMapping("/addOrder1")
+	@RequestMapping("/deleteOrder")
 	@ResponseBody
-	public Object addOrder1(HttpServletRequest request, @RequestBody OrderModel o)
-			throws Exception {
-		return ResultUtils.toJson(101, "该功能将在月底开通，请您耐心等待", "");
+	public Object deleteOrder(Long id) throws Exception {
+		oDao = new OrdersDaoImp();
+		if (oDao.deleteOrder(id) > 0) {
+			return ResultUtils.toJson(100, "", "");
+		}
+		return ResultUtils.toJson(101, "您不能删除正在进行的订单，如需请联系客服人员", "");
 	}
 
 	@RequestMapping("/addOrder")
 	@ResponseBody
-	public Object addOrder(HttpServletRequest request,
-			@RequestBody OrderModel o) throws Exception {
+	public Object addOrder(HttpServletRequest request, @RequestBody OrderModel o)
+			throws Exception {
 		oDao = new OrdersDaoImp();
 		uAddressDao = new UserAddressDaoImp();
 		/**** 获取header中的token并取出userid ****/
@@ -143,35 +146,99 @@ public class OrdersController {
 			Double Realtotal = oDao.getTotal(orderNum);
 			System.out.println(Realtotal);
 			if (!("" + Realtotal).equals("" + o.getTotal())) {
-				oDao.deleteOrder(id);
+				oDao.delOrder(id);
 				return ResultUtils.toJson(101, "商品价格与实际价格不符", "");
 			}
-			switch (o.getPayWay()) {
-			case 0:// 微信
-				String clientIp = request.getRemoteAddr();
-				// 订单总价不能包含小数，单位为分，因此乘100并转整型
-				// 不使用APP端传递的总价是为了防止数据被恶意修改导致无法匹配
-				Integer fee = (int) (Realtotal * 100);
-				data = WXAPI.doPay(orderNum, fee, clientIp);
-				if (data == null) {
-					oDao.deleteOrder(id);
-					System.out.println("data==null");
-					return ResultUtils.toJson(101, "生成订单失败，请重试", "");
-				}
-				break;
-			case 1:// 支付宝
-				break;
-			default:
-				break;
-			}
-			// data.put("orderNum", orderNum);
+			data = new HashMap<>();
+			data.put("orderNum", orderNum);
+			String msg = "生成订单成功";
 			if (Calendar.getInstance().get(Calendar.HOUR_OF_DAY) > 21) {
-				return ResultUtils.toJson(100, "生成订单成功，超过21点的订单将隔天下午送达", "");
+				msg = "生成订单成功，超过21点的订单将于后天送达";
 			}
-			return ResultUtils.toJson(100, "生成订单成功", "");
+			return ResultUtils.toJson(100, msg, data);
 		} else {
 			return ResultUtils.toJson(101, "生成订单失败，请重试", "");
 		}
 	}
+
+	@RequestMapping("/doPay")
+	@ResponseBody
+	public Object doPay(HttpServletRequest request, String orderNum,
+			Integer payWay) throws Exception {
+		oDao = new OrdersDaoImp();
+		System.out.println(payWay + "" + orderNum);
+		Double Realtotal = oDao.getTotal(orderNum);
+		switch (payWay) {// 支付方式
+		case 0:// 微信
+			String clientIp = request.getRemoteAddr();
+			// 订单总价不能包含小数，单位为分，因此乘100并转整型
+			// 不使用APP端传递的总价是为了防止数据被恶意修改导致无法匹配
+			Integer fee = (int) (Realtotal * 100);
+			data = WXAPI.doPay(orderNum, fee, clientIp);
+			if (data == null) {
+				return ResultUtils.toJson(101, "发起支付失败，请重试", "");
+			}
+			return ResultUtils.toJson(100, "", data);
+		case 1:// 支付宝
+			return ResultUtils.toJson(101, "目前只支持微信支付", "");
+		default:
+			return ResultUtils.toJson(101, "目前只支持微信支付", "");
+		}
+	}
+	// @RequestMapping("/addOrder")
+	// @ResponseBody
+	// public Object addOrder(HttpServletRequest request, @RequestBody
+	// OrderModel o)
+	// throws Exception {
+	// oDao = new OrdersDaoImp();
+	// uAddressDao = new UserAddressDaoImp();
+	// /**** 获取header中的token并取出userid ****/
+	// String token = request.getHeader("token");
+	// Long userid = Long.parseLong(""
+	// + TokenUtils.getValue(token, TokenUtils.getKey(), "userid"));
+	// Long time = System.currentTimeMillis();
+	// String orderNum = time + Utils.ran6();
+	// /*********************************/
+	// Orders orders = new Orders(userid, time / 1000, 1,
+	// uAddressDao.getAddressById(o.getAddressId()), orderNum);
+	// System.out.println(o.getAddressId() + "|||" + orders.getAddress());
+	// Long id = oDao.generateOrder(orders, o.getDetails());
+	// if (id > 0) {
+	// Double Realtotal = oDao.getTotal(orderNum);
+	// System.out.println(Realtotal);
+	// if (!("" + Realtotal).equals("" + o.getTotal())) {
+	// oDao.deleteOrder(id);
+	// return ResultUtils.toJson(101, "商品价格与实际价格不符", "");
+	// }
+	// switch (o.getPayWay()) {
+	// case 0:// 微信
+	// String clientIp = request.getRemoteAddr();
+	// // 订单总价不能包含小数，单位为分，因此乘100并转整型
+	// // 不使用APP端传递的总价是为了防止数据被恶意修改导致无法匹配
+	// Integer fee = (int) (Realtotal * 100);
+	// data = WXAPI.doPay(orderNum, fee, clientIp);
+	// if (data == null) {
+	// oDao.deleteOrder(id);
+	// System.out.println("data==null");
+	// return ResultUtils.toJson(101, "生成订单失败，请重试", "");
+	// }
+	// break;
+	// case 1:// 支付宝
+	// break;
+	// default:
+	// break;
+	// }
+	// // data.put("orderNum", orderNum);
+	// if (Calendar.getInstance().get(Calendar.HOUR_OF_DAY) > 21) {
+	// return ResultUtils.toJson(100, "生成订单成功，超过21点的订单将隔天下午送达", "");
+	// }
+	// if(data!=null){
+	// return ResultUtils.toJson(100, "生成订单成功", data);
+	// }
+	// return ResultUtils.toJson(100, "生成订单成功", "");
+	// } else {
+	// return ResultUtils.toJson(101, "生成订单失败，请重试", "");
+	// }
+	// }
 
 }

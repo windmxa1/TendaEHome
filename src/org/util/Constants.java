@@ -10,19 +10,19 @@ public class Constants {
 	/**
 	 * 应用id
 	 */
-	public static final String appid = "wx8a1727cf2f5a05c5";
+	public static final String appid = "wxb895559396a56469";
 	/**
 	 * 应用秘钥
 	 */
-	public static final String key = "421cb2cdbf0abda73e4652bd87ab9c81";
+	public static final String key = "Zu34X8QLmrUbByJdxHqZm30m2NKlVWXs";
 	/**
 	 * 商户号
 	 */
-	public static final String mch_id = "654321";
+	public static final String mch_id = "1489494212";
 	/**
 	 * 支付结果通知地址
 	 */
-	public static final String notify_url = "https://192.168.1.150:8080/TendaEHome/back/orders/notifyWxPay";
+	public static final String notify_url = "http://39.108.82.55:8080/TendaEHome/back/orders/notifyWxPay";
 	/**
 	 * 交易类型
 	 */

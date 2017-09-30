@@ -11,6 +11,7 @@ public class Orders implements java.io.Serializable {
 	private Long id;
 	private Long userid;
 	private Long time;
+	/** 0取消订单,1未支付，2已支付未发货，3发货未签收，4发货已签收 */
 	private Integer state;
 	private String address;
 	private String orderNum;
@@ -39,6 +40,7 @@ public class Orders implements java.io.Serializable {
 		this.address = address;
 		this.orderNum = orderNum;
 	}
+
 	/** full constructor */
 	public Orders(Long userid, Long time, Integer state, String address,
 			String orderNum, String staffId, Integer isExport) {
