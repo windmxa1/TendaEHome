@@ -38,4 +38,14 @@ public interface TvDao {
 	 * 修改可见状态
 	 */
 	Boolean updateTvAvailalbe(Integer id, Integer available);
+	/**
+	 * 按名字检索
+	 */
+	List<VTvId> getTvByName(String name, Integer start, Integer limit);
+
+	/**
+	 * 按名字获取记录总数
+	 */
+	Long getCount(String name);
+
 }

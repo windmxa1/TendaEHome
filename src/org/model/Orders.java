@@ -11,12 +11,13 @@ public class Orders implements java.io.Serializable {
 	private Long id;
 	private Long userid;
 	private Long time;
-	/** 0取消订单,1未支付，2已支付未发货，3发货未签收，4发货已签收 */
+	/** 0取消订单,1未支付，2已支付未发货，3发货未签收，4发货已签收，5退款中，6交易关闭 */
 	private Integer state;
 	private String address;
 	private String orderNum;
 	private String staffId;
 	private Integer isExport;
+	private Integer payWay;
 
 	// Constructors
 
@@ -43,7 +44,7 @@ public class Orders implements java.io.Serializable {
 
 	/** full constructor */
 	public Orders(Long userid, Long time, Integer state, String address,
-			String orderNum, String staffId, Integer isExport) {
+			String orderNum, String staffId, Integer isExport, Integer payWay) {
 		this.userid = userid;
 		this.time = time;
 		this.state = state;
@@ -51,6 +52,7 @@ public class Orders implements java.io.Serializable {
 		this.orderNum = orderNum;
 		this.staffId = staffId;
 		this.isExport = isExport;
+		this.payWay = payWay;
 	}
 
 	// Property accessors
@@ -117,6 +119,14 @@ public class Orders implements java.io.Serializable {
 
 	public void setIsExport(Integer isExport) {
 		this.isExport = isExport;
+	}
+
+	public Integer getPayWay() {
+		return this.payWay;
+	}
+
+	public void setPayWay(Integer payWay) {
+		this.payWay = payWay;
 	}
 
 }

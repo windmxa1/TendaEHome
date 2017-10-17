@@ -33,5 +33,10 @@
         <property name="isExport" type="java.lang.Integer">
             <column name="is_export" />
         </property>
+        <property name="payWay" type="java.lang.Integer">
+            <column name="pay_way">
+                <comment>0微信，1支付宝</comment>
+            </column>
+        </property>
     </class>
 </hibernate-mapping>

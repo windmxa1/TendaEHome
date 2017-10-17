@@ -16,6 +16,12 @@
             <key-property name="time" type="java.lang.Long">
                 <column name="time" />
             </key-property>
+            <key-property name="isExport" type="java.lang.Integer">
+                <column name="is_export" />
+            </key-property>
+            <key-property name="payWay" type="java.lang.Integer">
+                <column name="pay_way" />
+            </key-property>
             <key-property name="total" type="java.lang.Double">
                 <column name="total" precision="11" />
             </key-property>

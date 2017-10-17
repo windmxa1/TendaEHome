@@ -13,6 +13,8 @@ public class VOrdersId implements java.io.Serializable {
 	private Long id;
 	private Long userid;
 	private Long time;
+	private Integer isExport;
+	private Integer payWay;
 	private Double total;
 	private Long num;
 	private String createTime;
@@ -40,12 +42,14 @@ public class VOrdersId implements java.io.Serializable {
 	}
 
 	/** full constructor */
-	public VOrdersId(Long id, Long userid, Long time, Double total, Long num,
-			String createTime, Integer state, String status, String address,
-			String orderNum) {
+	public VOrdersId(Long id, Long userid, Long time, Integer isExport,
+			Integer payWay, Double total, Long num, String createTime,
+			Integer state, String status, String address, String orderNum) {
 		this.id = id;
 		this.userid = userid;
 		this.time = time;
+		this.isExport = isExport;
+		this.payWay = payWay;
 		this.total = total;
 		this.num = num;
 		this.createTime = createTime;
@@ -79,6 +83,22 @@ public class VOrdersId implements java.io.Serializable {
 
 	public void setTime(Long time) {
 		this.time = time;
+	}
+
+	public Integer getIsExport() {
+		return this.isExport;
+	}
+
+	public void setIsExport(Integer isExport) {
+		this.isExport = isExport;
+	}
+
+	public Integer getPayWay() {
+		return this.payWay;
+	}
+
+	public void setPayWay(Integer payWay) {
+		this.payWay = payWay;
 	}
 
 	public Double getTotal() {
@@ -171,6 +191,13 @@ public class VOrdersId implements java.io.Serializable {
 				&& ((this.getTime() == castOther.getTime()) || (this.getTime() != null
 						&& castOther.getTime() != null && this.getTime()
 						.equals(castOther.getTime())))
+				&& ((this.getIsExport() == castOther.getIsExport()) || (this
+						.getIsExport() != null
+						&& castOther.getIsExport() != null && this
+						.getIsExport().equals(castOther.getIsExport())))
+				&& ((this.getPayWay() == castOther.getPayWay()) || (this
+						.getPayWay() != null && castOther.getPayWay() != null && this
+						.getPayWay().equals(castOther.getPayWay())))
 				&& ((this.getTotal() == castOther.getTotal()) || (this
 						.getTotal() != null && castOther.getTotal() != null && this
 						.getTotal().equals(castOther.getTotal())))
@@ -204,6 +231,10 @@ public class VOrdersId implements java.io.Serializable {
 				+ (getUserid() == null ? 0 : this.getUserid().hashCode());
 		result = 37 * result
 				+ (getTime() == null ? 0 : this.getTime().hashCode());
+		result = 37 * result
+				+ (getIsExport() == null ? 0 : this.getIsExport().hashCode());
+		result = 37 * result
+				+ (getPayWay() == null ? 0 : this.getPayWay().hashCode());
 		result = 37 * result
 				+ (getTotal() == null ? 0 : this.getTotal().hashCode());
 		result = 37 * result

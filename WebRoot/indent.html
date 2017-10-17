@@ -40,20 +40,47 @@
 <body>
 	<div class="main-ontent" style="position: absolute;">
 		<div class="webdesigntuts-workshop" style="margin:10px; height: 30px;">
-			<div style="float: left;">
+			<div style="float: left;width:100%;">
 				<span style="margin-right: 20px;" onclick="indent(-1)">全部订单</span> <span
 					style="margin-right: 20px;" onclick="indent(4)">已签收</span> <span
 					style="margin-right: 20px;" onclick="indent(3)">发货未签收</span> <span
 					style="margin-right: 20px;" onclick="indent(2)">支付未发货</span> <span
 					style="margin-right: 20px;" onclick="indent(1)">未支付</span> <span
-					style="margin-right: 20px;" onclick="indent(0)">取消</span> <input
+					style="margin-right: 20px;" onclick="indent(0)">取消</span> <span
+					style="margin-right: 20px;" onclick="indent(5)">等待退款</span> <span
+					style="margin-right: 20px;" onclick="indent(6)">已退款</span> <input
 					type="search" id="seek_text" placeholder="请按订单号搜索">
 				<button onclick="seek()"
 					style="background: #0066CC; border: none; outline: none; color: #FFFFFF;">搜索</button>
+				<button onclick="completeRefund()"
+					style="background: #0066CC; border: none; outline: none; color: #FFFFFF;">一键更新所有待退款订单</button>
+				<div class="dropdown pull-right">
+					<button class="btn btn-default dropdown-toggle" type="button"
+						id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true"
+						aria-expanded="true">
+						导出订单 <span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu dropdown-menu-right"
+						aria-labelledby="dropdownMenu1">
+						<li class="dropdown-header">生态城订单导出</li>
+						<li><a onclick="getOrderPDF('生态城',2)">导出已支付订单</a>
+						</li>
+						<li><a onclick="getOrderPDF('生态城',1)">导出未支付订单</a>
+						</li>
+						<li role="separator" class="divider"></li>
+						<li class="dropdown-header">开发区订单导出</li>
+						<li><a onclick="getOrderPDF('开发区',2)">导出已支付订单</a>
+						</li>
+						<li><a onclick="getOrderPDF('开发区',1)">导出未支付订单</a>
+						</li>
+					</ul>
+				</div>
+				<!-- 
 				<button onclick="getOrderPDF('生态城')"
 					style="background: #0066CC; border: none; outline: none; color: #FFFFFF;">生态城订单导出</button>
 				<button onclick="getOrderPDF('开发区')"
 					style="background: #0066CC; border: none; outline: none; color: #FFFFFF;">开发区订单导出</button>
+				-->
 			</div>
 		</div>
 		<div id="browser" class="tbtree" style="text-align: center;">
@@ -106,16 +133,17 @@
 			 -->
 		<!--------------------------------修改订单(结束)---------------------------------------->
 		<!--------------------------------订单详情(开始)---------------------------------------->
-		<div class="modal fade" id="ddxq" name="ddxq" tabindex="-1" role="dialog" aria-labelledby="ddxqLabel" aria-hidden="true">
+		<div class="modal fade" id="ddxq" name="ddxq" tabindex="-1"
+			role="dialog" aria-labelledby="ddxqLabel" aria-hidden="true">
 			<div class="modal-dialog" style="width: 1200px">
-				<div class="modal-content" >
+				<div class="modal-content">
 					<div class="modal-header"
 						style="text-align: center; font-weight:bold;">
 						<h4 class="modal-title" id="ddxqLabel">订单详情</h4>
 					</div>
-					<div class="modal-body" style="height:600px" >
-						<iframe name="orderDetailsF" frameborder="no" border="0" style="width: 100%;height: 100%;"
-							src="details.html"></iframe>
+					<div class="modal-body" style="height:600px">
+						<iframe name="orderDetailsF" frameborder="no" border="0"
+							style="width: 100%;height: 100%;" src="details.html"></iframe>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default" data-dismiss="modal">关闭

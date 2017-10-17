@@ -97,13 +97,19 @@ public class OrdersDaoImp implements OrdersDao {
 			query.setParameter(0, userid);
 			query.setParameter(1, id);
 			Orders o = (Orders) query.uniqueResult();
-			if (System.currentTimeMillis() / 1000 > ChangeTime.hourTimeStamp(
-					21, o.getTime())) {// 晚于下单当天9点则不更新
-				return -2;
+			if (o.getState() > 1) {
+				if (System.currentTimeMillis() / 1000 > ChangeTime
+						.hourTimeStamp(21, o.getTime())) {// 晚于下单当天9点且已付款则不更新
+					return -2;
+				}
+				o.setState(5);
+				ts.commit();
+				return 1;
+			} else {
+				o.setState(0);
+				ts.commit();
+				return 0;
 			}
-			o.setState(0);
-			ts.commit();
-			return 0;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return -1;
@@ -238,14 +244,15 @@ public class OrdersDaoImp implements OrdersDao {
 			Integer state, String address) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
+			Transaction ts = session.beginTransaction();
 			String sql = "";
 			Query query = null;
 			if (state == null) {
-				sql = "from VOrders v  where date(v.id.createTime) = curdate() and id.address like ? order by v.id.time desc";
+				sql = "from VOrders v  where v.id.isExport=0 and date(v.id.createTime) = curdate() and id.address like ? order by v.id.time desc";
 				query = session.createQuery(sql);
 				query.setParameter(0, "%" + address + "%");
 			} else {
-				sql = "from VOrders v where v.id.state=? and date(v.id.createTime) = curdate() and id.address like ? order by v.id.time desc";
+				sql = "from VOrders v where v.id.isExport=0 and v.id.state=? and date(v.id.createTime) = curdate() and id.address like ? order by v.id.time desc";
 				query = session.createQuery(sql);
 				query.setParameter(0, state);
 				query.setParameter(1, "%" + address + "%");
@@ -266,6 +273,20 @@ public class OrdersDaoImp implements OrdersDao {
 			for (VOrders v : vOrders) {
 				list.add(v.getId());
 			}
+			if (state == null) {
+				Query query2 = session
+						.createQuery("update Orders set isExport=1 where from_unixtime(time,'%Y-%m-%d') = curdate() and address like ?");
+				query2.setParameter(0, "%" + address + "%");
+				query2.executeUpdate();
+			} else {
+				Query query2 = session
+						.createQuery("update Orders set isExport=1 where state=? and from_unixtime(time,'%Y-%m-%d') = curdate() and address like ?");
+				query2.setParameter(0, state);
+				query2.setParameter(1, "%" + address + "%");
+				query2.executeUpdate();
+			}
+
+			ts.commit();
 			return list;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -316,19 +337,40 @@ public class OrdersDaoImp implements OrdersDao {
 	}
 
 	@Override
+	public boolean completeRefund() {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			Transaction ts = session.beginTransaction();
+			String sql = "update Orders set state=6 where state=5";
+			Query query = session.createQuery(sql);
+			query.executeUpdate();
+			ts.commit();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
+	@Override
 	public boolean updateOrder(Long id, Integer state) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
 			Transaction ts = session.beginTransaction();
 			String sql = "";
 			switch (state) {// 添加情况判断防止数据混乱
-			case 3:// 已支付->发货
-				sql = "update Orders set state=? where id = ? and state=2";
-				break;
 			case 4:// 发货->完成
 				sql = "update Orders set state=? where id = ? and state=3";
 				break;
-			default:// 取消订单
+			case 5:// 已支付->退款
+				sql = "update Orders set state=? where id = ? and state=2";
+				break;
+			case 6:// 退款中->交易关闭
+				sql = "update Orders set state=? where id = ? and state=5";
+				break;
+			default:// 未支付->取消订单
 				sql = "update Orders set state=? where id = ? ";
 				break;
 			}
@@ -365,15 +407,15 @@ public class OrdersDaoImp implements OrdersDao {
 	}
 
 	@Override
-	public boolean updateOrder(String orderNum, Integer state) {
-		System.out.println("update>>>>>");
+	public boolean updateOrder(String orderNum, Integer state, Integer payWay) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
 			Transaction ts = session.beginTransaction();
-			String sql = "update Orders set state=? where orderNum = ? and state = 1";// 防止重复修改
+			String sql = "update Orders set state=?,payWay=? where orderNum = ? and state = 1";// 防止重复修改
 			Query query = session.createQuery(sql);
 			query.setParameter(0, state);
-			query.setParameter(1, orderNum);
+			query.setParameter(1, payWay);
+			query.setParameter(2, orderNum);
 			query.executeUpdate();
 			ts.commit();
 			return true;

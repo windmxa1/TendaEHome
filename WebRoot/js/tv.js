@@ -3,10 +3,11 @@
  */
 var json = null;
 var total = null;
+var indexId = 0;
+var pageSize = 20;
+var pageNo = 1;
 $(function() {
 	// refreshData(20,1,10,json.length);
-	var pageSize = 20;
-	var pageNo = 1;
 	builderUQTQueryMsg(getJsonArrayByPageSize(pageSize, pageNo));
 
 	var totalPage = getTotllePage(pageSize);
@@ -121,37 +122,104 @@ var getTotllePage = function(pageSize) {
  * @returns {*}
  */
 var getJsonArrayByPageSize = function(pageSize, pageNo) {
-	$.ajax({
-		type : "post",
-		url : "back/tv/getTvList",
-		dataType : "json",
-		async : false,
-		cache : false,
-		headers : {
-			"token" : getCookie('token')
-		},
-		data : {
-			'start' : (pageNo - 1) * pageSize,
-			'limit' : pageSize,
-			'type' : $('.selectType option:selected').val() || null
-		},
-		success : function(data) {
-			if (data.code == 100) {
-				json = data.data.list;
-				total = data.data.total;
+	if (indexId == 1) {
+		$.ajax({
+			type : "post",
+			url : "back/tv/getTvByName",
+			dataType : "json",
+			async : false,
+			cache : false,
+			headers : {
+				"token" : getCookie('token')
+			},
+			data : {
+				'start' : (pageNo - 1) * pageSize,
+				'limit' : pageSize,
+				'name' : $('#seek_text').val()
+			},
+			success : function(data) {
+				if (data.code == 100) {
+					json = data.data.list;
+					total = data.data.total;
+				}
+			},
+			error : function(jqXHR) {
+				alert("网络异常");
 			}
-		},
-		error : function(jqXHR) {
-			alert("网络异常");
-		}
-	});
+		});
+	} else {
+		$.ajax({
+			type : "post",
+			url : "back/tv/getTvList",
+			dataType : "json",
+			async : false,
+			cache : false,
+			headers : {
+				"token" : getCookie('token')
+			},
+			data : {
+				'start' : (pageNo - 1) * pageSize,
+				'limit' : pageSize,
+				'type' : $('.selectType option:selected').val() || null
+			},
+			success : function(data) {
+				if (data.code == 100) {
+					json = data.data.list;
+					total = data.data.total;
+				}
+			},
+			error : function(jqXHR) {
+				alert("网络异常");
+			}
+		});
+	}
 	var jsonCount = total;
 	var shang = getTotllePage(pageSize);
 	// var startIndex = (pageNo);
 	// var endIndex = (shang == pageNo)? jsonCount:pageSize;
 	return json.slice(0, 20);
 }
+/**
+ * 重置搜索
+ */
+function reset() {
+	indexId = 0;
+	builderUQTQueryMsg(getJsonArrayByPageSize(pageSize, pageNo));
+	var totalPage = getTotllePage(pageSize);
+	var totalRecords = total;
+	// 生成分页控件 根据分页的形式在这里设置
+	kkpager.init({
+		pno : pageNo,
+		// 总页码
+		total : totalPage,
+		// 总数据条数
+		totalRecords : totalRecords,
+		// 页面条数
+		pageSize : pageSize
+	});
+	kkpager.generPageHtml();
+}
+/**
+ * 搜索节目
+ */
+function seek() {
+	indexId = 1;
+	builderUQTQueryMsg(getJsonArrayByPageSize(pageSize, pageNo));
+	var totalPage = getTotllePage(pageSize);
+	var totalRecords = total;
+	// 生成分页控件 根据分页的形式在这里设置
+	kkpager.init({
+		pno : pageNo,
+		// 总页码
+		total : totalPage,
+		// 总数据条数
+		totalRecords : totalRecords,
+		// 页面条数
+		pageSize : pageSize
+	});
+	kkpager.generPageHtml();
 
+};
 /**
  * 刷新页面数据
  * 
@@ -209,20 +277,20 @@ var builderUQTQueryMsg = function(UQTQueryMsg) {
 								+ "<td class='match_type'>" + tvUrl + "</td>"
 								+ "<td class='match_type'>" + createTime
 								+ "</td>" + "<td class='dis_dta'>";
-						if(available==1){
+						if (available == 1) {
 							trString = trString
-							+ "<button class='btn btn-info' onclick='toggleTv("
-							+ id
-							+ ","
-							+ available
-							+ ")' style='height:30px;margin-right:10px'>隐藏</button>";
-						}else{
+									+ "<button class='btn btn-info' onclick='toggleTv("
+									+ id
+									+ ","
+									+ available
+									+ ")' style='height:30px;margin-right:10px'>隐藏</button>";
+						} else {
 							trString = trString
-							+ "<button class='btn btn-warning' onclick='toggleTv("
-							+ id
-							+ ","
-							+ available
-							+ ")' style='height:30px;margin-right:10px'>显示</button>";
+									+ "<button class='btn btn-warning' onclick='toggleTv("
+									+ id
+									+ ","
+									+ available
+									+ ")' style='height:30px;margin-right:10px'>显示</button>";
 						}
 						trString = trString
 								+ "<button data-toggle='modal' id='modTv' data-target='#modOrder' style='height:30px;margin-right:10px' class='btn' data-order='"

@@ -62,7 +62,7 @@ public class RepairController {
 		
 		List<VRepairOrderId> list = rDao.getList(start, limit, userid);
 		if(list==null||list.size()==0){
-			return ResultUtils.toJson(100, "您还没有提交过报修单", "");
+			return ResultUtils.toJson(101, "您还没有提交过报修单", "");
 		}
 		return ResultUtils.toJson(100, "", list);
 	}

@@ -83,6 +83,7 @@ public class RepairController {
 	public Object updateRepairOrder(HttpServletRequest request,
 			@RequestBody RepairOrder repair) throws Exception {
 		rDao = new RepairDaoImp();
+//		repair.setIsRead(1);
 		if (rDao.saveOrUpdate(repair) == 0L) {
 			return ResultUtils.toJson(100, "修改成功", "");
 		}

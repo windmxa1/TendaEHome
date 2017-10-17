@@ -3,6 +3,7 @@ package org.controller;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.util.ALIPAY;
 import org.util.Constants;
 import org.util.JsonUtils;
 import org.util.PDFUtil;
@@ -30,6 +32,7 @@ import org.util.XmlUtils;
 import org.view.VOrdersDetailsId;
 import org.view.VOrdersId;
 
+import com.alipay.api.internal.util.AlipaySignature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
@@ -65,7 +68,7 @@ public class OrdersController {
 			v.setDetails(oDao.getDetailList(v.getId(), 0, -1));
 		}
 		if (list == null || list.size() == 0) {
-			return ResultUtils.toJson(100, "暂无订单", "");
+			return ResultUtils.toJson(101, "暂无订单", "");
 		} else {
 			String url = PDFUtil.buidPDF(Constants.watermark, list, 0);
 			data = new HashMap<String, Object>();
@@ -94,7 +97,7 @@ public class OrdersController {
 	@ResponseBody
 	public Object updateOrder(HttpServletRequest request, Long id, Integer state)
 			throws Exception {
-		oDao = new OrdersDaoImp();
+		oDao = new OrdersDaoImp();		
 		if (oDao.updateOrder(id, state)) {
 			return ResultUtils.toJson(100, "修改成功", "");
 		} else {
@@ -102,6 +105,16 @@ public class OrdersController {
 		}
 	}
 
+	@RequestMapping("/completeRefund")
+	@ResponseBody
+	public Object completeRefund() throws Exception {
+		oDao = new OrdersDaoImp();
+		if (oDao.completeRefund()) {
+			return ResultUtils.toJson(100, "", "");
+		}
+		return ResultUtils.toJson(101, "操作失败，请重试", "");
+	}
+	
 	@RequestMapping("/deleteOrder")
 	@ResponseBody
 	public Object deleteOrder(Long id) throws Exception {
@@ -176,9 +189,20 @@ public class OrdersController {
 			Map map = XmlUtils.xml2map(notityXml, false);
 			if (map.get("return_code").equals("SUCCESS")) {// 通信成功
 				if (map.get("result_code").equals("SUCCESS")) {// 交易成功
-					if (WXAPI.validSign(map)
-							&& oDao.updateOrder("" + map.get("out_trade_no"), 2)) {// 验签成功且修改成功返回SUCCESS
-						return WXAPI.setXml("SUCCESS", "OK");
+					if (WXAPI.validSign(map)) {
+						Double total = oDao.getTotal(""
+								+ map.get("out_trade_no")) * 100;
+						if (total == Double.parseDouble(""
+								+ (map.get("total_fee")))) {// 微信支付的总金额单位是分
+							if (oDao.updateOrder("" + map.get("out_trade_no"),
+									2,0)) {// 验签成功且修改成功返回SUCCESS
+								return WXAPI.setXml("SUCCESS", "OK");
+							}
+						} else {
+							System.out.println("订单总价错误,参数总价为："
+									+ map.get("total_fee") + "," + "订单实际总价为："
+									+ total);
+						}
 					}
 				}
 			}
@@ -188,6 +212,38 @@ public class OrdersController {
 			e.printStackTrace();
 		}
 		return WXAPI.setXml("FAIL", "校验失败，请重试");
+	}
+
+	@RequestMapping("/notifyAliPay")
+	@ResponseBody
+	public Object notifyAliPay(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		// 获取支付宝POST过来反馈信息
+		Map<String, String> params = new HashMap<String, String>();
+		Map requestParams = request.getParameterMap();
+		for (Iterator iter = requestParams.keySet().iterator(); iter.hasNext();) {
+			String name = (String) iter.next();
+			String[] values = (String[]) requestParams.get(name);
+			String valueStr = "";
+			for (int i = 0; i < values.length; i++) {
+				valueStr = (i == values.length - 1) ? valueStr + values[i]
+						: valueStr + values[i] + ",";
+			}
+			// 乱码解决，这段代码在出现乱码时使用。
+			// valueStr = new String(valueStr.getBytes("ISO-8859-1"), "utf-8");
+			params.put(name, valueStr);
+		}
+		// 切记alipaypublickey是支付宝的公钥，请去open.alipay.com对应应用下查看。
+		boolean flag = AlipaySignature.rsaCheckV1(params,
+				ALIPAY.ALIPAY_PUBLIC_KEY, ALIPAY.CHARSET, "RSA2");
+		if (flag) {
+			if (ALIPAY.isValid(params)) {
+				return "success";
+			} else {
+				return "failure";
+			}
+		}
+		return "failure";
 	}
 
 }

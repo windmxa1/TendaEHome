@@ -169,4 +169,20 @@ public class TvController {
 		return ResultUtils.toJson(101, "服务器繁忙，请重试", "");
 	}
 
+	/**
+	 * 搜索直播
+	 */
+	@RequestMapping("/getTvByName")
+	@ResponseBody
+	public Object getTvByName(String name, Integer start, Integer limit) {
+		tDao = new TvDaoImp();
+		List<VTvId> list = tDao.getTvByName(name, start, limit);
+		if (list == null) {
+			return ResultUtils.toJson(101, "服务器繁忙，请重试", "");
+		}
+		data = new HashMap<>();
+		data.put("list", list);
+		data.put("total", tDao.getCount(name));
+		return ResultUtils.toJson(100, "", data);
+	}
 }

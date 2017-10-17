@@ -19,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.util.ALIPAY;
 import org.util.ResultUtils;
 import org.util.TokenUtils;
 import org.util.Utils;
@@ -106,6 +107,8 @@ public class OrdersController {
 		switch (oDao.cancel(userid, id)) {
 		case 0:
 			return ResultUtils.toJson(100, "取消订单成功", "");
+		case 1:
+			return ResultUtils.toJson(100, "取消订单成功，您的退款将在3~5个工作日内返还", "");
 		case -1:
 			return ResultUtils.toJson(101, "取消订单失败", "");
 		case -2:
@@ -114,6 +117,7 @@ public class OrdersController {
 			return ResultUtils.toJson(101, "取消订单失败", "");
 		}
 	}
+
 
 	@RequestMapping("/deleteOrder")
 	@ResponseBody
@@ -166,7 +170,7 @@ public class OrdersController {
 	public Object doPay(HttpServletRequest request, String orderNum,
 			Integer payWay) throws Exception {
 		oDao = new OrdersDaoImp();
-		System.out.println(payWay + "" + orderNum);
+		// System.out.println(payWay + "" + orderNum);
 		Double Realtotal = oDao.getTotal(orderNum);
 		switch (payWay) {// 支付方式
 		case 0:// 微信
@@ -180,65 +184,16 @@ public class OrdersController {
 			}
 			return ResultUtils.toJson(100, "", data);
 		case 1:// 支付宝
-			return ResultUtils.toJson(101, "目前只支持微信支付", "");
+			data = new HashMap<>();
+			String result = ALIPAY.doPay(orderNum, "" + Realtotal);
+			if (result == null) {
+				return ResultUtils.toJson(101, "发起支付失败，请重试", "");
+			}
+			data.put("result", result);
+			return ResultUtils.toJson(100, "", data);
 		default:
 			return ResultUtils.toJson(101, "目前只支持微信支付", "");
 		}
 	}
-	// @RequestMapping("/addOrder")
-	// @ResponseBody
-	// public Object addOrder(HttpServletRequest request, @RequestBody
-	// OrderModel o)
-	// throws Exception {
-	// oDao = new OrdersDaoImp();
-	// uAddressDao = new UserAddressDaoImp();
-	// /**** 获取header中的token并取出userid ****/
-	// String token = request.getHeader("token");
-	// Long userid = Long.parseLong(""
-	// + TokenUtils.getValue(token, TokenUtils.getKey(), "userid"));
-	// Long time = System.currentTimeMillis();
-	// String orderNum = time + Utils.ran6();
-	// /*********************************/
-	// Orders orders = new Orders(userid, time / 1000, 1,
-	// uAddressDao.getAddressById(o.getAddressId()), orderNum);
-	// System.out.println(o.getAddressId() + "|||" + orders.getAddress());
-	// Long id = oDao.generateOrder(orders, o.getDetails());
-	// if (id > 0) {
-	// Double Realtotal = oDao.getTotal(orderNum);
-	// System.out.println(Realtotal);
-	// if (!("" + Realtotal).equals("" + o.getTotal())) {
-	// oDao.deleteOrder(id);
-	// return ResultUtils.toJson(101, "商品价格与实际价格不符", "");
-	// }
-	// switch (o.getPayWay()) {
-	// case 0:// 微信
-	// String clientIp = request.getRemoteAddr();
-	// // 订单总价不能包含小数，单位为分，因此乘100并转整型
-	// // 不使用APP端传递的总价是为了防止数据被恶意修改导致无法匹配
-	// Integer fee = (int) (Realtotal * 100);
-	// data = WXAPI.doPay(orderNum, fee, clientIp);
-	// if (data == null) {
-	// oDao.deleteOrder(id);
-	// System.out.println("data==null");
-	// return ResultUtils.toJson(101, "生成订单失败，请重试", "");
-	// }
-	// break;
-	// case 1:// 支付宝
-	// break;
-	// default:
-	// break;
-	// }
-	// // data.put("orderNum", orderNum);
-	// if (Calendar.getInstance().get(Calendar.HOUR_OF_DAY) > 21) {
-	// return ResultUtils.toJson(100, "生成订单成功，超过21点的订单将隔天下午送达", "");
-	// }
-	// if(data!=null){
-	// return ResultUtils.toJson(100, "生成订单成功", data);
-	// }
-	// return ResultUtils.toJson(100, "生成订单成功", "");
-	// } else {
-	// return ResultUtils.toJson(101, "生成订单失败，请重试", "");
-	// }
-	// }
 
 }

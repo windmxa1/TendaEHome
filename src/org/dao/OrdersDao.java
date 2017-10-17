@@ -67,7 +67,7 @@ public interface OrdersDao {
 	 * @param state
 	 * @return
 	 */
-	public boolean updateOrder(String orderNum, Integer state);
+	public boolean updateOrder(String orderNum, Integer state,Integer payWay);
 
 	/**
 	 * 删除订单,仅允许删除被取消的订单或已完成的订单
@@ -98,6 +98,10 @@ public interface OrdersDao {
 	 * 获取当天订单列表，用于订单导出，分区导出
 	 */
 	List<VOrdersId> getListByState2(Integer start, Integer limit, Integer state,String address);
+	/**
+	 * 一键修改所有待退款订单为已退款
+	 */
+	boolean completeRefund();
 
 
 }

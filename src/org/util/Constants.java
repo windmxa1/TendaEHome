@@ -6,7 +6,7 @@ public class Constants {
 	/**
 	 * 商品描述
 	 */
-	public static final String body = "泰达E家人 一米菜园网上超市购物";
+	public static final String body = "生态宜家-一米菜园网上超市购物";
 	/**
 	 * 应用id
 	 */

@@ -22,6 +22,9 @@ $(function() {
 		pageSize : pageSize
 	});
 	kkpager.generPageHtml();
+	$(".dropdown").hover(function() {
+		$(this).toggleClass("open");
+	});
 });
 // 切换订单状态
 function indent(v) {
@@ -61,12 +64,14 @@ function seek() {
 	kkpager.generPageHtml();
 };
 // 导出生态城PDF
-function getOrderPDF(o) {
+function getOrderPDF(o, s) {
+	$(".dropdown").removeClass('open');
 	$.ajax({
 		type : "post",
 		url : "back/orders/getOrdersPDF",
 		data : {
-			address : o
+			address : o,
+			state : s
 		},
 		dataType : "json",
 		async : false,
@@ -75,8 +80,10 @@ function getOrderPDF(o) {
 			"token" : getCookie('token')
 		},
 		success : function(data) {
-			if (data.msg == "") {
+			if (data.code == 100) {
 				location.href = data.data.pdfUrl;
+			} else {
+				alert(data.msg);
 			}
 		},
 		error : function(jqXHR) {
@@ -84,9 +91,49 @@ function getOrderPDF(o) {
 		}
 	})
 }
+// 一键完成退款
+function completeRefund(){
+	if (!confirm("请确认您是否已经处理了所有退款？")) {
+		return;
+	}
+	$.ajax({
+		type : "post",
+		url : "back/orders/completeRefund",
+		dataType : "json",
+		async : false,
+		cache : false,
+		headers : {
+			"token" : getCookie('token')
+		},
+		success : function(data) {
+			if (data.code == 100) {
+				location.reload();
+			}
+		},
+		error : function(jqXHR) {
+			alert("网络异常");
+		}
+	});
+}
 
 // 修改订单
 function updateIndent(s, v) {
+	switch (s) {
+	case 0:
+		if (!confirm("确定要取消订单？")) {
+			return;
+		}
+	case 4:
+		if (!confirm("确定订单已完成？")) {
+			return;
+		}
+	case 5:
+		if (!confirm("确定要取消该订单并退款吗？")) {
+			return;
+		}
+	default:
+		break;
+	}
 	$.ajax({
 		type : "post",
 		url : "back/orders/updateOrder",
@@ -257,7 +304,7 @@ function refreshData(pageSize, pageNo) {
 var builderUQTQueryMsg = function(UQTQueryMsg) {
 	var UQT_detailTable = $('#UQT_detailTable');
 	UQT_detailTable.empty();
-	var th = '<tr><th scope="col" class="eng_name" >订单编号</th><th scope="col" class="query_pro" >地址</th><th class="match_type" scope="col">订单状态</th><th scope="col"  class="dis_order">时间</th><th scope="col"  class="dis_dta">操作</th><th class="dis_hidden" style="display: none">隐藏属性</th></tr>';
+	var th = '<tr><th scope="col" class="eng_name" style="width:90px">订单编号</th><th scope="col" class="query_pro" >地址</th><th class="match_type" scope="col">订单状态</th><th scope="col"  class="dis_order">时间</th><th scope="col"  class="dis_order">支付方式</th><th scope="col"  class="dis_dta">操作</th><th class="dis_hidden" style="display: none">隐藏属性</th></tr>';
 
 	UQT_detailTable.append(th);
 	var tr;
@@ -271,6 +318,18 @@ var builderUQTQueryMsg = function(UQTQueryMsg) {
 						var status = eachData.status;
 						var address = eachData.address;
 						var createTime = eachData.createTime;
+						var payWay ="";
+						switch(eachData.payWay){
+							case 0:	
+								payWay ="微信支付";
+								break;
+							case 1:
+								payWay ="支付宝支付";
+								break;
+							default:
+								payWay ="无";
+								break;
+						}
 						var trString = "<td class='eng_name'>"
 								+ orderNum
 								+ "</td>"
@@ -283,26 +342,42 @@ var builderUQTQueryMsg = function(UQTQueryMsg) {
 								+ "<td class='match_type'>"
 								+ createTime
 								+ "</td>"
-								+ "<td class='dis_dta'>"
+								+ "<td class='match_type'>"
+								+ payWay
+								+ "</td>"
+								+ "<td class='dis_dta' style='text-align:left;'>"
 								+ "<button class='btn' onclick='details("
 								+ id
 								+ ")' data-toggle='modal' data-target='#ddxq' style='height:30px;margin-right:10px'  >订单详情</button>";
-						if (eachData.state == 3) {
+						switch (eachData.state) {
+						case 0:
+							trString = trString
+									+ "<button class='btn btn-warning' disabled='disabled' style='height:30px; margin-right:10px' >取消订单</button>";
+							break;
+						case 2:
+							trString = trString
+							+ "<button class='btn btn-warning' style='height:30px; margin-right:10px' onclick='updateIndent("
+							+ 5 + "," + id + ")' >取消并退款</button>";
+							break;
+						case 1:
+							trString = trString
+									+ "<button class='btn btn-warning' style='height:30px; margin-right:10px' onclick='updateIndent("
+									+ 0 + "," + id + ")' >取消订单</button>";
+							break;
+						case 3:
 							trString = trString
 									+ "<button class='btn btn-info' style='height:30px; margin-right:10px' onclick='updateIndent("
 									+ 4 + "," + id + ")' >完成订单</button>";
-						} else if (eachData.state < 3) {
-							if (eachData.state == 0) {
-								trString = trString
-										+ "<button class='btn btn-warning' disabled='disabled' style='height:30px; margin-right:10px' >取消订单</button>";
-							} else {
-								trString = trString
-										+ "<button class='btn btn-warning' style='height:30px; margin-right:10px' onclick='updateIndent("
-										+ 0 + "," + id + ")' >取消订单</button>";
-							}
-						} else {
+							break;
+						case 5:
+							trString = trString
+							+ "<button class='btn btn-info' style='height:30px; margin-right:10px' onclick='updateIndent("
+							+ 6 + "," + id + ")' >完成退款</button>";
+							break;
+						default:
 							trString = trString
 									+ "<button class='btn btn-info' disabled='disabled' style='height:30px; margin-right:10px'>完成订单</button>";
+							break;
 						}
 						trString = trString
 								+ "</td>"

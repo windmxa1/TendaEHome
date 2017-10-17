@@ -17,6 +17,7 @@ public class VRepairOrderId implements java.io.Serializable {
 	private String handleResult;
 	private Long userid;
 	private String staffId;
+	private Integer isRead;
 	private String state;
 
 	// Constructors
@@ -39,7 +40,8 @@ public class VRepairOrderId implements java.io.Serializable {
 	/** full constructor */
 	public VRepairOrderId(Long id, String appointmentTime, String address,
 			String description, String phone, Integer status,
-			String handleResult, Long userid, String staffId, String state) {
+			String handleResult, Long userid, String staffId, Integer isRead,
+			String state) {
 		this.id = id;
 		this.appointmentTime = appointmentTime;
 		this.address = address;
@@ -49,6 +51,7 @@ public class VRepairOrderId implements java.io.Serializable {
 		this.handleResult = handleResult;
 		this.userid = userid;
 		this.staffId = staffId;
+		this.isRead = isRead;
 		this.state = state;
 	}
 
@@ -126,6 +129,14 @@ public class VRepairOrderId implements java.io.Serializable {
 		this.staffId = staffId;
 	}
 
+	public Integer getIsRead() {
+		return this.isRead;
+	}
+
+	public void setIsRead(Integer isRead) {
+		this.isRead = isRead;
+	}
+
 	public String getState() {
 		return this.state;
 	}
@@ -174,6 +185,9 @@ public class VRepairOrderId implements java.io.Serializable {
 				&& ((this.getStaffId() == castOther.getStaffId()) || (this
 						.getStaffId() != null && castOther.getStaffId() != null && this
 						.getStaffId().equals(castOther.getStaffId())))
+				&& ((this.getIsRead() == castOther.getIsRead()) || (this
+						.getIsRead() != null && castOther.getIsRead() != null && this
+						.getIsRead().equals(castOther.getIsRead())))
 				&& ((this.getState() == castOther.getState()) || (this
 						.getState() != null && castOther.getState() != null && this
 						.getState().equals(castOther.getState())));
@@ -205,6 +219,8 @@ public class VRepairOrderId implements java.io.Serializable {
 				+ (getUserid() == null ? 0 : this.getUserid().hashCode());
 		result = 37 * result
 				+ (getStaffId() == null ? 0 : this.getStaffId().hashCode());
+		result = 37 * result
+				+ (getIsRead() == null ? 0 : this.getIsRead().hashCode());
 		result = 37 * result
 				+ (getState() == null ? 0 : this.getState().hashCode());
 		return result;

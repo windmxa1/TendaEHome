@@ -15,5 +15,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/jjwt"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/jackson2.8"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/zxing"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/alipay"/>
 	<classpathentry kind="output" path="WebRoot/WEB-INF/classes"/>
 </classpath>

@@ -14,6 +14,15 @@ public class Utils {
 		return "" + a.intValue();
 	}
 	/**
+	 * 生成4位随机数
+	 * 
+	 * @return
+	 */
+	public static String ran4() {
+		Double a = 1000 + Math.random() * 8999;
+		return "" + a.intValue();
+	}
+	/**
 	 * 实体转Map
 	 */
 	public static LinkedHashMap<String, Object> objectToMap(Object obj) throws Exception {    

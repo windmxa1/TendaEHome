@@ -161,6 +161,7 @@ $(document).on('click','.modOrder',function(){
 	$('#OrderhandleResult').val(order.handleResult);
 	$('#Orderaddress').val(order.address);
 	$('#Orderdescription').val(order.description);
+	$('#isRead').val(order.isRead);
 	
 });
 

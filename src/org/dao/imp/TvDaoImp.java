@@ -34,7 +34,7 @@ public class TvDaoImp implements TvDao {
 	public List<VTvId> getTVList1(Integer start, Integer limit) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
-			String sql = "from VTv";
+			String sql = "from VTv order by id";
 			Query query = session.createQuery(sql);
 			if (start == null)
 				start = 0;
@@ -64,7 +64,7 @@ public class TvDaoImp implements TvDao {
 	public List<VTvId> getTVList(Integer start, Integer limit) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
-			String sql = "from VTv where id.available = 1";
+			String sql = "from VTv where id.available = 1 order by id ";
 			Query query = session.createQuery(sql);
 			if (start == null)
 				start = 0;
@@ -164,6 +164,53 @@ public class TvDaoImp implements TvDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
+	@Override
+	public List<VTvId> getTvByName(String name, Integer start, Integer limit) {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			Query query = session.createQuery("from VTv where name like ?");
+			query.setParameter(0, "%" + name + "%");
+			if (start == null)
+				start = 0;
+			if (limit == null) {
+				limit = 15;
+				query.setMaxResults(limit);
+			} else if (limit == -1) {
+			} else {
+				query.setMaxResults(limit);
+			}
+			query.setFirstResult(start);
+			List<VTv> list = query.list();
+			List<VTvId> list2 = new ArrayList<>();
+			for (VTv v : list) {
+				list2.add(v.getId());
+			}
+			return list2;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
+	@Override
+	public Long getCount(String name) {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			Query query = session
+					.createQuery("select count(id.id) from VTv where id.name like ?");
+			query.setParameter(0, "%" + name + "%");
+			Long count = (Long) query.uniqueResult();
+			return count;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 0L;
 		} finally {
 			HibernateSessionFactory.closeSession();
 		}

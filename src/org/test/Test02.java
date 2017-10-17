@@ -50,6 +50,6 @@ public class Test02 {
 		// PDFUtil.buidPDF("", list, 0);
 		// System.out.println(mapper.writeValueAsString(oDao.getListByState2(0,
 		// -1, null, "开发区")));
-		oDao.updateOrder("1506739556414205378", 2);
+		oDao.updateOrder("1505293366080226028", 2,1);
 	}
 }
