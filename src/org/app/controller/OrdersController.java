@@ -15,6 +15,7 @@ import org.dao.UserAddressDao;
 import org.dao.imp.OrdersDaoImp;
 import org.dao.imp.UserAddressDaoImp;
 import org.model.Orders;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +27,8 @@ import org.util.Utils;
 import org.util.WXAPI;
 import org.view.VOrdersDetailsId;
 import org.view.VOrdersId;
+
+import com.sun.swing.internal.plaf.basic.resources.basic;
 
 @Controller("/app/OrdersController")
 @RequestMapping("/app/orders")
@@ -118,7 +121,6 @@ public class OrdersController {
 		}
 	}
 
-
 	@RequestMapping("/deleteOrder")
 	@ResponseBody
 	public Object deleteOrder(Long id) throws Exception {
@@ -165,13 +167,26 @@ public class OrdersController {
 		}
 	}
 
+	/**
+	 * 定时取消
+	 */
+	@Scheduled(fixedDelay = 1 * 1000)
+	private void closeOrder() {
+		oDao = new OrdersDaoImp();
+		oDao.cancel();
+	}
+
 	@RequestMapping("/doPay")
 	@ResponseBody
 	public Object doPay(HttpServletRequest request, String orderNum,
 			Integer payWay) throws Exception {
 		oDao = new OrdersDaoImp();
 		// System.out.println(payWay + "" + orderNum);
-		Double Realtotal = oDao.getTotal(orderNum);
+		VOrdersId v = oDao.getOrder(orderNum);
+		if(v.getState()==0){
+			return ResultUtils.toJson(101, "该订单因超时或其他原因被关闭，请您重新下单，如有疑问可拨打客服电话咨询我们", ""); 
+		}
+		Double Realtotal = v.getTotal();
 		switch (payWay) {// 支付方式
 		case 0:// 微信
 			String clientIp = request.getRemoteAddr();

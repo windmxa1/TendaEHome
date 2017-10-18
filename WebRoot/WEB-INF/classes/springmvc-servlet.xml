@@ -1,18 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:task="http://www.springframework.org/schema/task"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans 
 		http://www.springframework.org/schema/beans/spring-beans.xsd
           http://www.springframework.org/schema/context 
           http://www.springframework.org/schema/context/spring-context-4.0.xsd
           http://www.springframework.org/schema/mvc 
-          http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
+          http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+          http://www.springframework.org/schema/task   
+           http://www.springframework.org/schema/task/spring-task-4.0.xsd  
+          ">
 
 	<context:component-scan base-package="org.controller"></context:component-scan>
 	<context:component-scan base-package="org.app.controller"></context:component-scan>
 
 	<mvc:annotation-driven />
+
+	<task:executor id="executor" pool-size="5" />
+	<task:scheduler id="scheduler" pool-size="10" />
+	<!-- 开启这个配置，识别@Scheduled注解 -->
+	<task:annotation-driven executor="executor"
+		scheduler="scheduler" />
+		
 	<mvc:resources mapping="/js/**" location="/js/" />
 	<mvc:resources mapping="/css/**" location="/css/" />
 	<mvc:resources mapping="/upload/**" location="/upload/" />
@@ -39,13 +49,13 @@
 			<mvc:exclude-mapping path="/back/admin/register" />
 			<mvc:exclude-mapping path="/back/staff/addStaffPromotion" />
 			<mvc:exclude-mapping path="/back/orders/staffDeliverOrder" />
-			<mvc:exclude-mapping path="/back/orders/notifyWxPay" />			
-			<mvc:exclude-mapping path="/back/orders/notifyAliPay" />			
+			<mvc:exclude-mapping path="/back/orders/notifyWxPay" />
+			<mvc:exclude-mapping path="/back/orders/notifyAliPay" />
 			<mvc:exclude-mapping path="/back/repair/getRepairOrderList1" />
 			<mvc:exclude-mapping path="/back/repair/repairNotice" />
 			<bean class="org.interceptor.BackInterceptor"></bean>
 		</mvc:interceptor>
-	</mvc:interceptors>	
+	</mvc:interceptors>
 	<bean
 		class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
 		<property name="messageConverters">
@@ -73,8 +83,8 @@
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
 		<property name="maxUploadSize" value="10485760" />
 		<property name="maxInMemorySize" value="4096" />
-		 <!--resolveLazily属性启用是为了推迟文件解析，以便在UploadAction 中捕获文件大小异常-->  
-		<property name="resolveLazily" value="true"/>  
+		<!--resolveLazily属性启用是为了推迟文件解析，以便在UploadAction 中捕获文件大小异常 -->
+		<property name="resolveLazily" value="true" />
 		<property name="defaultEncoding" value="UTF-8"></property>
 	</bean>
 </beans>

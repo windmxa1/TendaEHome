@@ -43,6 +43,10 @@ public interface OrdersDao {
 	 * 取消订单
 	 */
 	public int cancel(Long userid, Long id);
+	/**
+	 * 定时取消订单
+	 */
+	public boolean cancel();
 
 	/**
 	 * 根据状态获取订单列表,NULL所有,0取消订单,1未支付，2已支付未发货，3发货未签收，4发货已签收

@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.dao.OrdersDao;
 import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.jdbc.Work;
@@ -15,6 +16,7 @@ import org.model.Orders;
 import org.model.OrdersDetail;
 import org.util.ChangeTime;
 import org.util.HibernateSessionFactory;
+import org.util.JsonUtils;
 import org.view.VOrders;
 import org.view.VOrdersDetails;
 import org.view.VOrdersDetailsId;
@@ -113,6 +115,23 @@ public class OrdersDaoImp implements OrdersDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return -1;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
+	public boolean cancel() {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			Transaction ts = session.beginTransaction();
+			String sql = "update orders set state = 0 where state=1 and now()>date_add(from_unixtime(time),interval 1 day) ";
+			SQLQuery query = session.createSQLQuery(sql);
+			query.executeUpdate();
+			ts.commit();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
 		} finally {
 			HibernateSessionFactory.closeSession();
 		}
