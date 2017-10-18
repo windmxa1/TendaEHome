@@ -98,7 +98,8 @@ public class GoodsController {
 			throws Exception {
 		gDao = new GoodsDaoImp();
 		data = new HashMap<String, Object>();
-		List<VGoodsId> list = gDao.getGoodsByKey(start, limit, key, (short) 1);
+		Short[] state = { (short) 1 };
+		List<VGoodsId> list = gDao.getGoodsByKey(start, limit, key, state);
 		if (list != null) {
 			data.put("list", list);
 		} else {

@@ -68,7 +68,7 @@ public interface GoodsDao {
 	 * 获取指定名称的商品
 	 */
 	public List<VGoodsId> getGoodsByKey(Integer start, Integer limit,
-			String key, Short state);
+			String key, Short[] state);
 
 	/**
 	 * 获取指定名称的商品总数

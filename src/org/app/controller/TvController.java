@@ -22,17 +22,33 @@ public class TvController {
 
 	@RequestMapping("/getTvList")
 	@ResponseBody
-	public Object getTvList(Integer start, Integer limit)throws Exception {
+	public Object getTvList(Integer start, Integer limit) throws Exception {
 		tDao = new TvDaoImp();
 		data = new HashMap<>();
 		List<VTvId> list = tDao.getTVList(start, limit);
 		if (list == null || list.size() == 0) {
-			data.put("list", new ArrayList<>());
-			return ResultUtils.toJson(100, "暂无直播内容", data);
+			return ResultUtils.toJson(101, "暂无直播内容", "");
 		} else {
 			data.put("list", list);
 			return ResultUtils.toJson(100, "", data);
 		}
+	}
+
+	/**
+	 * 搜索直播
+	 */
+	@RequestMapping("/getTvByName")
+	@ResponseBody
+	public Object getTvByName(String name, Integer start, Integer limit)
+			throws Exception {
+		tDao = new TvDaoImp();
+		List<VTvId> list = tDao.getTvByName(name, start, limit);
+		if (list == null || list.size() == 0) {
+			return ResultUtils.toJson(101, "搜索不到相关节目", "");
+		}
+		data = new HashMap<>();
+		data.put("list", list);
+		return ResultUtils.toJson(100, "", data);
 	}
 
 }

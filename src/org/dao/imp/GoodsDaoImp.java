@@ -179,10 +179,10 @@ public class GoodsDaoImp implements GoodsDao {
 
 	@Override
 	public List<VGoodsId> getGoodsByKey(Integer start, Integer limit,
-			String key, Short state) {
+			String key, Short[] state) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
-			String sql = "from VGoods v where v.id.state= ? and v.id.name like ? order by v.id.count desc";
+			String sql = "from VGoods v where v.id.state in (:stateList) and v.id.name like ? order by v.id.count desc";
 			Query query = session.createQuery(sql);
 			if (start == null) {
 				start = 0;
@@ -192,8 +192,8 @@ public class GoodsDaoImp implements GoodsDao {
 			}
 			query.setFirstResult(start);
 			query.setMaxResults(limit);
-			query.setParameter(0, state);
-			query.setParameter(1, "%" + key + "%");
+			query.setParameter(0, "%" + key + "%");
+			query.setParameterList("stateList", state);
 			List<VGoods> vGoods = query.list();
 			List<VGoodsId> list = new ArrayList<VGoodsId>();
 			for (VGoods v : vGoods) {

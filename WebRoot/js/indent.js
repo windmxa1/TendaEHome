@@ -131,6 +131,10 @@ function updateIndent(s, v) {
 		if (!confirm("确定要取消该订单并退款吗？")) {
 			return;
 		}
+	case 6:
+		if (!confirm("确定已经完成该订单的退款处理了吗？")) {
+			return;
+		}
 	default:
 		break;
 	}

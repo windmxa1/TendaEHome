@@ -41,7 +41,6 @@ public class TvController {
 		data.put("list", list);
 		data.put("total", tDao.getTVCount());
 		return ResultUtils.toJson(100, "", data);
-
 	}
 
 	/**
@@ -174,7 +173,8 @@ public class TvController {
 	 */
 	@RequestMapping("/getTvByName")
 	@ResponseBody
-	public Object getTvByName(String name, Integer start, Integer limit) {
+	public Object getTvByName(String name, Integer start, Integer limit)
+			throws Exception {
 		tDao = new TvDaoImp();
 		List<VTvId> list = tDao.getTvByName(name, start, limit);
 		if (list == null) {
