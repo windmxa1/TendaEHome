@@ -99,7 +99,7 @@ public class OrdersDaoImp implements OrdersDao {
 			query.setParameter(0, userid);
 			query.setParameter(1, id);
 			Orders o = (Orders) query.uniqueResult();
-			if (o.getState() > 1) {
+			if (o.getState() > 1) {//订单已支付
 				if (System.currentTimeMillis() / 1000 > ChangeTime
 						.hourTimeStamp(21, o.getTime())) {// 晚于下单当天9点且已付款则不更新
 					return -2;

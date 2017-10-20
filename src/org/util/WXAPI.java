@@ -16,8 +16,6 @@ import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 public class WXAPI {
 	// public static void main(String[] args) throws JsonProcessingException {
 	//
