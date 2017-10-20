@@ -32,7 +32,7 @@ public class BaseInterceptor implements HandlerInterceptor {
 				.getRealPath("/");
 		Constants.pdfDir = TokenUtils.rootPath + "pdf" + File.separator;
 		String ipAddress = request.getLocalAddr();
-		if (ipAddress.equals("172.18.222.230 ")) {// 如果等于云服务器内网IP就说明是云服务器，转换为公网IP
+		if (ipAddress.equals("172.18.222.230")) {// 如果等于云服务器内网IP就说明是云服务器，转换为公网IP
 			ipAddress = "39.108.82.55";
 		}
 		Constants.pdfUrl = "http://" + ipAddress + ":" + request.getLocalPort()
