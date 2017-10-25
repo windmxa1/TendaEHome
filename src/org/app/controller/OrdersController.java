@@ -11,10 +11,12 @@ import javax.servlet.http.HttpServletRequest;
 import org.bean.OrderModel;
 import org.dao.GoodsDao;
 import org.dao.OrdersDao;
+import org.dao.RefundDao;
 import org.dao.UserAddressDao;
 import org.dao.imp.OrdersDaoImp;
 import org.dao.imp.UserAddressDaoImp;
 import org.model.Orders;
+import org.model.Refund;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,6 +37,7 @@ import com.sun.swing.internal.plaf.basic.resources.basic;
 public class OrdersController {
 	OrdersDao oDao;
 	GoodsDao gDao;
+	RefundDao rDao;
 	UserAddressDao uAddressDao;
 	// Long userid;
 	Map<String, Object> data;
@@ -121,6 +124,39 @@ public class OrdersController {
 		}
 	}
 
+	@RequestMapping("/refundOrder")
+	@ResponseBody
+	public Object refundOrder(Long id, Integer payWay, String reason)
+			throws Exception {
+		Long time = System.currentTimeMillis() / 1000;
+		String refundId = time + Utils.ran4();
+
+		Refund refund = new Refund(refundId, id, reason, time);
+		// 发送退款请求
+		switch (payWay) {
+		case 1://微信
+			break;
+		case 2://支付宝
+			break;
+		}
+		if (!rDao.saveOrUpdate(refund)) {
+			return ResultUtils.toJson(101, "生成退款单失败，请重试", "");
+		}
+		switch (oDao.updateRefundId(id, refundId)) {
+		case 0:
+			break;
+		case 1:
+			break;
+		case -1:
+			break;
+		case -2:
+			break;
+		default:
+			break;
+		}
+		return ResultUtils.toJson(101, "生成退款单失败，请重试", "");
+	}
+
 	@RequestMapping("/deleteOrder")
 	@ResponseBody
 	public Object deleteOrder(Long id) throws Exception {
@@ -144,7 +180,7 @@ public class OrdersController {
 		Long time = System.currentTimeMillis();
 		String orderNum = time + Utils.ran6();
 		/*********************************/
-		Orders orders = new Orders(userid, time / 1000, 1,
+		Orders orders = new Orders(userid, time / 1000,
 				uAddressDao.getAddressById(o.getAddressId()), orderNum);
 		System.out.println(o.getAddressId() + "|||" + orders.getAddress());
 		Long id = oDao.generateOrder(orders, o.getDetails());
@@ -183,8 +219,9 @@ public class OrdersController {
 		oDao = new OrdersDaoImp();
 		// System.out.println(payWay + "" + orderNum);
 		VOrdersId v = oDao.getOrder(orderNum);
-		if(v.getState()==0){
-			return ResultUtils.toJson(101, "该订单因超时或其他原因被关闭，请您重新下单，如有疑问可拨打客服电话咨询我们", ""); 
+		if (v.getState() == 0) {
+			return ResultUtils.toJson(101,
+					"该订单因超时或其他原因被关闭，请您重新下单，如有疑问可拨打客服电话咨询我们", "");
 		}
 		Double Realtotal = v.getTotal();
 		switch (payWay) {// 支付方式

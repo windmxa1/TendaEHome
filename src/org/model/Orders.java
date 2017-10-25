@@ -11,13 +11,13 @@ public class Orders implements java.io.Serializable {
 	private Long id;
 	private Long userid;
 	private Long time;
-	/** 0取消订单,1未支付，2已支付未发货，3发货未签收，4发货已签收，5退款中，6交易关闭 */
-	private Integer state;
 	private String address;
 	private String orderNum;
 	private String staffId;
 	private Integer isExport;
+	private Integer deliveryState;
 	private Integer payWay;
+	private String refundId;
 
 	// Constructors
 
@@ -33,26 +33,19 @@ public class Orders implements java.io.Serializable {
 		this.orderNum = orderNum;
 	}
 
-	public Orders(Long userid, Long time, Integer state, String address,
-			String orderNum) {
-		this.userid = userid;
-		this.time = time;
-		this.state = state;
-		this.address = address;
-		this.orderNum = orderNum;
-	}
-
 	/** full constructor */
-	public Orders(Long userid, Long time, Integer state, String address,
-			String orderNum, String staffId, Integer isExport, Integer payWay) {
+	public Orders(Long userid, Long time, String address, String orderNum,
+			String staffId, Integer isExport, Integer deliveryState,
+			Integer payWay, String refundId) {
 		this.userid = userid;
 		this.time = time;
-		this.state = state;
 		this.address = address;
 		this.orderNum = orderNum;
 		this.staffId = staffId;
 		this.isExport = isExport;
+		this.deliveryState = deliveryState;
 		this.payWay = payWay;
+		this.refundId = refundId;
 	}
 
 	// Property accessors
@@ -79,14 +72,6 @@ public class Orders implements java.io.Serializable {
 
 	public void setTime(Long time) {
 		this.time = time;
-	}
-
-	public Integer getState() {
-		return this.state;
-	}
-
-	public void setState(Integer state) {
-		this.state = state;
 	}
 
 	public String getAddress() {
@@ -121,12 +106,28 @@ public class Orders implements java.io.Serializable {
 		this.isExport = isExport;
 	}
 
+	public Integer getDeliveryState() {
+		return this.deliveryState;
+	}
+
+	public void setDeliveryState(Integer deliveryState) {
+		this.deliveryState = deliveryState;
+	}
+
 	public Integer getPayWay() {
 		return this.payWay;
 	}
 
 	public void setPayWay(Integer payWay) {
 		this.payWay = payWay;
+	}
+
+	public String getRefundId() {
+		return this.refundId;
+	}
+
+	public void setRefundId(String refundId) {
+		this.refundId = refundId;
 	}
 
 }

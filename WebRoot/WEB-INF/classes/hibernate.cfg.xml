@@ -48,6 +48,8 @@
 	<mapping resource="org/view/VStaffPromotion.hbm.xml" />
 	<mapping resource="org/model/Staff.hbm.xml" />
 	<mapping resource="org/model/AppVersion.hbm.xml" />
+	<mapping resource="org/model/AfterSale.hbm.xml" />
+	<mapping resource="org/model/Refund.hbm.xml" />
 
 </session-factory>
 

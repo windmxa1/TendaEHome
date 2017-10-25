@@ -16,11 +16,6 @@
         <property name="time" type="java.lang.Long">
             <column name="time" not-null="true" />
         </property>
-        <property name="state" type="java.lang.Integer">
-            <column name="state">
-                <comment>0取消订单,1未支付，2已支付未发货，3发货未签收，4发货已签收</comment>
-            </column>
-        </property>
         <property name="address" type="java.lang.String">
             <column name="address" length="200" not-null="true" />
         </property>
@@ -31,11 +26,23 @@
             <column name="staff_id" length="11" />
         </property>
         <property name="isExport" type="java.lang.Integer">
-            <column name="is_export" />
+            <column name="is_export">
+                <comment>导出状态</comment>
+            </column>
+        </property>
+        <property name="deliveryState" type="java.lang.Integer">
+            <column name="delivery_state">
+                <comment>发货状态，默认为0，发货后为1，签收为2</comment>
+            </column>
         </property>
         <property name="payWay" type="java.lang.Integer">
             <column name="pay_way">
-                <comment>0微信，1支付宝</comment>
+                <comment>支付方式，默认为0，1微信，2支付宝，-1为取消</comment>
+            </column>
+        </property>
+        <property name="refundId" type="java.lang.String">
+            <column name="refund_id" length="15">
+                <comment>退款单编号，默认0,大于0表示申请退款，应该取退款单的状态为订单状态</comment>
             </column>
         </property>
     </class>

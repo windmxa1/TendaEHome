@@ -90,28 +90,45 @@ public class OrdersDaoImp implements OrdersDao {
 		}
 	}
 
-	public int cancel(Long userid, Long id) {
+	@Override
+	public int updateRefundId(Long id, String refundId) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
 			Transaction ts = session.beginTransaction();
 			String sql = "from Orders where userid=? and id = ? ";
 			Query query = session.createQuery(sql);
-			query.setParameter(0, userid);
-			query.setParameter(1, id);
+			query.setParameter(0, id);
 			Orders o = (Orders) query.uniqueResult();
-			if (o.getState() > 1) {//订单已支付
+			if (o.getPayWay() > 0) {// 订单已支付
 				if (System.currentTimeMillis() / 1000 > ChangeTime
 						.hourTimeStamp(21, o.getTime())) {// 晚于下单当天9点且已付款则不更新
 					return -2;
 				}
-				o.setState(5);
+				o.setRefundId(refundId);
 				ts.commit();
 				return 1;
-			} else {
-				o.setState(0);
-				ts.commit();
-				return 0;
 			}
+			return 0;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return -1;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
+	@Override
+	public int cancel(Long userid, Long id) {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			Transaction ts = session.beginTransaction();
+			String sql = "update Orders set payWay=-1 where userid=? and id = ? and payWay=0 ";
+			Query query = session.createQuery(sql);
+			query.setParameter(0, userid);
+			query.setParameter(1, id);
+			query.executeUpdate();
+			ts.commit();
+			return 0;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return -1;
@@ -460,6 +477,11 @@ public class OrdersDaoImp implements OrdersDao {
 				Query query2 = session.createQuery(sql2);
 				query2.setParameter(0, id);
 				query2.executeUpdate();
+				String sql3 = "delete Refund where orderId = ?";
+				Query query3 = session.createQuery(sql3);
+				query2.setParameter(0, id);
+				query2.executeUpdate();
+
 			}
 			ts.commit();
 			return a;

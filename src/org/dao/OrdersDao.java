@@ -97,15 +97,19 @@ public interface OrdersDao {
 	/**
 	 * 获取当天订单列表，用于订单导出
 	 */
-	List<VOrdersId> getListByState1(Integer start, Integer limit, Integer state);
+	public List<VOrdersId> getListByState1(Integer start, Integer limit, Integer state);
 	/**
 	 * 获取当天订单列表，用于订单导出，分区导出
 	 */
-	List<VOrdersId> getListByState2(Integer start, Integer limit, Integer state,String address);
+	public List<VOrdersId> getListByState2(Integer start, Integer limit, Integer state,String address);
 	/**
 	 * 一键修改所有待退款订单为已退款
 	 */
-	boolean completeRefund();
+	public boolean completeRefund();
+	/**
+	 * 更新退款单编号
+	 */
+	public int updateRefundId(Long id, String refundId);
 
 
 }

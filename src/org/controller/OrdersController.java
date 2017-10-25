@@ -195,7 +195,7 @@ public class OrdersController {
 						if (total == Double.parseDouble(""
 								+ (map.get("total_fee")))) {// 微信支付的总金额单位是分
 							if (oDao.updateOrder("" + map.get("out_trade_no"),
-									2,0)) {// 验签成功且修改成功返回SUCCESS
+									2,1)) {// 验签成功且修改成功返回SUCCESS
 								return WXAPI.setXml("SUCCESS", "OK");
 							}
 						} else {
