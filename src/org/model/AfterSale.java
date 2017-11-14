@@ -8,12 +8,13 @@ public class AfterSale implements java.io.Serializable {
 
 	// Fields
 
-	private String aftersaleId;
+	private String afterSaleId;
 	private Long orderId;
 	private String reason;
 	private String handleResult;
 	private String refundId;
 	private Long time;
+	private Integer state;
 
 	// Constructors
 
@@ -22,17 +23,17 @@ public class AfterSale implements java.io.Serializable {
 	}
 
 	/** minimal constructor */
-	public AfterSale(String aftersaleId, Long orderId, String reason, Long time) {
-		this.aftersaleId = aftersaleId;
+	public AfterSale(String afterSaleId, Long orderId, String reason, Long time) {
+		this.afterSaleId = afterSaleId;
 		this.orderId = orderId;
 		this.reason = reason;
 		this.time = time;
 	}
 
 	/** full constructor */
-	public AfterSale(String aftersaleId, Long orderId, String reason,
+	public AfterSale(String afterSaleId, Long orderId, String reason,
 			String handleResult, String refundId, Long time) {
-		this.aftersaleId = aftersaleId;
+		this.afterSaleId = afterSaleId;
 		this.orderId = orderId;
 		this.reason = reason;
 		this.handleResult = handleResult;
@@ -40,14 +41,26 @@ public class AfterSale implements java.io.Serializable {
 		this.time = time;
 	}
 
-	// Property accessors
-
-	public String getAftersaleId() {
-		return this.aftersaleId;
+	public AfterSale(String afterSaleId, Long orderId, String reason,
+			String handleResult, String refundId, Long time, Integer state) {
+		super();
+		this.afterSaleId = afterSaleId;
+		this.orderId = orderId;
+		this.reason = reason;
+		this.handleResult = handleResult;
+		this.refundId = refundId;
+		this.time = time;
+		this.state = state;
 	}
 
-	public void setAftersaleId(String aftersaleId) {
-		this.aftersaleId = aftersaleId;
+	// Property accessors
+
+	public String getAfterSaleId() {
+		return this.afterSaleId;
+	}
+
+	public void setAfterSaleId(String afterSaleId) {
+		this.afterSaleId = afterSaleId;
 	}
 
 	public Long getOrderId() {
@@ -88,6 +101,14 @@ public class AfterSale implements java.io.Serializable {
 
 	public void setTime(Long time) {
 		this.time = time;
+	}
+
+	public Integer getState() {
+		return state;
+	}
+
+	public void setState(Integer state) {
+		this.state = state;
 	}
 
 }

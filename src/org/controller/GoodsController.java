@@ -61,7 +61,7 @@ public class GoodsController {
 		List<VGoodsId> list = gDao.getGoodsByKey(start, limit, key, state);
 		if (list != null) {
 			data.put("list", list);
-			data.put("total", gDao.getCountByKey(key, (short) 1));
+			data.put("total", gDao.getCountByKey(key, state));
 		} else {
 			data.put("list", new ArrayList<>());
 		}

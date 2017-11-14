@@ -14,22 +14,94 @@ import org.hibernate.Transaction;
 import org.hibernate.jdbc.Work;
 import org.model.Orders;
 import org.model.OrdersDetail;
+import org.model.Refund;
+import org.util.ALIPAY;
 import org.util.ChangeTime;
 import org.util.HibernateSessionFactory;
-import org.util.JsonUtils;
+import org.util.WXAPI;
 import org.view.VOrders;
 import org.view.VOrdersDetails;
 import org.view.VOrdersDetailsId;
 import org.view.VOrdersId;
 
 public class OrdersDaoImp implements OrdersDao {
-
-	public List<VOrdersId> getList(Long userid, Integer start, Integer limit) {
+	@Override
+	public List<VOrdersId> getAfterSaleOrder(Long userid, Integer start,
+			Integer limit) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
-			String sql = "from VOrders v where v.id.userid=? order by v.id.time desc";
+			String sql = "";
+			Query query = null;
+			if (userid == null) {
+				sql = "from VOrders v where v.id.afterSaleState>0 order by v.id.time desc";
+				query = session.createQuery(sql);
+			} else {
+				sql = "from VOrders v where v.id.userid=? and v.id.afterSaleState>0 order by v.id.time desc";
+				query = session.createQuery(sql);
+				query.setParameter(0, userid);
+			}
+			if (start == null) {
+				start = 0;
+			}
+			if (limit == null) {
+				limit = 15;
+			}
+			query.setFirstResult(start);
+			query.setMaxResults(limit);
+			List<VOrders> vOrders = query.list();
+			List<VOrdersId> list = new ArrayList<VOrdersId>();
+			for (VOrders v : vOrders) {
+				list.add(v.getId());
+			}
+			return list;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
+	@Override
+	public Long getAfterSaleCount() {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			String sql = "select count(v.id.id) from VOrders v where v.id.afterSaleState>0 order by v.id.time desc";
 			Query query = session.createQuery(sql);
-			query.setParameter(0, userid);
+			Long count = (Long) query.uniqueResult();
+			return count;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 0L;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
+	public List<VOrdersId> getList(Long userid, Integer start, Integer limit,
+			Integer state, Boolean isDish) {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			String sql = "";
+			Query query = null;
+			if (state == null) {
+				if (isDish) {
+					sql = "from VOrders v where v.id.userid=? and v.id.franchiseeId >0 order by v.id.time desc";
+				} else {
+					sql = "from VOrders v where v.id.userid=? and v.id.franchiseeId =0 order by v.id.time desc";
+				}
+				query = session.createQuery(sql);
+				query.setParameter(0, userid);
+			} else {
+				if (isDish) {
+					sql = "from VOrders v where v.id.userid=? and v.id.state=? and v.id.franchiseeId >0 order by v.id.time desc";
+				} else {
+					sql = "from VOrders v where v.id.userid=? and v.id.state=? and v.id.franchiseeId =0 order by v.id.time desc";
+				}
+				query = session.createQuery(sql);
+				query.setParameter(0, userid);
+				query.setParameter(1, state);
+			}
 			if (start == null) {
 				start = 0;
 			}
@@ -70,6 +142,24 @@ public class OrdersDaoImp implements OrdersDao {
 		}
 	}
 
+	@Override
+	public VOrdersId getOrder(Long id) {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			String sql = "from VOrders v where v.id.id=? ";
+			Query query = session.createQuery(sql);
+			query.setParameter(0, id);
+			query.setMaxResults(1);
+			VOrders v = (VOrders) query.uniqueResult();
+			return v.getId();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
 	public Long saveOrUpdate(Orders orders) {
 		Long id = 0L;
 		try {
@@ -91,20 +181,85 @@ public class OrdersDaoImp implements OrdersDao {
 	}
 
 	@Override
-	public int updateRefundId(Long id, String refundId) {
+	public int updateRefundId1(Long id, Refund r) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
 			Transaction ts = session.beginTransaction();
-			String sql = "from Orders where userid=? and id = ? ";
+			session.save(r);
+			String sql = "from Orders where id = ? ";
+			Query query = session.createQuery(sql);
+			query.setParameter(0, id);
+			Orders o = (Orders) query.uniqueResult();
+			Query query2 = session
+					.createQuery("select id.total from VOrders where id.id= ?");
+			query2.setParameter(0, id);
+			Double total = (Double) query2.uniqueResult();
+			if (o.getPayWay() > 0) {// 订单已支付
+				o.setRefundId(r.getRefundId());
+				switch (o.getPayWay()) {
+				case 1:// 微信
+					Integer total2 = (int) (total * 100);
+					if (!WXAPI.doRefund(o.getOrderNum(), r.getRefundId(),
+							total2, total2, r.getDescription())) {
+						return -1;
+					}
+					break;
+				case 2:// 支付宝
+					if (!ALIPAY.doRefund(o.getOrderNum(), r.getRefundId(),
+							total, r.getDescription())) {
+						return -1;
+					}
+					break;
+				}
+				ts.commit();
+				return 1;
+			}
+			return 0;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return -1;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
+	@Override
+	public int updateRefundId(Long id, Refund r, Integer type) {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			Transaction ts = session.beginTransaction();
+			session.save(r);
+			String sql = "from Orders where id = ? ";
 			Query query = session.createQuery(sql);
 			query.setParameter(0, id);
 			Orders o = (Orders) query.uniqueResult();
 			if (o.getPayWay() > 0) {// 订单已支付
-				if (System.currentTimeMillis() / 1000 > ChangeTime
-						.hourTimeStamp(21, o.getTime())) {// 晚于下单当天9点且已付款则不更新
-					return -2;
+				o.setRefundId(r.getRefundId());
+				switch (o.getPayWay()) {
+				case 1:// 微信
+					Query query2 = session
+							.createQuery("select id.total from VOrders where id.id= ?");
+					query2.setParameter(0, id);
+					Double total = (Double) query2.uniqueResult();
+					Integer total2 = (int) (total * 100);
+					Integer total3 = 0;
+					if (type == 1) {// 后台申请，可以做到多次退款
+						total3 = (int) (r.getRefundFee() * 100);
+					} else {
+						total3 = total2;
+					}
+					if (!WXAPI.doRefund(o.getOrderNum(), r.getRefundId(),
+							total3, total2, r.getDescription())) {
+						return -1;
+					}
+					break;
+				case 2:// 支付宝
+					if (!ALIPAY.doRefund(o.getOrderNum(), r.getRefundId(),
+							r.getRefundFee(), r.getDescription())) {
+						return -1;
+					}
+					break;
 				}
-				o.setRefundId(refundId);
 				ts.commit();
 				return 1;
 			}
@@ -122,13 +277,21 @@ public class OrdersDaoImp implements OrdersDao {
 		try {
 			Session session = HibernateSessionFactory.getSession();
 			Transaction ts = session.beginTransaction();
-			String sql = "update Orders set payWay=-1 where userid=? and id = ? and payWay=0 ";
-			Query query = session.createQuery(sql);
-			query.setParameter(0, userid);
-			query.setParameter(1, id);
-			query.executeUpdate();
+			String sql = "";
+			Query query = null;
+			if (userid == null) {
+				sql = "update Orders set payWay=-1 where id = ? and payWay=0 ";
+				query = session.createQuery(sql);
+				query.setParameter(0, id);
+			} else {
+				sql = "update Orders set payWay=-1 where userid=? and id = ? and payWay=0 ";
+				query = session.createQuery(sql);
+				query.setParameter(0, userid);
+				query.setParameter(1, id);
+			}
+			int a = query.executeUpdate();
 			ts.commit();
-			return 0;
+			return a;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return -1;
@@ -141,7 +304,24 @@ public class OrdersDaoImp implements OrdersDao {
 		try {
 			Session session = HibernateSessionFactory.getSession();
 			Transaction ts = session.beginTransaction();
-			String sql = "update orders set state = 0 where state=1 and now()>date_add(from_unixtime(time),interval 1 day) ";
+			String sql = "update orders set pay_way = -1 where pay_way=0 and now()>date_add(from_unixtime(time),interval 1 day) ";
+			SQLQuery query = session.createSQLQuery(sql);
+			query.executeUpdate();
+			ts.commit();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
+	public boolean finish() {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			Transaction ts = session.beginTransaction();
+			String sql = "update orders set delivery_state = 2 where delivery_state=1 and now()>date_add(from_unixtime(time),interval 2 day) ";
 			SQLQuery query = session.createSQLQuery(sql);
 			query.executeUpdate();
 			ts.commit();
@@ -306,21 +486,16 @@ public class OrdersDaoImp implements OrdersDao {
 			query.setFirstResult(start);
 			List<VOrders> vOrders = query.list();
 			List<VOrdersId> list = new ArrayList<VOrdersId>();
+			List<Long> ids = new ArrayList<>();
 			for (VOrders v : vOrders) {
 				list.add(v.getId());
+				ids.add(v.getId().getId());
 			}
-			if (state == null) {
-				Query query2 = session
-						.createQuery("update Orders set isExport=1 where from_unixtime(time,'%Y-%m-%d') = curdate() and address like ?");
-				query2.setParameter(0, "%" + address + "%");
-				query2.executeUpdate();
-			} else {
-				Query query2 = session
-						.createQuery("update Orders set isExport=1 where state=? and from_unixtime(time,'%Y-%m-%d') = curdate() and address like ?");
-				query2.setParameter(0, state);
-				query2.setParameter(1, "%" + address + "%");
-				query2.executeUpdate();
-			}
+			Query query2 = session
+					.createQuery("update Orders set isExport=1 where from_unixtime(time,'%Y-%m-%d') = curdate() and address like ? and id in (:idList)");
+			query2.setParameter(0, "%" + "生态城" + "%");
+			query2.setParameterList("idList", ids);
+			query2.executeUpdate();
 
 			ts.commit();
 			return list;
@@ -334,16 +509,24 @@ public class OrdersDaoImp implements OrdersDao {
 
 	@Override
 	public List<VOrdersId> getListByState(Integer start, Integer limit,
-			Integer state) {
+			Integer state, Boolean isDish) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
 			String sql = "";
 			Query query = null;
 			if (state == null) {
-				sql = "from VOrders v order by v.id.time desc";
+				if (isDish) {
+					sql = "from VOrders v where v.id.franchiseeId >0 order by v.id.time desc";
+				} else {
+					sql = "from VOrders v where v.id.franchiseeId =0 order by v.id.time desc";
+				}
 				query = session.createQuery(sql);
 			} else {
-				sql = "from VOrders v where v.id.state=?  order by v.id.time desc";
+				if (isDish) {
+					sql = "from VOrders v where v.id.state=? and v.id.franchiseeId >0  order by v.id.time desc";
+				} else {
+					sql = "from VOrders v where v.id.state=? and v.id.franchiseeId =0 order by v.id.time desc";
+				}
 				query = session.createQuery(sql);
 				query.setParameter(0, state);
 			}
@@ -373,58 +556,6 @@ public class OrdersDaoImp implements OrdersDao {
 	}
 
 	@Override
-	public boolean completeRefund() {
-		try {
-			Session session = HibernateSessionFactory.getSession();
-			Transaction ts = session.beginTransaction();
-			String sql = "update Orders set state=6 where state=5";
-			Query query = session.createQuery(sql);
-			query.executeUpdate();
-			ts.commit();
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		} finally {
-			HibernateSessionFactory.closeSession();
-		}
-	}
-
-	@Override
-	public boolean updateOrder(Long id, Integer state) {
-		try {
-			Session session = HibernateSessionFactory.getSession();
-			Transaction ts = session.beginTransaction();
-			String sql = "";
-			switch (state) {// 添加情况判断防止数据混乱
-			case 4:// 发货->完成
-				sql = "update Orders set state=? where id = ? and state=3";
-				break;
-			case 5:// 已支付->退款
-				sql = "update Orders set state=? where id = ? and state=2";
-				break;
-			case 6:// 退款中->交易关闭
-				sql = "update Orders set state=? where id = ? and state=5";
-				break;
-			default:// 未支付->取消订单
-				sql = "update Orders set state=? where id = ? ";
-				break;
-			}
-			Query query = session.createQuery(sql);
-			query.setParameter(0, state);
-			query.setParameter(1, id);
-			query.executeUpdate();
-			ts.commit();
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		} finally {
-			HibernateSessionFactory.closeSession();
-		}
-	}
-
-	@Override
 	public Double getTotal(String orderNum) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
@@ -443,15 +574,14 @@ public class OrdersDaoImp implements OrdersDao {
 	}
 
 	@Override
-	public boolean updateOrder(String orderNum, Integer state, Integer payWay) {
+	public boolean updateOrder(String orderNum, Integer payWay) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
 			Transaction ts = session.beginTransaction();
-			String sql = "update Orders set state=?,payWay=? where orderNum = ? and state = 1";// 防止重复修改
+			String sql = "update Orders set payWay=? where orderNum = ? and payWay = 0";// 防止重复修改
 			Query query = session.createQuery(sql);
-			query.setParameter(0, state);
-			query.setParameter(1, payWay);
-			query.setParameter(2, orderNum);
+			query.setParameter(0, payWay);
+			query.setParameter(1, orderNum);
 			query.executeUpdate();
 			ts.commit();
 			return true;
@@ -468,24 +598,29 @@ public class OrdersDaoImp implements OrdersDao {
 		try {
 			Session session = HibernateSessionFactory.getSession();
 			Transaction ts = session.beginTransaction();
-			String sql = "delete Orders where id=? and (state=0 or state=4)";
-			Query query = session.createQuery(sql);
+			String sql = "delete o.* from orders o left join refund r on o.id=r.order_id where o.id=? and (o.pay_way=-1 or o.pay_way=0 or o.delivery_state=2 or r.state=1)";
+			SQLQuery query = session.createSQLQuery(sql);
 			query.setParameter(0, id);
 			int a = query.executeUpdate();
+			System.out.println(a);
 			if (a > 0) {
-				String sql2 = "delete OrdersDetail where orderId = ?";
+				String sql2 = "delete from OrdersDetail where orderId = ?";
 				Query query2 = session.createQuery(sql2);
 				query2.setParameter(0, id);
 				query2.executeUpdate();
-				String sql3 = "delete Refund where orderId = ?";
+				String sql3 = "delete from Refund where orderId = ?";
 				Query query3 = session.createQuery(sql3);
-				query2.setParameter(0, id);
-				query2.executeUpdate();
-
+				query3.setParameter(0, id);
+				System.out.println(query3.executeUpdate());
+				String sql4 = "delete from AfterSale where orderId = ?";
+				Query query4 = session.createQuery(sql4);
+				query4.setParameter(0, id);
+				query4.executeUpdate();
 			}
 			ts.commit();
 			return a;
 		} catch (Exception e) {
+			e.printStackTrace();
 			return 0;
 		} finally {
 			HibernateSessionFactory.closeSession();
@@ -497,15 +632,23 @@ public class OrdersDaoImp implements OrdersDao {
 		try {
 			Session session = HibernateSessionFactory.getSession();
 			Transaction ts = session.beginTransaction();
-			String sql = "delete Orders where id=? ";
+			String sql = "delete from Orders where id=? ";
 			Query query = session.createQuery(sql);
 			query.setParameter(0, id);
 			int a = query.executeUpdate();
 			if (a > 0) {
-				String sql2 = "delete OrdersDetail where orderId = ?";
+				String sql2 = "delete from OrdersDetail where orderId = ?";
 				Query query2 = session.createQuery(sql2);
 				query2.setParameter(0, id);
 				query2.executeUpdate();
+				String sql3 = "delete from Refund where orderId = ?";
+				Query query3 = session.createQuery(sql3);
+				query3.setParameter(0, id);
+				query3.executeUpdate();
+				String sql4 = "delete from AfterSale where orderId = ?";
+				Query query4 = session.createQuery(sql4);
+				query4.setParameter(0, id);
+				query4.executeUpdate();
 			}
 			ts.commit();
 			return a;
@@ -517,16 +660,20 @@ public class OrdersDaoImp implements OrdersDao {
 	}
 
 	@Override
-	public Long getCountByState(Integer state) {
+	public Long getCountByState(Integer state,Boolean isDish) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
 			String sql = "";
 			Query query = null;
 			if (state == null) {
-				sql = "select count(id) from Orders ";
+				if(isDish){
+					sql = "select count(id) from Orders where ";
+				}else {
+					sql = "select count(id) from Orders ";
+				}
 				query = session.createQuery(sql);
 			} else {
-				sql = "select count(id) from Orders where state=?";
+				sql = "select count(id.id) from VOrders where id.state=?";
 				query = session.createQuery(sql);
 				query.setParameter(0, state);
 			}
@@ -563,7 +710,7 @@ public class OrdersDaoImp implements OrdersDao {
 		try {
 			Session session = HibernateSessionFactory.getSession();
 			Transaction ts = session.beginTransaction();
-			String sql = "update Orders set staffId=?,state=3  where orderNum=? and state<3";
+			String sql = "update Orders set staffId=?,deliveryState=1  where orderNum=? and delivery_state=0";
 			Query query = session.createQuery(sql);
 			query.setParameter(0, staffId);
 			query.setParameter(1, orderNum);
@@ -578,4 +725,34 @@ public class OrdersDaoImp implements OrdersDao {
 		}
 	}
 
+	@Override
+	public boolean updateDeliveryState(Integer deliveryState, Long userid,
+			Long id) {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			Transaction ts = session.beginTransaction();
+			String sql = "";
+			Query query = null;
+			if (userid == null) {
+				sql = "update Orders set deliveryState=? where id= ? ";
+				query = session.createQuery(sql);
+				query.setParameter(0, deliveryState);
+				query.setParameter(1, id);
+			} else {
+				sql = "update Orders set deliveryState=? where id= ? and userid = ? ";// 防止重复修改
+				query = session.createQuery(sql);
+				query.setParameter(0, deliveryState);
+				query.setParameter(1, id);
+				query.setParameter(2, userid);
+			}
+			query.executeUpdate();
+			ts.commit();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
 }

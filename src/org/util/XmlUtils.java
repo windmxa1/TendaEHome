@@ -24,7 +24,7 @@ import org.w3c.dom.NodeList;
 public class XmlUtils {
 //	public static void main(String[] args) {
 //		OrdersDao oDao = new OrdersDaoImp();
-//		String xml ="<xml><appid><![CDATA[wxb895559396a56469]]></appid><bank_type><![CDATA[CCB_DEBIT]]></bank_type><cash_fee><![CDATA[1]]></cash_fee><fee_type><![CDATA[CNY]]></fee_type><is_subscribe><![CDATA[N]]></is_subscribe><mch_id><![CDATA[1489494212]]></mch_id><nonce_str><![CDATA[225ec1bbe9e149b9a2a2c3289816dec6]]></nonce_str><openid><![CDATA[ozPoT02FBuwRl5eZy0hpQe90SxPM]]></openid><out_trade_no><![CDATA[1506739556414205378]]></out_trade_no><result_code><![CDATA[SUCCESS]]></result_code><return_code><![CDATA[SUCCESS]]></return_code><sign><![CDATA[F053CA1B8F9DFA2327CEF86028F2F51B]]></sign><time_end><![CDATA[20170930104619]]></time_end><total_fee>1</total_fee><trade_type><![CDATA[APP]]></trade_type><transaction_id><![CDATA[4200000011201709305101919166]]></transaction_id></xml>";
+//		String xml ="<root><out_refund_no><![CDATA[15095051012774]]></out_refund_no><out_trade_no><![CDATA[1509505077831740019]]></out_trade_no><refund_account><![CDATA[REFUND_SOURCE_RECHARGE_FUNDS]]></refund_account><refund_fee><![CDATA[1]]></refund_fee><refund_id><![CDATA[50000004502017110102200504943]]></refund_id><refund_recv_accout><![CDATA[建设银行储蓄卡8530]]></refund_recv_accout><refund_request_source><![CDATA[API]]></refund_request_source><refund_status><![CDATA[SUCCESS]]></refund_status><settlement_refund_fee><![CDATA[1]]></settlement_refund_fee><settlement_total_fee><![CDATA[1]]></settlement_total_fee><success_time><![CDATA[2017-11-01 10:59:32]]></success_time><total_fee><![CDATA[1]]></total_fee><transaction_id><![CDATA[4200000027201711011652482584]]></transaction_id></root>";
 //		try {
 //			Map map = xml2map(xml, false);
 //			System.out.println(JsonUtils.getMapperInstance()
@@ -37,7 +37,7 @@ public class XmlUtils {
 //							&& oDao.updateOrder("" + map.get("out_trade_no"), 2)) {// 验签成功且修改成功返回SUCCESS
 //						System.out.println("OK3");
 //						System.out.println(WXAPI.setXml("SUCCESS", "OK"));
-//						
+//
 //					}
 //				}
 //			}

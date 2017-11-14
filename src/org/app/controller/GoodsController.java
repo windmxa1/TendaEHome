@@ -123,6 +123,23 @@ public class GoodsController {
 		return ResultUtils.toJson(100, "", data);
 	}
 
+	// 最新上架，按分类返回
+	@RequestMapping("/getNewArrival1")
+	@ResponseBody
+	public Object getNewArrival1() throws Exception {
+		gDao = new GoodsDaoImp();
+		data = new HashMap<String, Object>();
+		List<Long> gCatalogIds = gDao.getCatalogIds();
+		if (gCatalogIds == null) {
+			return ResultUtils.toJson(101, "服务器繁忙，请重试", "");
+		}
+		for (Long catalog : gCatalogIds) {
+			List<VGoodsId> list = gDao.getNewArrival(catalog);
+			data.put("" + catalog, list);
+		}
+		return ResultUtils.toJson(100, "", data);
+	}
+
 	// 获取目录列表
 	@RequestMapping("/getCatalog")
 	@ResponseBody

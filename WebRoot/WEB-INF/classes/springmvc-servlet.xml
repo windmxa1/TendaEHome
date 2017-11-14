@@ -51,6 +51,7 @@
 			<mvc:exclude-mapping path="/back/orders/staffDeliverOrder" />
 			<mvc:exclude-mapping path="/back/orders/notifyWxPay" />
 			<mvc:exclude-mapping path="/back/orders/notifyAliPay" />
+			<mvc:exclude-mapping path="/back/orders/notifyWxRefund" />
 			<mvc:exclude-mapping path="/back/repair/getRepairOrderList1" />
 			<mvc:exclude-mapping path="/back/repair/repairNotice" />
 			<bean class="org.interceptor.BackInterceptor"></bean>

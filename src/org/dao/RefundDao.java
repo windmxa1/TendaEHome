@@ -23,5 +23,17 @@ public interface RefundDao {
 	 * 获取单个退款单
 	 */
 	public Refund getRefund(String refundId);
+	/**
+	 * 获取单个退款单
+	 */
+	public Refund getRefundByOrderNum(String orderNum);
+	/**
+	 * 获取单个退款单
+	 */
+	public Refund getRefund(Long orderId);
+	/**
+	 * 修改退款单状态
+	 */
+	boolean updateState(String refundId, Integer state);
 	
 }

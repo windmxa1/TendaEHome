@@ -1,16 +1,37 @@
 package org.util;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.net.ssl.SSLContext;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLContexts;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
@@ -39,11 +60,11 @@ public class WXAPI {
 	 */
 	public static Boolean validSign(Map map) {
 		String appid = (String) map.get("appid");// 应用ID
-//		String attach = (String) map.get("attach");// 商家数据包
+		// String attach = (String) map.get("attach");// 商家数据包
 		String bank_type = (String) map.get("bank_type");// 付款银行
 		String cash_fee = (String) map.get("cash_fee");// 现金支付金额
 		String fee_type = (String) map.get("fee_type");// 货币种类
-		String is_subscribe = (String) map.get("is_subscribe");//是否关注公众账号  
+		String is_subscribe = (String) map.get("is_subscribe");// 是否关注公众账号
 		String mch_id = (String) map.get("mch_id");// 商户号
 		String nonce_str = (String) map.get("nonce_str");// 随机字符串
 		String openid = (String) map.get("openid");// 用户标识
@@ -57,7 +78,7 @@ public class WXAPI {
 
 		LinkedHashMap<String, Object> linkedHashMap = new LinkedHashMap<>();
 		linkedHashMap.put("appid", appid);
-//		linkedHashMap.put("attach", attach);
+		// linkedHashMap.put("attach", attach);
 		linkedHashMap.put("bank_type", bank_type);
 		linkedHashMap.put("cash_fee", cash_fee);
 		linkedHashMap.put("fee_type", fee_type);
@@ -74,7 +95,7 @@ public class WXAPI {
 		linkedHashMap.put("transaction_id", transaction_id);
 
 		String sign = (String) map.get("sign");// 获取签名
-		Boolean isOk= makeSign(linkedHashMap).equals(sign);
+		Boolean isOk = makeSign(linkedHashMap).equals(sign);
 		return isOk;
 	}
 
@@ -88,15 +109,93 @@ public class WXAPI {
 	}
 
 	/**
+	 * 发送退款请求
+	 * 
+	 * @param orderNum
+	 *            订单编号
+	 * @param refundId
+	 *            退款单编号
+	 * @param refund_fee
+	 *            退款金额，单位为分
+	 * @param total_fee
+	 *            订单金额，单位为分
+	 * @return
+	 */
+	public static boolean doRefund(String orderNum, String refundId,
+			Integer refund_fee, Integer total_fee,String refund_desc) {
+		// 随机字符串
+		String nonce_str = UUID.randomUUID().toString().trim().replace("-", "");
+		LinkedHashMap<String, Object> data = new LinkedHashMap<>();
+		data.put("appid", Constants.appid);
+		data.put("mch_id", Constants.mch_id);
+		data.put("nonce_str", nonce_str);
+		data.put("out_refund_no", refundId);
+		data.put("out_trade_no", orderNum);
+		data.put("refund_desc", refund_desc);
+		data.put("refund_fee", refund_fee);
+		data.put("total_fee", total_fee);
+		String xml = formatData(data);
+		if (xml == null) {
+			return false;
+		}
+		System.out.println(xml);
+		try {
+			String resultXml = clientConnect(Constants.refundUrl, xml);
+			System.out.println(resultXml);
+			if (resultXml.equals("")) {
+				return false;
+			}
+			Document doc = DocumentHelper.parseText(resultXml);
+			Element root = doc.getRootElement();
+			if (root.elementText("return_code").equals("SUCCESS")) {// 通讯结果
+				if (root.elementText("result_code").equals("SUCCESS")) {// 业务结果
+					System.out.println("申请退款成功");
+					return true;
+				}
+			}
+		} catch (DocumentException e) {
+			e.printStackTrace();
+		} catch (KeyManagementException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnrecoverableKeyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (KeyStoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CertificateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	/**
 	 * 发送支付请求获取预付单号
 	 */
 	public static LinkedHashMap<String, Object> doPay(String out_trade_no,
 			Integer total_fee, String spbill_create_ip) {
 		// 随机字符串
 		String nonce_str = UUID.randomUUID().toString().trim().replace("-", "");
+		LinkedHashMap<String, Object> data = new LinkedHashMap<>();
 
-		String xml = formatData(nonce_str, out_trade_no, total_fee,
-				spbill_create_ip);
+		data.put("appid", Constants.appid);
+		data.put("body", Constants.body);
+		data.put("mch_id", Constants.mch_id);
+		data.put("nonce_str", nonce_str);
+		data.put("notify_url", Constants.notify_url);
+		data.put("out_trade_no", out_trade_no);
+		data.put("spbill_create_ip", spbill_create_ip);
+		data.put("total_fee", total_fee);
+		data.put("trade_type", Constants.trade_type);
+		String xml = formatData(data);
 		if (xml == null) {
 			return null;
 		}
@@ -107,7 +206,7 @@ public class WXAPI {
 			Element root = doc.getRootElement();
 			if (root.elementText("return_code").equals("SUCCESS")) {
 				if (root.elementText("result_code").equals("SUCCESS")) {
-					String appid = root.elementText("appid");
+					String APPID = root.elementText("appid");
 					String nonceStr = UUID.randomUUID().toString().trim()
 							.replace("-", "");
 					String Package = "Sign=WXPay";
@@ -115,16 +214,16 @@ public class WXAPI {
 					String prepayId = root.elementText("prepay_id");
 					String timeStamp = System.currentTimeMillis() / 1000 + "";
 
-					LinkedHashMap<String, Object> data = new LinkedHashMap<>();
-					data.put("appid", appid);
-					data.put("nonceStr", nonceStr);
-					data.put("package", Package);
-					data.put("partnerId", partnerId);
-					data.put("prepayId", prepayId);
-					data.put("timeStamp", timeStamp);
-					String sign = makeSign(data);
-					data.put("sign", sign);
-					return data;
+					LinkedHashMap<String, Object> return_data = new LinkedHashMap<>();
+					return_data.put("appid", APPID);
+					return_data.put("nonceStr", nonceStr);
+					return_data.put("package", Package);
+					return_data.put("partnerId", partnerId);
+					return_data.put("prepayId", prepayId);
+					return_data.put("timeStamp", timeStamp);
+					String sign = makeSign(return_data);
+					return_data.put("sign", sign);
+					return return_data;
 				}
 			}
 			System.out.println(resultXml);
@@ -133,6 +232,68 @@ public class WXAPI {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	/**
+	 * 发送网络请求
+	 */
+	private static String clientConnect(String pathUrl, String requestString)
+			throws KeyStoreException, NoSuchAlgorithmException,
+			CertificateException, IOException, KeyManagementException,
+			UnrecoverableKeyException {
+		// 指定读取证书格式为PKCS12
+		KeyStore keyStore = KeyStore.getInstance("PKCS12");
+		// 读取本机存放的PKCS12证书文件
+		FileInputStream instream = new FileInputStream(new File(
+				"/opt/apiclient_cert.p12"));
+		try {
+			// 指定PKCS12的密码(商户ID)
+			keyStore.load(instream, Constants.mch_id.toCharArray());
+		} finally {
+			instream.close();
+		}
+		SSLContext sslcontext = SSLContexts.custom()
+				.loadKeyMaterial(keyStore, Constants.mch_id.toCharArray()).build();
+		// 指定TLS版本
+		SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
+				sslcontext, new String[] { "TLSv1" }, null,
+				SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);
+		// 设置httpclient的SSLSocketFactory
+		CloseableHttpClient httpclient = HttpClients.custom()
+				.setSSLSocketFactory(sslsf).build();
+		String result = "";
+		try {
+
+			HttpPost httpost = new HttpPost(pathUrl); // 设置响应头信息
+			httpost.addHeader("Connection", "keep-alive");
+			httpost.addHeader("Accept", "*/*");
+			httpost.addHeader("Content-Type",
+					"application/x-www-form-urlencoded; charset=UTF-8");
+			httpost.addHeader("Host", "api.mch.weixin.qq.com");
+			httpost.addHeader("X-Requested-With", "XMLHttpRequest");
+			httpost.addHeader("Cache-Control", "max-age=0");
+			httpost.addHeader("User-Agent",
+					"Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.0) ");
+			httpost.setEntity(new StringEntity(requestString, "UTF-8"));
+
+			CloseableHttpResponse response = httpclient.execute(httpost);
+			try {
+				HttpEntity entity = response.getEntity();
+
+				System.out.println("----------------------------------------");
+				System.out.println(response.getStatusLine());
+				if (entity != null) {
+					result = EntityUtils
+							.toString(response.getEntity(), "UTF-8");
+				}
+				EntityUtils.consume(entity);
+			} finally {
+				response.close();
+			}
+		} finally {
+			httpclient.close();
+		}
+		return result;
 	}
 
 	/**
@@ -215,37 +376,7 @@ public class WXAPI {
 	 * @param spbill_create_ip
 	 * @return
 	 */
-	private static String formatData(String nonce_str, String out_trade_no,
-			Integer total_fee, String spbill_create_ip) {
-		LinkedHashMap<String, Object> data = new LinkedHashMap<>();
-		// 应用id
-		String appid = Constants.appid;
-		// 商户号
-		String mch_id = Constants.mch_id;
-		// 通知地址
-		String notify_url = Constants.notify_url;
-		// 支付类型 APP
-		String trade_type = Constants.trade_type;
-		// 商品描述 如：腾讯充值中心-QQ会员充值
-		String body = Constants.body;
-
-		// String temp = "appid=" + appid + "&" + "body=" + body + "&" +
-		// "mch_id="
-		// + mch_id + "&" + "nonce_str=" + nonce_str + "&" + "notify_url="
-		// + notify_url + "&" + "out_trade_no=" + out_trade_no + "&"
-		// + "spbill_create_ip=" + spbill_create_ip + "&" + "total_fee="
-		// + total_fee + "&" + "trade_type=" + trade_type;
-		// temp = temp + "&key=" + key;
-
-		data.put("appid", appid);
-		data.put("body", body);
-		data.put("mch_id", mch_id);
-		data.put("nonce_str", nonce_str);
-		data.put("notify_url", notify_url);
-		data.put("out_trade_no", out_trade_no);
-		data.put("spbill_create_ip", spbill_create_ip);
-		data.put("total_fee", total_fee);
-		data.put("trade_type", trade_type);
+	private static String formatData(LinkedHashMap<String, Object> data) {
 		// 签名：发送的所有参数键值对(key=value)用&拼接成stringA之后再拼接秘钥,
 		// 拼接完成进行md5运算之后使用toUpperCase全大写
 		String sign = makeSign(data);

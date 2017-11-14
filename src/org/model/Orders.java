@@ -18,6 +18,8 @@ public class Orders implements java.io.Serializable {
 	private Integer deliveryState;
 	private Integer payWay;
 	private String refundId;
+	private Long finishTime;
+	private Integer afterSaleState;
 
 	// Constructors
 
@@ -36,7 +38,8 @@ public class Orders implements java.io.Serializable {
 	/** full constructor */
 	public Orders(Long userid, Long time, String address, String orderNum,
 			String staffId, Integer isExport, Integer deliveryState,
-			Integer payWay, String refundId) {
+			Integer payWay, String refundId, Long finishTime,
+			Integer afterSaleState) {
 		this.userid = userid;
 		this.time = time;
 		this.address = address;
@@ -46,6 +49,8 @@ public class Orders implements java.io.Serializable {
 		this.deliveryState = deliveryState;
 		this.payWay = payWay;
 		this.refundId = refundId;
+		this.finishTime = finishTime;
+		this.afterSaleState = afterSaleState;
 	}
 
 	// Property accessors
@@ -128,6 +133,22 @@ public class Orders implements java.io.Serializable {
 
 	public void setRefundId(String refundId) {
 		this.refundId = refundId;
+	}
+
+	public Long getFinishTime() {
+		return this.finishTime;
+	}
+
+	public void setFinishTime(Long finishTime) {
+		this.finishTime = finishTime;
+	}
+
+	public Integer getAfterSaleState() {
+		return this.afterSaleState;
+	}
+
+	public void setAfterSaleState(Integer afterSaleState) {
+		this.afterSaleState = afterSaleState;
 	}
 
 }

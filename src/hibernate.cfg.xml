@@ -50,6 +50,9 @@
 	<mapping resource="org/model/AppVersion.hbm.xml" />
 	<mapping resource="org/model/AfterSale.hbm.xml" />
 	<mapping resource="org/model/Refund.hbm.xml" />
+	<mapping resource="org/model/Franchisee.hbm.xml" />
+	<mapping resource="org/model/Dish.hbm.xml" />
+	<mapping resource="org/model/DishCatalog.hbm.xml" />
 
 </session-factory>
 

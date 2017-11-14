@@ -47,11 +47,14 @@ public interface GoodsDao {
 	 * 最新上架商品列表,按时间选出最新的10种商品
 	 */
 	public List<VGoodsId> getNewArrival();
-
 	/**
 	 * 获取目录列表
 	 */
 	public List<GoodsCatalog> getCatalog();
+	/**
+	 * 获取目录名称列表
+	 */
+	public List<String> getCatalogs();
 
 	/**
 	 * 获取目录总数
@@ -73,7 +76,7 @@ public interface GoodsDao {
 	/**
 	 * 获取指定名称的商品总数
 	 */
-	public Long getCountByKey(String key, Short state);
+	public Long getCountByKey(String key, Short[] state);
 
 	/**
 	 * 维护商品信息
@@ -84,5 +87,18 @@ public interface GoodsDao {
 	 * 删除商品,伪删除
 	 */
 	public boolean delete(Long id);
+	/**
+	 * 获取最新上架的10中商品
+	 */
+	public List<VGoodsId> getNewArrival(String catalog);
+	/**
+	 * 获取最新上架的10中商品
+	 */
+	public List<VGoodsId> getNewArrival(Long catalogId);
+	/**
+	 * 获取目录ID列表 
+	 */
+	public List<Long> getCatalogIds();
+	
 
 }

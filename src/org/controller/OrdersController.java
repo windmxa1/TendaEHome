@@ -1,31 +1,30 @@
 package org.controller;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.bean.WXNotify;
-import org.bean.WXRETURN;
 import org.dao.OrdersDao;
+import org.dao.RefundDao;
 import org.dao.imp.OrdersDaoImp;
+import org.dao.imp.RefundDaoImp;
 import org.dom4j.DocumentException;
+import org.model.Refund;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.util.AESUtil;
 import org.util.ALIPAY;
 import org.util.Constants;
-import org.util.JsonUtils;
 import org.util.PDFUtil;
 import org.util.ResultUtils;
+import org.util.TokenUtils;
 import org.util.Utils;
 import org.util.WXAPI;
 import org.util.XmlUtils;
@@ -33,12 +32,12 @@ import org.view.VOrdersDetailsId;
 import org.view.VOrdersId;
 
 import com.alipay.api.internal.util.AlipaySignature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
 @RequestMapping("/back/orders")
 public class OrdersController {
 	OrdersDao oDao;
+	RefundDao rDao;
 	// Long userid;
 	Map<String, Object> data;
 
@@ -93,28 +92,6 @@ public class OrdersController {
 		return ResultUtils.toJson(100, "", data);
 	}
 
-	@RequestMapping("/updateOrder")
-	@ResponseBody
-	public Object updateOrder(HttpServletRequest request, Long id, Integer state)
-			throws Exception {
-		oDao = new OrdersDaoImp();		
-		if (oDao.updateOrder(id, state)) {
-			return ResultUtils.toJson(100, "修改成功", "");
-		} else {
-			return ResultUtils.toJson(101, "修改失败", "");
-		}
-	}
-
-	@RequestMapping("/completeRefund")
-	@ResponseBody
-	public Object completeRefund() throws Exception {
-		oDao = new OrdersDaoImp();
-		if (oDao.completeRefund()) {
-			return ResultUtils.toJson(100, "", "");
-		}
-		return ResultUtils.toJson(101, "操作失败，请重试", "");
-	}
-	
 	@RequestMapping("/deleteOrder")
 	@ResponseBody
 	public Object deleteOrder(Long id) throws Exception {
@@ -156,6 +133,122 @@ public class OrdersController {
 		}
 	}
 
+	@RequestMapping("/refundOrder")
+	@ResponseBody
+	public Object refundOrder(Long id, Double total) throws Exception {
+		oDao = new OrdersDaoImp();
+		Long time = System.currentTimeMillis() / 1000;
+		String refundId = time + Utils.ran4();
+		Refund refund = new Refund(refundId, id, total, 1, "正常退款", time);
+		switch (oDao.updateRefundId1(id, refund)) {
+		case 0:
+			return ResultUtils.toJson(101, "该订单尚未付款，无法进行退款操作，请重试", "");
+		case 1:
+			return ResultUtils.toJson(100, "取消订单成功，您的退款将在1~5个工作日内返还", "");
+		case -1:
+			return ResultUtils.toJson(101, "系统繁忙，请稍后重试或咨询客服", "");
+		}
+		return ResultUtils.toJson(101, "生成退款单失败，请重试", "");
+	}
+
+	@RequestMapping("/cancelOrder")
+	@ResponseBody
+	public Object cancelOrder(HttpServletRequest request, Long id)
+			throws Exception {
+		oDao = new OrdersDaoImp();
+		if (oDao.cancel(null, id) > 0) {
+			return ResultUtils.toJson(100, "取消订单成功", "");
+		}
+		return ResultUtils.toJson(101, "取消订单失败，您的订单已取消或系统繁忙，请稍后重试", "");
+	}
+
+	@RequestMapping("/finishRefund")
+	@ResponseBody
+	public Object finishRefund(HttpServletRequest request, String refundId)
+			throws Exception {
+		rDao = new RefundDaoImp();
+		if (rDao.updateState(refundId, 2)) {
+			return ResultUtils.toJson(100, "取消订单成功", "");
+		}
+		return ResultUtils.toJson(101, "取消订单失败，您的订单已取消或系统繁忙，请稍后重试", "");
+	}
+
+	@RequestMapping("/finishOrder")
+	@ResponseBody
+	public Object finishOrder(HttpServletRequest request, Long id)
+			throws Exception {
+		oDao = new OrdersDaoImp();
+		if (oDao.updateDeliveryState(2, null, id)) {
+			return ResultUtils.toJson(100, "订单完成！", "");
+		}
+		return ResultUtils.toJson(101, "服务器繁忙，请您重试", "");
+	}
+
+	@RequestMapping("/notifyWxRefund")
+	@ResponseBody
+	public Object notifyWxRefund(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		oDao = new OrdersDaoImp();
+		rDao = new RefundDaoImp();
+		String result;
+		String inputLine;
+		String notityXml = "";
+		request.setCharacterEncoding("UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html;charset=UTF-8");
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		// 微信给返回的东西
+		try {
+			while ((inputLine = request.getReader().readLine()) != null) {
+				notityXml += inputLine;
+			}
+			request.getReader().close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			result = WXAPI.setXml("FAIL", "xml获取失败");
+			return result;
+		}
+		if (StringUtils.isEmpty(notityXml)) {
+			result = WXAPI.setXml("FAIL", "xml为空");
+			return result;
+		}
+		System.out.println(notityXml);
+		Map map = XmlUtils.xml2map(notityXml, false);
+		if (map.get("return_code").equals("SUCCESS")) {// 通信成功
+			if (map.get("appid").equals(Constants.appid)
+					&& map.get("mch_id").equals(Constants.mch_id)) {
+				String req_info = AESUtil.decryptData(map.get("req_info")
+						.toString());
+				try {
+					Map map2 = XmlUtils.xml2map(req_info, false);
+					Refund refund = rDao.getRefund(""
+							+ map2.get("out_refund_no"));
+					switch (map2.get("refund_status") + "") {
+					case "SUCCESS":
+						refund.setState(2);
+						break;
+					case "CHANGE":
+						refund.setState(-1);
+						break;
+					case "REFUNDCLOSE":
+						refund.setState(-2);
+						break;
+					}
+					if (refund != null
+							&& 100 * refund.getRefundFee() == Double
+									.parseDouble(map2.get("refund_fee") + "")
+							&& rDao.saveOrUpdate(refund)) {
+						return WXAPI.setXml("SUCCESS", "OK");
+					}
+				} catch (Exception e) {
+					System.out.println(req_info);
+					e.printStackTrace();
+				}
+			}
+		}
+		return WXAPI.setXml("FAIL", "校验失败");
+	}
+
 	@RequestMapping("/notifyWxPay")
 	@ResponseBody
 	public Object notifyWxPay(HttpServletRequest request,
@@ -195,7 +288,7 @@ public class OrdersController {
 						if (total == Double.parseDouble(""
 								+ (map.get("total_fee")))) {// 微信支付的总金额单位是分
 							if (oDao.updateOrder("" + map.get("out_trade_no"),
-									2,1)) {// 验签成功且修改成功返回SUCCESS
+									1)) {// 验签成功且修改成功返回SUCCESS
 								return WXAPI.setXml("SUCCESS", "OK");
 							}
 						} else {

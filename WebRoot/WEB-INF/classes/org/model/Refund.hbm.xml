@@ -15,6 +15,9 @@
                 <comment>订单编号作为外键，为一对多做准备</comment>
             </column>
         </property>
+        <property name="refundFee" type="java.lang.Double">
+            <column name="refund_fee" precision="11" not-null="true" />
+        </property>
         <property name="state" type="java.lang.Integer">
             <column name="state" />
         </property>

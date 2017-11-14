@@ -5,7 +5,10 @@ import java.net.URLDecoder;
 import java.util.Map;
 
 import org.dao.OrdersDao;
+import org.dao.RefundDao;
 import org.dao.imp.OrdersDaoImp;
+import org.dao.imp.RefundDaoImp;
+import org.model.Refund;
 
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
@@ -29,10 +32,9 @@ public class ALIPAY {
 
 	public final static String GATEWAY = "https://openapi.alipay.com/gateway.do";
 
-	// public static void main(String[] args) throws
-	// UnsupportedEncodingException {
-	// doPay("123123", "1.23");
-	// }
+	public static void main(String[] args) throws UnsupportedEncodingException {
+		doRefund("1509516254039511454", "15095182004783", 0.01, "用户请求退款");
+	}
 
 	/**
 	 * 获取支付信息
@@ -51,12 +53,12 @@ public class ALIPAY {
 		model.setBody("生态宜家-一米菜园网上超市购物");
 		model.setSubject("生态宜家");
 		model.setOutTradeNo(orderNum);
-//		model.setTimeoutExpress("30m");//设置支付时限
+		// model.setTimeoutExpress("30m");//设置支付时限
 		model.setTotalAmount(total_fee);
 		model.setProductCode("QUICK_MSECURITY_PAY");
 		request.setBizModel(model);
 		request.setNotifyUrl(NotifyUrl);
-		
+
 		try {
 			// 这里和普通的接口调用不同，使用的是sdkExecute
 			AlipayTradeAppPayResponse response = alipayClient
@@ -73,30 +75,41 @@ public class ALIPAY {
 
 	/**
 	 * 支付宝退款
+	 * 
+	 * @param out_trade_no
+	 *            订单编号
+	 * @param refund_amount
+	 *            退款金额，单位为元，精确到小数点后两位
+	 * @param refund_reason
+	 *            退款原因
+	 * @param out_request_no
+	 *            退款单号
+	 * @return
 	 */
-	public static String refund(String out_trade_no, String refund_amount) {
+	public static boolean doRefund(String out_trade_no, String out_request_no,
+			Double refund_amount, String refund_reason) {
 		AlipayClient alipayClient = new DefaultAlipayClient(
 				"https://openapi.alipay.com/gateway.do", APP_ID,
 				APP_PRIVATE_KEY, "json", CHARSET, ALIPAY_PUBLIC_KEY, "RSA2");
 		AlipayTradeRefundRequest request = new AlipayTradeRefundRequest();
-
-		request.setBizContent("{" + "\"out_trade_no\":\"" + out_trade_no
-				+ "\"," + "\"refund_amount\":" + refund_amount + ","
-				+ "\"refund_reason\":\"正常退款\"" + "  }");
+		String requestString = "{" + "\"out_trade_no\":\"" + out_trade_no
+				+ "\"," + "\"refund_amount\":" + refund_amount  + ","
+				+ "\"out_request_no\":\"" + out_request_no + "\","
+				+ "\"refund_reason\":\"" + refund_reason + "\"" + "}";
+//		System.out.println(requestString);
+		request.setBizContent(requestString);
 		AlipayTradeRefundResponse response;
 		try {
 			response = alipayClient.execute(request);
+			System.out.println(response.getBody().toString());
 			if (response.isSuccess()) {
 				System.out.println("调用成功");
-			} else {
-				System.out.println("调用失败");
+				return true;
 			}
 		} catch (AlipayApiException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return null;
-
+		return false;
 	}
 
 	/*
@@ -112,14 +125,37 @@ public class ALIPAY {
 	public static Boolean isValid(Map<String, String> params) {
 		if (APP_ID.equals(params.get("app_id"))) {
 			OrdersDao oDao = new OrdersDaoImp();
-			Double total = oDao.getTotal("" + params.get("out_trade_no"));
-			if (total == Double.parseDouble((params.get("total_amount")))) {
-				if (oDao.updateOrder("" + params.get("out_trade_no"), 2, 1)) {// 验签成功且修改成功返回SUCCESS
-					return true;
+			RefundDao rDao = new RefundDaoImp();
+			switch (params.get("trade_status")) {
+			case "TRADE_SUCCESS":
+				Double total = oDao.getTotal("" + params.get("out_trade_no"));
+				if (total == Double.parseDouble((params.get("total_amount")))) {
+					if (oDao.updateOrder("" + params.get("out_trade_no"), 2)) {// 验签成功且修改成功返回SUCCESS
+						return true;
+					}
+				} else {
+					System.out.println("订单总价错误,参数总价为："
+							+ params.get("total_fee") + "," + "订单实际总价为："
+							+ total);
 				}
-			} else {
-				System.out.println("订单总价错误,参数总价为：" + params.get("total_fee")
-						+ "," + "订单实际总价为：" + total);
+				break;
+			case "TRADE_FINISHED":
+				break;
+			case "TRADE_CLOSED":
+				System.out.println("退款单号：" + params.get("out_biz_no"));
+				Refund r = rDao.getRefund(params.get("out_trade_no"));
+				if (r != null
+						&& r.getRefundFee() == Double.parseDouble((params
+								.get("refund_fee"))) && rDao.saveOrUpdate(r)) {
+					return true;
+				} else {
+					System.out.println("退款金额错误,参数总价为："
+							+ params.get("refund_fee") + "," + "退款实际金额为："
+							+ r.getRefundFee());
+				}
+				break;
+			default:
+				break;
 			}
 		} else {
 			System.out.println("appid不正确");

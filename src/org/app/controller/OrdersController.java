@@ -30,8 +30,6 @@ import org.util.WXAPI;
 import org.view.VOrdersDetailsId;
 import org.view.VOrdersId;
 
-import com.sun.swing.internal.plaf.basic.resources.basic;
-
 @Controller("/app/OrdersController")
 @RequestMapping("/app/orders")
 public class OrdersController {
@@ -45,14 +43,14 @@ public class OrdersController {
 	@RequestMapping("/getOrdersList")
 	@ResponseBody
 	public Object getOrdersList(HttpServletRequest request, Integer start,
-			Integer limit) throws Exception {
+			Integer limit, Integer state) throws Exception {
 		oDao = new OrdersDaoImp();
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");
 		Long userid = Long.parseLong(""
 				+ TokenUtils.getValue(token, TokenUtils.getKey(), "userid"));
 		/*********************************/
-		List<VOrdersId> list = oDao.getList(userid, start, limit);
+		List<VOrdersId> list = oDao.getList(userid, start, limit, state);
 		data = new HashMap<String, Object>();
 		if (list == null || list.size() == 0) {
 			data.put("list", new ArrayList<>());
@@ -83,14 +81,14 @@ public class OrdersController {
 	@RequestMapping("/getOrders")
 	@ResponseBody
 	public Object getOrders(HttpServletRequest request, Integer start,
-			Integer limit) throws Exception {
+			Integer limit, Integer state) throws Exception {
 		oDao = new OrdersDaoImp();
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");
 		Long userid = Long.parseLong(""
 				+ TokenUtils.getValue(token, TokenUtils.getKey(), "userid"));
 		/*********************************/
-		List<VOrdersId> list = oDao.getList(userid, start, limit);
+		List<VOrdersId> list = oDao.getList(userid, start, limit, state);
 		data = new HashMap<String, Object>();
 		if (list == null || list.size() == 0) {
 			data.put("list", new ArrayList<>());
@@ -110,49 +108,45 @@ public class OrdersController {
 		Long userid = Long.parseLong(""
 				+ TokenUtils.getValue(token, TokenUtils.getKey(), "userid"));
 		/*********************************/
-		switch (oDao.cancel(userid, id)) {
-		case 0:
+		if (oDao.cancel(userid, id) > 0) {
 			return ResultUtils.toJson(100, "取消订单成功", "");
-		case 1:
-			return ResultUtils.toJson(100, "取消订单成功，您的退款将在3~5个工作日内返还", "");
-		case -1:
-			return ResultUtils.toJson(101, "取消订单失败", "");
-		case -2:
-			return ResultUtils.toJson(101, "该订单在当天9点后无法取消", "");
-		default:
-			return ResultUtils.toJson(101, "取消订单失败", "");
 		}
+		return ResultUtils.toJson(101, "取消订单失败，您的订单已取消或系统繁忙，请稍后重试", "");
+	}
+
+	@RequestMapping("/finishOrder")
+	@ResponseBody
+	public Object finishOrder(HttpServletRequest request, Long id)
+			throws Exception {
+		oDao = new OrdersDaoImp();
+		/**** 获取header中的token并取出userid ****/
+		String token = request.getHeader("token");
+		Long userid = Long.parseLong(""
+				+ TokenUtils.getValue(token, TokenUtils.getKey(), "userid"));
+		/*********************************/
+		if (oDao.updateDeliveryState(2, userid, id)) {
+			return ResultUtils.toJson(100, "订单完成！", "");
+		}
+		return ResultUtils.toJson(101, "服务器繁忙，请您重试", "");
 	}
 
 	@RequestMapping("/refundOrder")
 	@ResponseBody
-	public Object refundOrder(Long id, Integer payWay, String reason)
-			throws Exception {
+	public Object refundOrder(Long id, Integer payWay, String reason,
+			Double totalFee) throws Exception {
+		oDao = new OrdersDaoImp();
 		Long time = System.currentTimeMillis() / 1000;
 		String refundId = time + Utils.ran4();
-
-		Refund refund = new Refund(refundId, id, reason, time);
-		// 发送退款请求
-		switch (payWay) {
-		case 1://微信
-			break;
-		case 2://支付宝
-			break;
-		}
-		if (!rDao.saveOrUpdate(refund)) {
-			return ResultUtils.toJson(101, "生成退款单失败，请重试", "");
-		}
-		switch (oDao.updateRefundId(id, refundId)) {
+		Refund refund = new Refund(refundId, id, totalFee, 1, reason, time);
+		switch (oDao.updateRefundId(id, refund, 0)) {
 		case 0:
-			break;
+			return ResultUtils.toJson(101, "该订单尚未付款，无法进行退款操作，请重试", "");
 		case 1:
-			break;
+			return ResultUtils.toJson(100, "取消订单成功，您的退款将在1~5个工作日内返还", "");
 		case -1:
-			break;
-		case -2:
-			break;
-		default:
-			break;
+			return ResultUtils.toJson(101, "系统繁忙，请稍后重试或咨询客服", "");
+		case -2:// 超过当天9点
+			return ResultUtils.toJson(101, "该订单在当天9点后无法取消", "");
 		}
 		return ResultUtils.toJson(101, "生成退款单失败，请重试", "");
 	}
@@ -201,6 +195,15 @@ public class OrdersController {
 		} else {
 			return ResultUtils.toJson(101, "生成订单失败，请重试", "");
 		}
+	}
+
+	/**
+	 * 定时自动完成
+	 */
+	@Scheduled(fixedDelay = 1 * 1000)
+	private void finishOrder() {
+		oDao = new OrdersDaoImp();
+		oDao.finish();
 	}
 
 	/**

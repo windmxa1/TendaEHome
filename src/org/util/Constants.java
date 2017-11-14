@@ -24,6 +24,11 @@ public class Constants {
 	 */
 	public static final String notify_url = "http://39.108.82.55:8080/TendaEHome/back/orders/notifyWxPay";
 	/**
+	 * 退款结果通知地址
+	 */
+	public static final String notifyRefund_url = "http://39.108.82.55:8080/TendaEHome/back/orders/notifyWxRefund";
+	
+	/**
 	 * 交易类型
 	 */
 	public static final String trade_type = "APP";
@@ -31,6 +36,10 @@ public class Constants {
 	 * 统一下单接口地址
 	 */
 	public static final String payUrl = "https://api.mch.weixin.qq.com/pay/unifiedorder";
+	/**
+	 * 退款地址
+	 */
+	public static final String refundUrl = "https://api.mch.weixin.qq.com/secapi/pay/refund";
 	/**
 	 * 适应任何系统的文件分隔符
 	 */

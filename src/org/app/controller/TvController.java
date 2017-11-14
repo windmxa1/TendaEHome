@@ -26,8 +26,8 @@ public class TvController {
 		tDao = new TvDaoImp();
 		data = new HashMap<>();
 		List<VTvId> list = tDao.getTVList(start, limit);
-		if (list == null || list.size() == 0) {
-			return ResultUtils.toJson(101, "暂无直播内容", "");
+		if (list == null) {
+			return ResultUtils.toJson(101, "服务器繁忙，请重试", "");
 		} else {
 			data.put("list", list);
 			return ResultUtils.toJson(100, "", data);

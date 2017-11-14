@@ -6,8 +6,8 @@
 -->
 <hibernate-mapping>
     <class name="org.model.AfterSale" table="after_sale" catalog="tendaehome" dynamic-insert="true">
-        <id name="aftersaleId" type="java.lang.String">
-            <column name="aftersale_id" length="15" />
+        <id name="afterSaleId" type="java.lang.String">
+            <column name="after_sale_id" length="15" />
             <generator class="assigned" />
         </id>
         <property name="orderId" type="java.lang.Long">

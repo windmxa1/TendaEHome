@@ -91,23 +91,113 @@ function getOrderPDF(o, s) {
 		}
 	})
 }
-// 一键完成退款
-function completeRefund(){
-	if (!confirm("请确认您是否已经处理了所有退款？")) {
-		return;
-	}
+// 时间戳转换
+function getLocalTime(nS) {
+	return new Date(parseInt(nS) * 1000).toLocaleString().replace(/年|月/g, "-")
+			.replace(/日/g, " ");
+}
+
+// 申请退款
+function popRefund(o) {
+	$("#as-close").trigger("click");
+	$('#r_orderId').val(o.id);
+	$('#r_payWay').val(o.payWay);
+	$('#r_total').val(o.total);
+	$('#refundmodal').modal();
+	
+}
+function doRefund() {
+	var data = new FormData($('#refund_form')[0]);
 	$.ajax({
 		type : "post",
-		url : "back/orders/completeRefund",
+		url : "back/refund/doRefund",
 		dataType : "json",
 		async : false,
 		cache : false,
+		contentType : false,
+		processData : false,
+		data :data,
 		headers : {
 			"token" : getCookie('token')
 		},
 		success : function(data) {
 			if (data.code == 100) {
+				alert("申请成功!");
 				location.reload();
+			}else{
+				alert(data.msg);
+			}
+		},
+		error : function(jqXHR) {
+			alert("网络异常");
+		}
+	});
+}
+// 售后处理
+function doAfterSale(odata) {
+	$("#labelRefund").html("退款单编号");
+	$.ajax({
+		type : "post",
+		url : "back/refund/getAfterSaleByOrder",
+		dataType : "json",
+		async : false,
+		cache : false,
+		data : {
+			orderId : odata.id
+		},
+		headers : {
+			"token" : getCookie('token')
+		},
+		success : function(data) {
+			if (data.code == 100) {
+				var as = data.data.afterSale;
+				$('#as_afterSaleId').val(as.afterSaleId);
+				$('#as_orderId').val(as.orderId);
+				$('#as_refundId').val(as.refundId);
+				$('#as_reason').val(as.reason);
+				$('#as_state').val(odata.afterSaleState);// 售后处理状态从订单上得到
+				$('#as_handleResult').val(as.handleResult);
+				$('#as_time').val(getLocalTime(as.time));
+				if (as.refundId == 0) {
+					$("#labelRefund").append(
+							"<button type='button' class='btn btn-info' onclick='popRefund("
+									+ JSON.stringify(odata)
+									+ ")'>申请退款</button>");
+				} else {
+					$("#labelRefund").append(
+							"<a href='#refundDiv' onclick='refundDetail("
+									+ as.refundId
+									+ ")' data-toggle='collapse'>详情</a>");
+				}
+			}
+		},
+		error : function(jqXHR) {
+			alert("网络异常");
+		}
+	});
+}
+// 获取退款详情
+function refundDetail(refundId) {
+	$.ajax({
+		type : "post",
+		url : "back/refund/getRefundById",
+		dataType : "json",
+		async : false,
+		cache : false,
+		data : {
+			id : refundId
+		},
+		headers : {
+			"token" : getCookie('token')
+		},
+		success : function(data) {
+			if (data.code == 100) {
+				var r = data.refund;
+				$("#refundDiv").append(
+						"退款单号" + r.refundId + " 退款金额" + r.refundFee + "<br />"
+								+ "退款状态" + r.state + " 退款描述" + r.description);
+			} else {
+				alert(data.msg);
 			}
 		},
 		error : function(jqXHR) {
@@ -116,44 +206,92 @@ function completeRefund(){
 	});
 }
 
+// 修改售后单
+function updateAfterSale() {
+	var data = new FormData($('#aftersale_form')[0]);
+	$.ajax({
+		type : "post",
+		url : "back/refund/updateAfterSale",
+		dataType : "json",
+		async : false,
+		cache : false,
+		contentType : false,
+		processData : false,
+		headers : {
+			"token" : getCookie('token')
+		},
+		data : data,
+		success : function(data) {
+			if (data.code == 100) {
+				alert("修改成功");
+				location.reload();
+			} else {
+				alert(data.msg);
+			}
+		},
+		error : function(jqXHR) {
+			alert("网络异常");
+		}
+	})
+}
 // 修改订单
 function updateIndent(s, v) {
+	var order_data = {};
+	var urlPath = "";
 	switch (s) {
 	case 0:
 		if (!confirm("确定要取消订单？")) {
 			return;
 		}
+		urlPath = "back/orders/cancelOrder";
+		order_data = {
+			id : v.id
+		};
+		break;
 	case 4:
 		if (!confirm("确定订单已完成？")) {
 			return;
 		}
+		urlPath = "back/orders/finishOrder";
+		order_data = {
+			id : v.id
+		};
+		break;
 	case 5:
 		if (!confirm("确定要取消该订单并退款吗？")) {
 			return;
 		}
+		urlPath = "back/orders/refundOrder";
+		order_data = {
+			id : v.id,
+			total : v.total
+		};
+		break;
 	case 6:
 		if (!confirm("确定已经完成该订单的退款处理了吗？")) {
 			return;
 		}
-	default:
+		urlPath = "back/orders/finishRefund";
+		order_data = {
+			refundId : v.refundId
+		}
 		break;
 	}
 	$.ajax({
 		type : "post",
-		url : "back/orders/updateOrder",
+		url : urlPath,
 		dataType : "json",
 		async : false,
 		cache : false,
 		headers : {
 			"token" : getCookie('token')
 		},
-		data : {
-			id : v,
-			state : s
-		},
+		data : order_data,
 		success : function(data) {
 			if (data.code == 100) {
 				location.reload();
+			} else {
+				alert(data.msg);
 			}
 		},
 		error : function(jqXHR) {
@@ -221,6 +359,30 @@ var getJsonArrayByPageSize = function(pageSize, pageNo) {
 		$.ajax({
 			type : "post",
 			url : "back/orders/getOrdersList",
+			dataType : "json",
+			async : false,
+			cache : false,
+			headers : {
+				"token" : getCookie('token')
+			},
+			data : {
+				'start' : (pageNo - 1) * pageSize,
+				'limit' : pageSize,
+			},
+			success : function(data) {
+				if (data.code == 100) {
+					json = data.data.list;
+					total = data.data.total
+				}
+			},
+			error : function(data) {
+				alert("error");
+			}
+		});
+	} else if (indexState == 7) {
+		$.ajax({
+			type : "post",
+			url : "back/refund/getAfterSaleOrder",
 			dataType : "json",
 			async : false,
 			cache : false,
@@ -322,17 +484,18 @@ var builderUQTQueryMsg = function(UQTQueryMsg) {
 						var status = eachData.status;
 						var address = eachData.address;
 						var createTime = eachData.createTime;
-						var payWay ="";
-						switch(eachData.payWay){
-							case 0:	
-								payWay ="微信支付";
-								break;
-							case 1:
-								payWay ="支付宝支付";
-								break;
-							default:
-								payWay ="无";
-								break;
+						var afterSaleState = eachData.afterSaleState;
+						var payWay = "";
+						switch (eachData.payWay) {
+						case 0:
+							payWay = "微信支付";
+							break;
+						case 1:
+							payWay = "支付宝支付";
+							break;
+						default:
+							payWay = "无";
+							break;
 						}
 						var trString = "<td class='eng_name'>"
 								+ orderNum
@@ -353,35 +516,46 @@ var builderUQTQueryMsg = function(UQTQueryMsg) {
 								+ "<button class='btn' onclick='details("
 								+ id
 								+ ")' data-toggle='modal' data-target='#ddxq' style='height:30px;margin-right:10px'  >订单详情</button>";
-						switch (eachData.state) {
-						case 0:
+						if (indexState == 7) {
 							trString = trString
-									+ "<button class='btn btn-warning' disabled='disabled' style='height:30px; margin-right:10px' >取消订单</button>";
-							break;
-						case 2:
-							trString = trString
-							+ "<button class='btn btn-warning' style='height:30px; margin-right:10px' onclick='updateIndent("
-							+ 5 + "," + id + ")' >取消并退款</button>";
-							break;
-						case 1:
-							trString = trString
-									+ "<button class='btn btn-warning' style='height:30px; margin-right:10px' onclick='updateIndent("
-									+ 0 + "," + id + ")' >取消订单</button>";
-							break;
-						case 3:
-							trString = trString
-									+ "<button class='btn btn-info' style='height:30px; margin-right:10px' onclick='updateIndent("
-									+ 4 + "," + id + ")' >完成订单</button>";
-							break;
-						case 5:
-							trString = trString
-							+ "<button class='btn btn-info' style='height:30px; margin-right:10px' onclick='updateIndent("
-							+ 6 + "," + id + ")' >完成退款</button>";
-							break;
-						default:
-							trString = trString
-									+ "<button class='btn btn-info' disabled='disabled' style='height:30px; margin-right:10px'>完成订单</button>";
-							break;
+									+ "<button class='btn' onclick='doAfterSale("
+									+ JSON.stringify(eachData)
+									+ ")' data-toggle='modal' data-target='#aftersale' style='height:30px; margin-right:10px' >售后处理</button>";
+						} else {
+							switch (eachData.state) {
+							case 0:
+								trString = trString
+										+ "<button class='btn btn-warning' disabled='disabled' style='height:30px; margin-right:10px' >取消订单</button>";
+								break;
+							case 2:
+								trString = trString
+										+ "<button class='btn btn-warning' style='height:30px; margin-right:10px' onclick='updateIndent("
+										+ 5 + "," + JSON.stringify(eachData)
+										+ ")' >取消并退款</button>";
+								break;
+							case 1:
+								trString = trString
+										+ "<button class='btn btn-warning' style='height:30px; margin-right:10px' onclick='updateIndent("
+										+ 0 + "," + JSON.stringify(eachData)
+										+ ")' >取消订单</button>";
+								break;
+							case 3:
+								trString = trString
+										+ "<button class='btn btn-info' style='height:30px; margin-right:10px' onclick='updateIndent("
+										+ 4 + "," + JSON.stringify(eachData)
+										+ ")' >完成订单</button>";
+								break;
+							case 5:
+								trString = trString
+										+ "<button class='btn btn-info' style='height:30px; margin-right:10px' onclick='updateIndent("
+										+ 6 + "," + JSON.stringify(eachData)
+										+ ")' >完成退款</button>";
+								break;
+							default:
+								trString = trString
+										+ "<button class='btn btn-info' disabled='disabled' style='height:30px; margin-right:10px'>完成订单</button>";
+								break;
+							}
 						}
 						trString = trString
 								+ "</td>"

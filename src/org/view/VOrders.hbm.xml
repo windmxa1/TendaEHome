@@ -22,6 +22,15 @@
             <key-property name="payWay" type="java.lang.Integer">
                 <column name="pay_way" />
             </key-property>
+            <key-property name="deliveryState" type="java.lang.Integer">
+                <column name="delivery_state" />
+            </key-property>
+            <key-property name="refundId" type="java.lang.String">
+                <column name="refund_id" length="15" />
+            </key-property>
+            <key-property name="afterSaleState" type="java.lang.Integer">
+                <column name="after_sale_state" />
+            </key-property>
             <key-property name="total" type="java.lang.Double">
                 <column name="total" precision="11" />
             </key-property>
@@ -35,7 +44,7 @@
                 <column name="state" />
             </key-property>
             <key-property name="status" type="java.lang.String">
-                <column name="status" length="8" />
+                <column name="status" length="5" />
             </key-property>
             <key-property name="address" type="java.lang.String">
                 <column name="address" length="200" />

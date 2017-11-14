@@ -10,6 +10,7 @@ public class Refund implements java.io.Serializable {
 
 	private String refundId;
 	private Long orderId;
+	private Double refundFee;
 	private Integer state;
 	private String description;
 	private Long time;
@@ -20,27 +21,28 @@ public class Refund implements java.io.Serializable {
 	public Refund() {
 	}
 
-
-	public Refund(String refundId, Long orderId, String description, Long time) {
-		super();
+	/** minimal constructor */
+	public Refund(String refundId, Long orderId, Double refundFee) {
 		this.refundId = refundId;
 		this.orderId = orderId;
+		this.refundFee = refundFee;
+	}
+
+	public Refund(String refundId, Long orderId, Double refundFee,
+			 String description, Long time) {
+		this.refundId = refundId;
+		this.orderId = orderId;
+		this.refundFee = refundFee;
+		this.state = state;
 		this.description = description;
 		this.time = time;
 	}
-
-
-	/** minimal constructor */
-	public Refund(String refundId, Long orderId) {
-		this.refundId = refundId;
-		this.orderId = orderId;
-	}
-
 	/** full constructor */
-	public Refund(String refundId, Long orderId, Integer state,
-			String description, Long time) {
+	public Refund(String refundId, Long orderId, Double refundFee,
+			Integer state, String description, Long time) {
 		this.refundId = refundId;
 		this.orderId = orderId;
+		this.refundFee = refundFee;
 		this.state = state;
 		this.description = description;
 		this.time = time;
@@ -62,6 +64,14 @@ public class Refund implements java.io.Serializable {
 
 	public void setOrderId(Long orderId) {
 		this.orderId = orderId;
+	}
+
+	public Double getRefundFee() {
+		return this.refundFee;
+	}
+
+	public void setRefundFee(Double refundFee) {
+		this.refundFee = refundFee;
 	}
 
 	public Integer getState() {

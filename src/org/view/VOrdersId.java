@@ -2,6 +2,8 @@ package org.view;
 
 import java.util.List;
 
+import org.model.AfterSale;
+
 /**
  * VOrdersId entity. @author MyEclipse Persistence Tools
  */
@@ -15,6 +17,9 @@ public class VOrdersId implements java.io.Serializable {
 	private Long time;
 	private Integer isExport;
 	private Integer payWay;
+	private Integer deliveryState;
+	private String refundId;
+	private Integer afterSaleState;
 	private Double total;
 	private Long num;
 	private String createTime;
@@ -24,6 +29,7 @@ public class VOrdersId implements java.io.Serializable {
 	private String orderNum;
 	private List<VOrdersDetailsId> details;
 	private List<String> urlList;
+	private AfterSale afterSale;
 
 	// Constructors
 
@@ -43,13 +49,17 @@ public class VOrdersId implements java.io.Serializable {
 
 	/** full constructor */
 	public VOrdersId(Long id, Long userid, Long time, Integer isExport,
-			Integer payWay, Double total, Long num, String createTime,
+			Integer payWay, Integer deliveryState, String refundId,
+			Integer afterSaleState, Double total, Long num, String createTime,
 			Integer state, String status, String address, String orderNum) {
 		this.id = id;
 		this.userid = userid;
 		this.time = time;
 		this.isExport = isExport;
 		this.payWay = payWay;
+		this.deliveryState = deliveryState;
+		this.refundId = refundId;
+		this.afterSaleState = afterSaleState;
 		this.total = total;
 		this.num = num;
 		this.createTime = createTime;
@@ -99,6 +109,30 @@ public class VOrdersId implements java.io.Serializable {
 
 	public void setPayWay(Integer payWay) {
 		this.payWay = payWay;
+	}
+
+	public Integer getDeliveryState() {
+		return this.deliveryState;
+	}
+
+	public void setDeliveryState(Integer deliveryState) {
+		this.deliveryState = deliveryState;
+	}
+
+	public String getRefundId() {
+		return this.refundId;
+	}
+
+	public void setRefundId(String refundId) {
+		this.refundId = refundId;
+	}
+
+	public Integer getAfterSaleState() {
+		return this.afterSaleState;
+	}
+
+	public void setAfterSaleState(Integer afterSaleState) {
+		this.afterSaleState = afterSaleState;
 	}
 
 	public Double getTotal() {
@@ -173,6 +207,14 @@ public class VOrdersId implements java.io.Serializable {
 		this.urlList = urlList;
 	}
 
+	public AfterSale getAfterSale() {
+		return afterSale;
+	}
+
+	public void setAfterSale(AfterSale afterSale) {
+		this.afterSale = afterSale;
+	}
+
 	public boolean equals(Object other) {
 		if ((this == other))
 			return true;
@@ -198,6 +240,20 @@ public class VOrdersId implements java.io.Serializable {
 				&& ((this.getPayWay() == castOther.getPayWay()) || (this
 						.getPayWay() != null && castOther.getPayWay() != null && this
 						.getPayWay().equals(castOther.getPayWay())))
+				&& ((this.getDeliveryState() == castOther.getDeliveryState()) || (this
+						.getDeliveryState() != null
+						&& castOther.getDeliveryState() != null && this
+						.getDeliveryState()
+						.equals(castOther.getDeliveryState())))
+				&& ((this.getRefundId() == castOther.getRefundId()) || (this
+						.getRefundId() != null
+						&& castOther.getRefundId() != null && this
+						.getRefundId().equals(castOther.getRefundId())))
+				&& ((this.getAfterSaleState() == castOther.getAfterSaleState()) || (this
+						.getAfterSaleState() != null
+						&& castOther.getAfterSaleState() != null && this
+						.getAfterSaleState().equals(
+								castOther.getAfterSaleState())))
 				&& ((this.getTotal() == castOther.getTotal()) || (this
 						.getTotal() != null && castOther.getTotal() != null && this
 						.getTotal().equals(castOther.getTotal())))
@@ -235,6 +291,16 @@ public class VOrdersId implements java.io.Serializable {
 				+ (getIsExport() == null ? 0 : this.getIsExport().hashCode());
 		result = 37 * result
 				+ (getPayWay() == null ? 0 : this.getPayWay().hashCode());
+		result = 37
+				* result
+				+ (getDeliveryState() == null ? 0 : this.getDeliveryState()
+						.hashCode());
+		result = 37 * result
+				+ (getRefundId() == null ? 0 : this.getRefundId().hashCode());
+		result = 37
+				* result
+				+ (getAfterSaleState() == null ? 0 : this.getAfterSaleState()
+						.hashCode());
 		result = 37 * result
 				+ (getTotal() == null ? 0 : this.getTotal().hashCode());
 		result = 37 * result
@@ -253,5 +319,4 @@ public class VOrdersId implements java.io.Serializable {
 				+ (getOrderNum() == null ? 0 : this.getOrderNum().hashCode());
 		return result;
 	}
-
 }
