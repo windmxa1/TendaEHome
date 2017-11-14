@@ -11,9 +11,9 @@ public class Dish implements java.io.Serializable {
 	private Long id;
 	private String name;
 	private String pic;
-	private Double price;
-	private Double myPrice;
-	private Integer catalogId;
+	private Double price;//商户价格
+	private Double myPrice;	//价格
+	private Integer catalogId; //餐厅ID
 	private String description;
 
 	// Constructors

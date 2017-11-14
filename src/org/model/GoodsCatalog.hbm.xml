@@ -13,5 +13,8 @@
         <property name="catalog" type="java.lang.String">
             <column name="catalog" length="20" not-null="true" />
         </property>
+        <property name="url" type="java.lang.String">
+            <column name="url" length="20" />
+        </property>
     </class>
 </hibernate-mapping>

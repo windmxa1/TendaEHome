@@ -50,7 +50,7 @@ public class OrdersController {
 		Long userid = Long.parseLong(""
 				+ TokenUtils.getValue(token, TokenUtils.getKey(), "userid"));
 		/*********************************/
-		List<VOrdersId> list = oDao.getList(userid, start, limit, state);
+		List<VOrdersId> list = oDao.getList(userid, start, limit, state, false);
 		data = new HashMap<String, Object>();
 		if (list == null || list.size() == 0) {
 			data.put("list", new ArrayList<>());
@@ -88,7 +88,7 @@ public class OrdersController {
 		Long userid = Long.parseLong(""
 				+ TokenUtils.getValue(token, TokenUtils.getKey(), "userid"));
 		/*********************************/
-		List<VOrdersId> list = oDao.getList(userid, start, limit, state);
+		List<VOrdersId> list = oDao.getList(userid, start, limit, state,false);
 		data = new HashMap<String, Object>();
 		if (list == null || list.size() == 0) {
 			data.put("list", new ArrayList<>());
