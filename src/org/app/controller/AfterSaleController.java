@@ -75,14 +75,14 @@ public class AfterSaleController {
 	@RequestMapping("/getAfterSaleOrder")
 	@ResponseBody
 	public Object getAfterSaleOrder(HttpServletRequest request, Integer start,
-			Integer limit) {
+			Integer limit,Integer type) {
 		oDao = new OrdersDaoImp();
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");
 		Long userid = Long.parseLong(""
 				+ TokenUtils.getValue(token, TokenUtils.getKey(), "userid"));
 		/*********************************/
-		List<VOrdersId> list = oDao.getAfterSaleOrder(userid, start, limit);
+		List<VOrdersId> list = oDao.getAfterSaleOrder(userid, start, limit,type);
 		if (list == null || list.size() == 0) {
 			return ResultUtils.toJson(101, "您没有处理中的售后订单哦", "");
 		}

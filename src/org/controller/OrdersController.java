@@ -44,15 +44,15 @@ public class OrdersController {
 	@RequestMapping("/getOrdersList")
 	@ResponseBody
 	public Object getOrdersList(HttpServletRequest request, Integer start,
-			Integer limit, Integer state) throws Exception {
+			Integer limit, Integer state,Integer type) throws Exception {
 		oDao = new OrdersDaoImp();
 		data = new HashMap<String, Object>();
-		List<VOrdersId> list = oDao.getListByState(start, limit, state);
+		List<VOrdersId> list = oDao.getListByState(start, limit, state,type);
 		if (list == null || list.size() == 0) {
 			data.put("list", new ArrayList<>());
 		} else {
 			data.put("list", list);
-			data.put("total", oDao.getCountByState(state));
+			data.put("total", oDao.getCountByState(state,type));
 		}
 		return ResultUtils.toJson(100, "", data);
 	}
@@ -60,11 +60,11 @@ public class OrdersController {
 	@RequestMapping("/getOrdersPDF")
 	@ResponseBody
 	public Object getOrdersPDF(HttpServletRequest request, Integer state,
-			String address) throws Exception {
+			String address,String origin) throws Exception {
 		oDao = new OrdersDaoImp();
-		List<VOrdersId> list = oDao.getListByState2(0, -1, state, address);
+		List<VOrdersId> list = oDao.getListByState2(0, -1, state, address,0);
 		for (VOrdersId v : list) {
-			v.setDetails(oDao.getDetailList(v.getId(), 0, -1));
+			v.setDetails(oDao.getDetailList(v.getId(), 0, -1,origin));
 		}
 		if (list == null || list.size() == 0) {
 			return ResultUtils.toJson(101, "暂无订单", "");
@@ -82,7 +82,7 @@ public class OrdersController {
 			throws Exception {
 		oDao = new OrdersDaoImp();
 		data = new HashMap<>();
-		List<VOrdersDetailsId> list = oDao.getDetailList(orderId, start, limit);
+		List<VOrdersDetailsId> list = oDao.getDetailList(orderId, start, limit,null);
 		if (list == null || list.size() == 0) {
 			data.put("list", new ArrayList<>());
 		} else {
@@ -111,7 +111,7 @@ public class OrdersController {
 		VOrdersId v = oDao.getOrder(orderNum);
 		if (v != null) {
 			List<VOrdersDetailsId> details = oDao.getDetailList(v.getId(),
-					start, limit);
+					start, limit, null);
 			v.setDetails(details);
 			data.put("list", v);
 			data.put("total", 1);

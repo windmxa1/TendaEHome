@@ -12,7 +12,7 @@ public class RepairComment implements java.io.Serializable {
 	private Integer point;
 	private String description;
 	private String suggestion;
-	private String staffId;
+	private String staffNo;
 	private Long userid;
 
 	// Constructors
@@ -23,11 +23,11 @@ public class RepairComment implements java.io.Serializable {
 
 	/** full constructor */
 	public RepairComment(Integer point, String description, String suggestion,
-			String staffId, Long userid) {
+			String staffNo, Long userid) {
 		this.point = point;
 		this.description = description;
 		this.suggestion = suggestion;
-		this.staffId = staffId;
+		this.staffNo = staffNo;
 		this.userid = userid;
 	}
 
@@ -65,12 +65,12 @@ public class RepairComment implements java.io.Serializable {
 		this.suggestion = suggestion;
 	}
 
-	public String getStaffId() {
-		return this.staffId;
+	public String getstaffNo() {
+		return this.staffNo;
 	}
 
-	public void setStaffId(String staffId) {
-		this.staffId = staffId;
+	public void setstaffNo(String staffNo) {
+		this.staffNo = staffNo;
 	}
 
 	public Long getUserid() {

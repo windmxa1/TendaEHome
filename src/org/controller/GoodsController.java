@@ -58,10 +58,10 @@ public class GoodsController {
 		gDao = new GoodsDaoImp();
 		data = new HashMap<String, Object>();
 		Short[] state = { (short) 1, (short) 0 };
-		List<VGoodsId> list = gDao.getGoodsByKey(start, limit, key, state);
+		List<VGoodsId> list = gDao.getGoodsByKey(start, limit, key, state, 0);
 		if (list != null) {
 			data.put("list", list);
-			data.put("total", gDao.getCountByKey(key, state));
+			data.put("total", gDao.getCountByKey(key, state, 0));
 		} else {
 			data.put("list", new ArrayList<>());
 		}
@@ -148,8 +148,8 @@ public class GoodsController {
 	@ResponseBody
 	public Object addGoods(HttpServletRequest request, String name,
 			Double price, @RequestParam CommonsMultipartFile file,
-			Long catalogId, String description, String origin, String unit)
-			throws Exception {
+			Long catalogId, String description, String origin, String unit,
+			Double originPrice, Integer type) throws Exception {
 		Long time = System.currentTimeMillis() / 1000;
 
 		String path = request.getSession().getServletContext()
@@ -171,7 +171,8 @@ public class GoodsController {
 
 		String url = "upload/goods/" + catalogId + "/" + filename;
 
-		Goods goods = new Goods(name, price, url, catalogId, time, "g", 500);
+		Goods goods = new Goods(name, price, url, catalogId, description, time,
+				origin, (short) 1, "g", 500, 0L, originPrice, type);
 		if (description != null) {
 			goods.setDescription(description);
 		}
@@ -221,7 +222,8 @@ public class GoodsController {
 			Double price,
 			@RequestParam(required = false) CommonsMultipartFile file,
 			Long catalogId, String description, String origin, String unit,
-			Short state) throws Exception {
+			Short state, Long saleNum, Double originPrice, Integer type)
+			throws Exception {
 		Long time = System.currentTimeMillis() / 1000;
 		gDao = new GoodsDaoImp();
 		String url = "";
@@ -262,7 +264,7 @@ public class GoodsController {
 			}
 		}
 		Goods goods = new Goods(name, price, url, catalogId, description, time,
-				origin, state, "g", 500);
+				origin, state, "g", 500, saleNum, originPrice, type);
 		if (unit != null) {
 			try {
 				goods.setUnitName(unit.replaceAll("\\d+", ""));

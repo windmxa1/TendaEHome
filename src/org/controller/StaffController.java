@@ -10,6 +10,7 @@ import org.dao.StaffDao;
 import org.dao.imp.StaffDaoImp;
 import org.model.Staff;
 import org.model.StaffPromotion;
+import org.model.UserStaff;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -118,7 +119,7 @@ public class StaffController {
 	 */
 	@RequestMapping("/addStaff")
 	@ResponseBody
-	public Object addStaff(HttpServletRequest request,  Staff staff)
+	public Object addStaff(HttpServletRequest request, Staff staff)
 			throws Exception {
 		sDao = new StaffDaoImp();
 		if (sDao.saveOrUpdate(staff) > 0) {

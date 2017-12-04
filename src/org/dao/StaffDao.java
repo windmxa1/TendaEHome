@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.model.Staff;
 import org.model.StaffPromotion;
+import org.model.UserStaff;
 import org.view.VStaffPromotionId;
 
 public interface StaffDao {
@@ -46,10 +47,30 @@ public interface StaffDao {
 	/**
 	 * 获取员工信息列表
 	 */
-	public List<Staff> getStaffList(Integer start,Integer limit);
+	public List<Staff> getStaffList(Integer start, Integer limit);
 
 	/**
 	 * 获取员工总数
 	 */
 	public Long getStaffCount();
+
+	/**
+	 * 添加或修改员工账户
+	 */
+	public Long saveOrUpdateUser(UserStaff userStaff);
+
+	/**
+	 * 根据员工号获取员工账户
+	 */
+	public UserStaff getUserStaff(String staffNo);
+	/**
+	 * 获取员工
+	 */
+	public UserStaff getUserStaff(String username,String password);
+
+	/**
+	 * 修改员工账户密码
+	 */
+	public boolean updatePwd(String username, String password);
+
 }

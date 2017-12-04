@@ -32,6 +32,21 @@ public class TokenUtils {
 				.compact();
 		return jwt;
 	}
+	/**
+	 * 生成员工用户token
+	 */
+	public static String buildJwt1(Key key, Date exp, String staffNo) {
+		String jwt = Jwts.builder()
+				// .setExpiration(exp)// expTime是过期时间
+				.setIssuedAt(new Date())// 设置当前时间
+				.setIssuer("Marshall")// 设置发行人
+				.setSubject("authentic")// 设置主题
+				.setAudience("panshi")// 设置用户群
+				.claim("staffNo", staffNo)// 该方法是在JWT中加入值为vaule的key字段
+				.signWith(SignatureAlgorithm.HS512, key)// SECRET_KEY是加密算法对应的密钥，这里使用额是HS256加密算法
+				.compact();
+		return jwt;
+	}
 
 	/**
 	 * 生成管理员token

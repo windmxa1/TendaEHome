@@ -41,6 +41,9 @@
 			<mvc:exclude-mapping path="/app/user/phoneVerify" />
 			<mvc:exclude-mapping path="/app/goods/**" />
 			<mvc:exclude-mapping path="/app/garousel/**" />
+			<mvc:exclude-mapping path="/app/staff/login" />
+			<mvc:exclude-mapping path="/app/staff/updatePassword" />
+			<mvc:exclude-mapping path="/app/staff/register" />
 			<bean class="org.interceptor.AppInterceptor"></bean>
 		</mvc:interceptor>
 		<mvc:interceptor>

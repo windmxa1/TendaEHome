@@ -27,19 +27,20 @@ import org.view.VOrdersId;
 public class OrdersDaoImp implements OrdersDao {
 	@Override
 	public List<VOrdersId> getAfterSaleOrder(Long userid, Integer start,
-			Integer limit) {
+			Integer limit, Integer type) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
 			String sql = "";
 			Query query = null;
 			if (userid == null) {
-				sql = "from VOrders v where v.id.afterSaleState>0 order by v.id.time desc";
+				sql = "from VOrders v where v.id.afterSaleState>0 and v.id.type = :type order by v.id.time desc";
 				query = session.createQuery(sql);
 			} else {
-				sql = "from VOrders v where v.id.userid=? and v.id.afterSaleState>0 order by v.id.time desc";
+				sql = "from VOrders v where v.id.userid=? and v.id.afterSaleState>0 and v.id.type = :type order by v.id.time desc";
 				query = session.createQuery(sql);
 				query.setParameter(0, userid);
 			}
+			query.setParameter("type", type);
 			if (start == null) {
 				start = 0;
 			}
@@ -78,30 +79,24 @@ public class OrdersDaoImp implements OrdersDao {
 		}
 	}
 
+	@Override
 	public List<VOrdersId> getList(Long userid, Integer start, Integer limit,
-			Integer state, Boolean isDish) {
+			Integer state, Integer type) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
 			String sql = "";
 			Query query = null;
 			if (state == null) {
-				if (isDish) {
-					sql = "from VOrders v where v.id.userid=? and v.id.franchiseeId >0 order by v.id.time desc";
-				} else {
-					sql = "from VOrders v where v.id.userid=? and v.id.franchiseeId =0 order by v.id.time desc";
-				}
+				sql = "from VOrders v where v.id.userid=? and v.id.type = :type order by v.id.time desc";
 				query = session.createQuery(sql);
 				query.setParameter(0, userid);
 			} else {
-				if (isDish) {
-					sql = "from VOrders v where v.id.userid=? and v.id.state=? and v.id.franchiseeId >0 order by v.id.time desc";
-				} else {
-					sql = "from VOrders v where v.id.userid=? and v.id.state=? and v.id.franchiseeId =0 order by v.id.time desc";
-				}
+				sql = "from VOrders v where v.id.userid=? and v.id.state=? and v.id.type = :type order by v.id.time desc";
 				query = session.createQuery(sql);
 				query.setParameter(0, userid);
 				query.setParameter(1, state);
 			}
+			query.setParameter("type", type);
 			if (start == null) {
 				start = 0;
 			}
@@ -160,6 +155,7 @@ public class OrdersDaoImp implements OrdersDao {
 		}
 	}
 
+	@Override
 	public Long saveOrUpdate(Orders orders) {
 		Long id = 0L;
 		try {
@@ -300,6 +296,7 @@ public class OrdersDaoImp implements OrdersDao {
 		}
 	}
 
+	@Override
 	public boolean cancel() {
 		try {
 			Session session = HibernateSessionFactory.getSession();
@@ -317,6 +314,7 @@ public class OrdersDaoImp implements OrdersDao {
 		}
 	}
 
+	@Override
 	public boolean finish() {
 		try {
 			Session session = HibernateSessionFactory.getSession();
@@ -334,6 +332,7 @@ public class OrdersDaoImp implements OrdersDao {
 		}
 	}
 
+	@Override
 	public Long generateOrder(Orders orders, final List<OrdersDetail> details) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
@@ -366,6 +365,7 @@ public class OrdersDaoImp implements OrdersDao {
 		}
 	}
 
+	@Override
 	public List<String> getUrlList(Long orderId) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
@@ -384,12 +384,21 @@ public class OrdersDaoImp implements OrdersDao {
 
 	@Override
 	public List<VOrdersDetailsId> getDetailList(Long orderId, Integer start,
-			Integer limit) {
+			Integer limit, String origin) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
-			String sql = "from VOrdersDetails v where v.id.orderId=? ";
-			Query query = session.createQuery(sql);
-			query.setParameter(0, orderId);
+			String sql = "";
+			Query query = null;
+			if (origin == null) {
+				sql = "from VOrdersDetails v where v.id.orderId=? ";
+				query = session.createQuery(sql);
+				query.setParameter(0, orderId);
+			} else {
+				sql = "from VOrdersDetails v where v.id.orderId=? and origin like ?";
+				query = session.createQuery(sql);
+				query.setParameter(0, orderId);
+				query.setParameter(1, "%" + origin + "%");
+			}
 			if (start == null) {
 				start = 0;
 			}
@@ -417,19 +426,20 @@ public class OrdersDaoImp implements OrdersDao {
 
 	@Override
 	public List<VOrdersId> getListByState1(Integer start, Integer limit,
-			Integer state) {
+			Integer state, Integer type) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
 			String sql = "";
 			Query query = null;
 			if (state == null) {
-				sql = "from VOrders v  where date(v.id.createTime) = curdate() order by v.id.time desc";
+				sql = "from VOrders v  where date(v.id.createTime) = curdate() and type= :type order by v.id.time desc";
 				query = session.createQuery(sql);
 			} else {
-				sql = "from VOrders v where v.id.state=? and date(v.id.createTime) = curdate() order by v.id.time desc";
+				sql = "from VOrders v where v.id.state=? and date(v.id.createTime) = curdate() and type= :type order by v.id.time desc";
 				query = session.createQuery(sql);
 				query.setParameter(0, state);
 			}
+			query.setParameter("type", type);
 			if (start == null) {
 				start = 0;
 			}
@@ -457,22 +467,23 @@ public class OrdersDaoImp implements OrdersDao {
 
 	@Override
 	public List<VOrdersId> getListByState2(Integer start, Integer limit,
-			Integer state, String address) {
+			Integer state, String address, Integer type) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
 			Transaction ts = session.beginTransaction();
 			String sql = "";
 			Query query = null;
 			if (state == null) {
-				sql = "from VOrders v  where v.id.isExport=0 and date(v.id.createTime) = curdate() and id.address like ? order by v.id.time desc";
+				sql = "from VOrders v  where v.id.isExport=0 and date(v.id.createTime) = curdate() and id.address like ? and type= :type order by v.id.time desc";
 				query = session.createQuery(sql);
 				query.setParameter(0, "%" + address + "%");
 			} else {
-				sql = "from VOrders v where v.id.isExport=0 and v.id.state=? and date(v.id.createTime) = curdate() and id.address like ? order by v.id.time desc";
+				sql = "from VOrders v where v.id.isExport=0 and v.id.state=? and date(v.id.createTime) = curdate() and id.address like ? and type= :type order by v.id.time desc";
 				query = session.createQuery(sql);
 				query.setParameter(0, state);
 				query.setParameter(1, "%" + address + "%");
 			}
+			query.setParameter("type", type);
 			if (start == null) {
 				start = 0;
 			}
@@ -491,12 +502,13 @@ public class OrdersDaoImp implements OrdersDao {
 				list.add(v.getId());
 				ids.add(v.getId().getId());
 			}
-			Query query2 = session
-					.createQuery("update Orders set isExport=1 where from_unixtime(time,'%Y-%m-%d') = curdate() and address like ? and id in (:idList)");
-			query2.setParameter(0, "%" + "生态城" + "%");
-			query2.setParameterList("idList", ids);
-			query2.executeUpdate();
-
+			if (ids.size() > 0) {
+				Query query2 = session
+						.createQuery("update Orders set isExport=1 where from_unixtime(time,'%Y-%m-%d') = curdate() and address like ? and id in (:idList)");
+				query2.setParameter(0, "%" + "生态城" + "%");
+				query2.setParameterList("idList", ids);
+				query2.executeUpdate();
+			}
 			ts.commit();
 			return list;
 		} catch (Exception e) {
@@ -509,27 +521,20 @@ public class OrdersDaoImp implements OrdersDao {
 
 	@Override
 	public List<VOrdersId> getListByState(Integer start, Integer limit,
-			Integer state, Boolean isDish) {
+			Integer state, Integer type) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
 			String sql = "";
 			Query query = null;
 			if (state == null) {
-				if (isDish) {
-					sql = "from VOrders v where v.id.franchiseeId >0 order by v.id.time desc";
-				} else {
-					sql = "from VOrders v where v.id.franchiseeId =0 order by v.id.time desc";
-				}
+				sql = "from VOrders v where v.id.type=:type order by v.id.time desc";
 				query = session.createQuery(sql);
 			} else {
-				if (isDish) {
-					sql = "from VOrders v where v.id.state=? and v.id.franchiseeId >0  order by v.id.time desc";
-				} else {
-					sql = "from VOrders v where v.id.state=? and v.id.franchiseeId =0 order by v.id.time desc";
-				}
+				sql = "from VOrders v where v.id.state=? and v.id.type=:type order by v.id.time desc";
 				query = session.createQuery(sql);
 				query.setParameter(0, state);
 			}
+			query.setParameter("type", type);
 			if (start == null) {
 				start = 0;
 			}
@@ -660,23 +665,20 @@ public class OrdersDaoImp implements OrdersDao {
 	}
 
 	@Override
-	public Long getCountByState(Integer state,Boolean isDish) {
+	public Long getCountByState(Integer state, Integer type) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
 			String sql = "";
 			Query query = null;
 			if (state == null) {
-				if(isDish){
-					sql = "select count(id) from Orders where ";
-				}else {
-					sql = "select count(id) from Orders ";
-				}
+				sql = "select count(id) from Orders where id.type = :type ";
 				query = session.createQuery(sql);
 			} else {
-				sql = "select count(id.id) from VOrders where id.state=?";
+				sql = "select count(id.id) from VOrders where id.state=? and id.type = :type";
 				query = session.createQuery(sql);
 				query.setParameter(0, state);
 			}
+			query.setParameter("type", type);
 
 			Long a = (Long) query.uniqueResult();
 			return a;

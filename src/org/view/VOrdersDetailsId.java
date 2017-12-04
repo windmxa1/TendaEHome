@@ -13,6 +13,8 @@ public class VOrdersDetailsId implements java.io.Serializable {
 	private String orderNum;
 	private Long goodsId;
 	private String goodsName;
+	private Integer type;
+	private String origin;
 	private String totalNum;
 	private String goodsUrl;
 	private Integer num;
@@ -34,13 +36,15 @@ public class VOrdersDetailsId implements java.io.Serializable {
 
 	/** full constructor */
 	public VOrdersDetailsId(Long id, Long orderId, String orderNum,
-			Long goodsId, String goodsName, String totalNum, String goodsUrl,
-			Integer num, Double prices) {
+			Long goodsId, String goodsName, Integer type, String origin,
+			String totalNum, String goodsUrl, Integer num, Double prices) {
 		this.id = id;
 		this.orderId = orderId;
 		this.orderNum = orderNum;
 		this.goodsId = goodsId;
 		this.goodsName = goodsName;
+		this.type = type;
+		this.origin = origin;
 		this.totalNum = totalNum;
 		this.goodsUrl = goodsUrl;
 		this.num = num;
@@ -87,6 +91,22 @@ public class VOrdersDetailsId implements java.io.Serializable {
 
 	public void setGoodsName(String goodsName) {
 		this.goodsName = goodsName;
+	}
+
+	public Integer getType() {
+		return this.type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
+	}
+
+	public String getOrigin() {
+		return this.origin;
+	}
+
+	public void setOrigin(String origin) {
+		this.origin = origin;
 	}
 
 	public String getTotalNum() {
@@ -147,6 +167,12 @@ public class VOrdersDetailsId implements java.io.Serializable {
 						.getGoodsName() != null
 						&& castOther.getGoodsName() != null && this
 						.getGoodsName().equals(castOther.getGoodsName())))
+				&& ((this.getType() == castOther.getType()) || (this.getType() != null
+						&& castOther.getType() != null && this.getType()
+						.equals(castOther.getType())))
+				&& ((this.getOrigin() == castOther.getOrigin()) || (this
+						.getOrigin() != null && castOther.getOrigin() != null && this
+						.getOrigin().equals(castOther.getOrigin())))
 				&& ((this.getTotalNum() == castOther.getTotalNum()) || (this
 						.getTotalNum() != null
 						&& castOther.getTotalNum() != null && this
@@ -175,6 +201,10 @@ public class VOrdersDetailsId implements java.io.Serializable {
 				+ (getGoodsId() == null ? 0 : this.getGoodsId().hashCode());
 		result = 37 * result
 				+ (getGoodsName() == null ? 0 : this.getGoodsName().hashCode());
+		result = 37 * result
+				+ (getType() == null ? 0 : this.getType().hashCode());
+		result = 37 * result
+				+ (getOrigin() == null ? 0 : this.getOrigin().hashCode());
 		result = 37 * result
 				+ (getTotalNum() == null ? 0 : this.getTotalNum().hashCode());
 		result = 37 * result

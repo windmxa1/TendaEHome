@@ -19,8 +19,8 @@
         <property name="suggestion" type="java.lang.String">
             <column name="suggestion" length="200" />
         </property>
-        <property name="staffId" type="java.lang.String">
-            <column name="staff_id" length="10" not-null="true" />
+        <property name="staffNo" type="java.lang.String">
+            <column name="staff_no" length="10" not-null="true" />
         </property>
         <property name="userid" type="java.lang.Long">
             <column name="userid" not-null="true" />

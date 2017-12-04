@@ -85,4 +85,37 @@ public class FranchiseeDaoImp implements FranchiseeDao {
 		}
 	}
 
+	@Override
+	public List<Franchisee> getList(List<Long> ids) {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			String sql = " from Franchisee where id in (:ids) ?";
+			Query query = session.createQuery(sql);
+			query.setParameterList("ids", ids);
+			List<Franchisee> list = query.list();
+			return list;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
+	@Override
+	public List<Object[]> getLatLonList() {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			String sql = "select lat,lon,id from Franchisee";
+			Query query = session.createQuery(sql);
+			List<Object[]> list = query.list();
+			return list;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
 }

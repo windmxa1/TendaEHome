@@ -6,38 +6,43 @@ var json = null;
 var total = null;
 var pageSize = 20;
 var pageNo = 1;
+var goods_type = -1;
 $(function() {
 	// 加载目录列表
-	$.ajax({
-		type : "post",
-		url : "back/goods/getCatalog",
-		dataType : "json",
-		async : false,
-		cache : false,
-		headers : {
-			"token" : getCookie('token')
-		},
-		data : {
-			orderNum : $('#seek_text').val()
-		},
-		success : function(data) {
-			if (data.code == 100) {
-				var directoryList = '';
-				for ( var i = 0; i < data.data.list.length; i++) {
-					directoryList += "<li><p>" + data.data.list[i].catalog
-							+ "</p><span class='ddId' style='display: none;'>"
-							+ data.data.list[i].id + "</span></li>"
+	$
+			.ajax({
+				type : "post",
+				url : "back/goods/getCatalog",
+				dataType : "json",
+				async : false,
+				cache : false,
+				headers : {
+					"token" : getCookie('token')
+				},
+				data : {
+					orderNum : $('#seek_text').val()
+				},
+				success : function(data) {
+					if (data.code == 100) {
+						var directoryList = '';
+						for ( var i = 0; i < data.data.list.length; i++) {
+							directoryList += "<li><p>"
+									+ data.data.list[i].catalog
+									+ "</p><span class='ddId' style='display: none;'>"
+									+ data.data.list[i].id
+									+ "</span><span class='ddId' style='display: none;'>"
+									+ data.data.list[i].type + "</span></li>"
 
+						}
+						$('#directory').html(directoryList);
+					} else {
+						alert(data.msg)
+					}
+				},
+				error : function(data) {
+					alert("error");
 				}
-				$('#directory').html(directoryList);
-			} else {
-				alert(data.msg)
-			}
-		},
-		error : function(data) {
-			alert("error");
-		}
-	});
+			});
 	// 点击商品目录改变背景色
 	$('#qbsp_div').click(function() {
 		$('#qbsp_div').removeClass('addLiba');
@@ -101,7 +106,8 @@ $(function() {
 			"li");
 	for (i = 0; i < obj_lis.length; i++) {
 		obj_lis[i].onclick = function() {
-			indexId = $(this).find("span").eq(0).text()
+			indexId = $(this).find("span").eq(0).text();
+			goods_type = $(this).find("span").eq(1).text();
 			$('#xg_catalog').val($(this).find("p").eq(0).text());
 			builderUQTQueryMsg(getJsonArrayByPageSize(pageSize, pageNo));
 			var totalPage = getTotllePage(pageSize);
@@ -243,10 +249,15 @@ function tjsp() {
 	var description = document.getElementById('description').value;
 	var name = document.getElementById('name').value;
 	var price = document.getElementById('price').value;
+	var origin_price = document.getElementById('origin_price').value;
 	var unit = $('#unit').val();
 	var _reg = /^\S{0,50}$/;
 	var gg = /^[0-9]+(.[0-9]{1,2})?$/;
 	var unit_reg = /\d+\D+/;
+	if (goods_type == 2 && !gg.test(origin_price)) {
+		alert("价格格式：整数或整数后精确1~2位");
+		return;
+	}
 	if (indexId < 0) {
 		alert('请选择商品目录');
 	} else if (name == '' || price == '') {
@@ -262,6 +273,7 @@ function tjsp() {
 	} else {
 		var formData = new FormData(document.getElementById("tjsp_form"));
 		formData.append("catalogId", indexId);
+		formData.append("type", goods_type);
 		$.ajax({
 			type : "post",
 			url : "back/goods/addGoods",
@@ -292,7 +304,7 @@ function tjsp() {
 
 // 修改商品
 function updateCommodity(v) {
-	console.log(JSON.stringify(v));
+	 console.log(JSON.stringify(v));
 	$('#catalogId').val(v.catalogId);
 	$('#xg_id').val(v.goodsId);
 	$('#xg_name').val(v.name);
@@ -302,6 +314,10 @@ function updateCommodity(v) {
 	// $('#xg_file').val(v.goodsUrl);
 	$('#xg_origin').val(v.origin);
 	$('#xg_description').val(v.description);
+	$('#xg_saleNum').val(v.saleNum);
+//	alert(v.originPrice);
+	$('#xg_originPrice').val(v.originPrice);
+	$('#xg_type').val(v.type);
 
 }
 function upDownCommodity(state, id) {

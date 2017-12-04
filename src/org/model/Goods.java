@@ -19,6 +19,9 @@ public class Goods implements java.io.Serializable {
 	private Short state;
 	private String unitName;
 	private Integer unitNum;
+	private Long saleNum;
+	private Double originPrice;
+	private Integer type;
 
 	// Constructors
 
@@ -26,9 +29,35 @@ public class Goods implements java.io.Serializable {
 	public Goods() {
 	}
 
+	public Goods(String name, Double price, String url, Long catalogId,
+			String description, Long time, String origin, Short state,
+			String unitName, Integer unitNum) {
+		super();
+		this.name = name;
+		this.price = price;
+		this.url = url;
+		this.catalogId = catalogId;
+		this.description = description;
+		this.time = time;
+		this.origin = origin;
+		this.state = state;
+		this.unitName = unitName;
+		this.unitNum = unitNum;
+	}
+
 	/** minimal constructor */
 	public Goods(String name, Double price, String url, Long catalogId,
+			Long time) {
+		this.name = name;
+		this.price = price;
+		this.url = url;
+		this.catalogId = catalogId;
+		this.time = time;
+	}
+
+	public Goods(String name, Double price, String url, Long catalogId,
 			Long time, String unitName, Integer unitNum) {
+		super();
 		this.name = name;
 		this.price = price;
 		this.url = url;
@@ -41,7 +70,8 @@ public class Goods implements java.io.Serializable {
 	/** full constructor */
 	public Goods(String name, Double price, String url, Long catalogId,
 			String description, Long time, String origin, Short state,
-			String unitName, Integer unitNum) {
+			String unitName, Integer unitNum, Long saleNum, Double originPrice,
+			Integer type) {
 		this.name = name;
 		this.price = price;
 		this.url = url;
@@ -52,6 +82,9 @@ public class Goods implements java.io.Serializable {
 		this.state = state;
 		this.unitName = unitName;
 		this.unitNum = unitNum;
+		this.saleNum = saleNum;
+		this.originPrice = originPrice;
+		this.type = type;
 	}
 
 	// Property accessors
@@ -142,6 +175,30 @@ public class Goods implements java.io.Serializable {
 
 	public void setUnitNum(Integer unitNum) {
 		this.unitNum = unitNum;
+	}
+
+	public Long getSaleNum() {
+		return this.saleNum;
+	}
+
+	public void setSaleNum(Long saleNum) {
+		this.saleNum = saleNum;
+	}
+
+	public Double getOriginPrice() {
+		return this.originPrice;
+	}
+
+	public void setOriginPrice(Double originPrice) {
+		this.originPrice = originPrice;
+	}
+
+	public Integer getType() {
+		return this.type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
 	}
 
 }

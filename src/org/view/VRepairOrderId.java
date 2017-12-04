@@ -16,7 +16,7 @@ public class VRepairOrderId implements java.io.Serializable {
 	private Integer status;
 	private String handleResult;
 	private Long userid;
-	private String staffId;
+	private String staffNo;
 	private Integer isRead;
 	private String state;
 
@@ -40,7 +40,7 @@ public class VRepairOrderId implements java.io.Serializable {
 	/** full constructor */
 	public VRepairOrderId(Long id, String appointmentTime, String address,
 			String description, String phone, Integer status,
-			String handleResult, Long userid, String staffId, Integer isRead,
+			String handleResult, Long userid, String staffNo, Integer isRead,
 			String state) {
 		this.id = id;
 		this.appointmentTime = appointmentTime;
@@ -50,7 +50,7 @@ public class VRepairOrderId implements java.io.Serializable {
 		this.status = status;
 		this.handleResult = handleResult;
 		this.userid = userid;
-		this.staffId = staffId;
+		this.staffNo = staffNo;
 		this.isRead = isRead;
 		this.state = state;
 	}
@@ -121,12 +121,12 @@ public class VRepairOrderId implements java.io.Serializable {
 		this.userid = userid;
 	}
 
-	public String getStaffId() {
-		return this.staffId;
+	public String getstaffNo() {
+		return this.staffNo;
 	}
 
-	public void setStaffId(String staffId) {
-		this.staffId = staffId;
+	public void setstaffNo(String staffNo) {
+		this.staffNo = staffNo;
 	}
 
 	public Integer getIsRead() {
@@ -182,9 +182,9 @@ public class VRepairOrderId implements java.io.Serializable {
 				&& ((this.getUserid() == castOther.getUserid()) || (this
 						.getUserid() != null && castOther.getUserid() != null && this
 						.getUserid().equals(castOther.getUserid())))
-				&& ((this.getStaffId() == castOther.getStaffId()) || (this
-						.getStaffId() != null && castOther.getStaffId() != null && this
-						.getStaffId().equals(castOther.getStaffId())))
+				&& ((this.getstaffNo() == castOther.getstaffNo()) || (this
+						.getstaffNo() != null && castOther.getstaffNo() != null && this
+						.getstaffNo().equals(castOther.getstaffNo())))
 				&& ((this.getIsRead() == castOther.getIsRead()) || (this
 						.getIsRead() != null && castOther.getIsRead() != null && this
 						.getIsRead().equals(castOther.getIsRead())))
@@ -218,7 +218,7 @@ public class VRepairOrderId implements java.io.Serializable {
 		result = 37 * result
 				+ (getUserid() == null ? 0 : this.getUserid().hashCode());
 		result = 37 * result
-				+ (getStaffId() == null ? 0 : this.getStaffId().hashCode());
+				+ (getstaffNo() == null ? 0 : this.getstaffNo().hashCode());
 		result = 37 * result
 				+ (getIsRead() == null ? 0 : this.getIsRead().hashCode());
 		result = 37 * result

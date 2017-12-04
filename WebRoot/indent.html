@@ -40,6 +40,13 @@
 <body>
 	<div class="main-ontent" style="position: absolute;">
 		<div class="webdesigntuts-workshop" style="margin:10px; height: 30px;">
+			<ul class="nav nav-tabs">
+				<li class="active navli"><a href="#1" data-type="0">一米菜园</a></li>
+				<li class="navli"><a href="#2" data-type="1">智能家居</a></li>
+				<li class="navli"><a href="#3" data-type="2">互助餐厅</a></li>
+			</ul>
+		</div>
+		<div class="webdesigntuts-workshop" style="margin:10px; height: 30px;">
 			<div style="float: left;width:100%;">
 				<span style="margin-right: 20px;" onclick="indent(-1)">全部订单</span> <span
 					style="margin-right: 20px;" onclick="indent(4)">已签收</span> <span
@@ -62,12 +69,16 @@
 					<ul class="dropdown-menu dropdown-menu-right"
 						aria-labelledby="dropdownMenu1">
 						<li class="dropdown-header">生态城订单导出</li>
-						<li><a onclick="getOrderPDF('生态城',2)">导出已支付订单</a></li>
-						<li><a onclick="getOrderPDF('生态城',1)">导出未支付订单</a></li>
+						<li><a onclick="getOrderPDF('生态城',2)">导出已支付订单</a>
+						</li>
+						<li><a onclick="getOrderPDF('生态城',1)">导出未支付订单</a>
+						</li>
 						<li role="separator" class="divider"></li>
 						<li class="dropdown-header">开发区订单导出</li>
-						<li><a onclick="getOrderPDF('开发区',2)">导出已支付订单</a></li>
-						<li><a onclick="getOrderPDF('开发区',1)">导出未支付订单</a></li>
+						<li><a onclick="getOrderPDF('开发区',2)">导出已支付订单</a>
+						</li>
+						<li><a onclick="getOrderPDF('开发区',1)">导出未支付订单</a>
+						</li>
 					</ul>
 				</div>
 				<!-- 

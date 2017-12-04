@@ -43,14 +43,16 @@ public class OrdersController {
 	@RequestMapping("/getOrdersList")
 	@ResponseBody
 	public Object getOrdersList(HttpServletRequest request, Integer start,
-			Integer limit, Integer state) throws Exception {
+			Integer limit, Integer state, Integer type) throws Exception {
 		oDao = new OrdersDaoImp();
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");
 		Long userid = Long.parseLong(""
 				+ TokenUtils.getValue(token, TokenUtils.getKey(), "userid"));
 		/*********************************/
-		List<VOrdersId> list = oDao.getList(userid, start, limit, state, false);
+		if (type == null)
+			type = 0;
+		List<VOrdersId> list = oDao.getList(userid, start, limit, state, type);
 		data = new HashMap<String, Object>();
 		if (list == null || list.size() == 0) {
 			data.put("list", new ArrayList<>());
@@ -68,7 +70,7 @@ public class OrdersController {
 	public Object getOrdersDetailList(Long orderId, Integer start, Integer limit)
 			throws Exception {
 		oDao = new OrdersDaoImp();
-		List<VOrdersDetailsId> list = oDao.getDetailList(orderId, start, limit);
+		List<VOrdersDetailsId> list = oDao.getDetailList(orderId, start, limit,null);
 		data = new HashMap<>();
 		if (list != null) {
 			data.put("list", list);
@@ -81,14 +83,16 @@ public class OrdersController {
 	@RequestMapping("/getOrders")
 	@ResponseBody
 	public Object getOrders(HttpServletRequest request, Integer start,
-			Integer limit, Integer state) throws Exception {
+			Integer limit, Integer state, Integer type) throws Exception {
 		oDao = new OrdersDaoImp();
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");
 		Long userid = Long.parseLong(""
 				+ TokenUtils.getValue(token, TokenUtils.getKey(), "userid"));
 		/*********************************/
-		List<VOrdersId> list = oDao.getList(userid, start, limit, state,false);
+		if (type == null)
+			type = 0;
+		List<VOrdersId> list = oDao.getList(userid, start, limit, state, type);
 		data = new HashMap<String, Object>();
 		if (list == null || list.size() == 0) {
 			data.put("list", new ArrayList<>());
@@ -175,7 +179,8 @@ public class OrdersController {
 		String orderNum = time + Utils.ran6();
 		/*********************************/
 		Orders orders = new Orders(userid, time / 1000,
-				uAddressDao.getAddressById(o.getAddressId()), orderNum);
+				uAddressDao.getAddressById(o.getAddressId()), orderNum,
+				o.getFranchiseeId(), o.getType());
 		System.out.println(o.getAddressId() + "|||" + orders.getAddress());
 		Long id = oDao.generateOrder(orders, o.getDetails());
 		if (id > 0) {

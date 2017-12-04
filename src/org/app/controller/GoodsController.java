@@ -26,11 +26,12 @@ public class GoodsController {
 	// 获取商品信息
 	@RequestMapping("/getGoodsList")
 	@ResponseBody
-	public Object getGoodsList(Integer start, Integer limit) throws Exception {
+	public Object getGoodsList(Integer start, Integer limit,Integer type) throws Exception {
 		gDao = new GoodsDaoImp();
 		data = new HashMap<String, Object>();
 		Short[] state = { (short) 1 };
-		List<VGoodsId> list = gDao.getList(start, limit, state);
+		if(type==null)type=0;
+		List<VGoodsId> list = gDao.getList(start, limit, state, type);
 		if (list != null) {
 			data.put("list", list);
 		} else {
@@ -63,11 +64,12 @@ public class GoodsController {
 	// 获取销量最高的10个商品
 	@RequestMapping("/getBestSell")
 	@ResponseBody
-	public Object getGoodsList() throws Exception {
+	public Object getGoodsList(Integer type) throws Exception {
 		gDao = new GoodsDaoImp();
 		data = new HashMap<String, Object>();
 		Short[] state = { (short) 1 };
-		List<VGoodsId> list = gDao.getList(0, 10, state);
+		if(type==null)type=0;
+		List<VGoodsId> list = gDao.getList(0, 10, state, type);
 		if (list != null) {
 			data.put("list", list);
 		} else {
@@ -79,10 +81,11 @@ public class GoodsController {
 	// 获取折扣商品信息
 	@RequestMapping("/getDiscounts")
 	@ResponseBody
-	public Object getDiscounts(Integer start, Integer limit) throws Exception {
+	public Object getDiscounts(Integer start, Integer limit,Integer type) throws Exception {
 		gDao = new GoodsDaoImp();
 		data = new HashMap<String, Object>();
-		List<VGoodsId> list = gDao.getDiscounts(start, limit);
+		if(type==null)type=0;
+		List<VGoodsId> list = gDao.getDiscounts(start, limit, type);
 		if (list != null) {
 			data.put("list", list);
 		} else {
@@ -94,12 +97,13 @@ public class GoodsController {
 	// 搜索商品
 	@RequestMapping("/searchGoods")
 	@ResponseBody
-	public Object searchGoods(Integer start, Integer limit, String key)
+	public Object searchGoods(Integer start, Integer limit, String key,Integer type)
 			throws Exception {
 		gDao = new GoodsDaoImp();
 		data = new HashMap<String, Object>();
 		Short[] state = { (short) 1 };
-		List<VGoodsId> list = gDao.getGoodsByKey(start, limit, key, state);
+		if(type==null)type=0;
+		List<VGoodsId> list = gDao.getGoodsByKey(start, limit, key, state, type);
 		if (list != null) {
 			data.put("list", list);
 		} else {
@@ -111,10 +115,11 @@ public class GoodsController {
 	// 最新上架
 	@RequestMapping("/getNewArrival")
 	@ResponseBody
-	public Object getNewArrival() throws Exception {
+	public Object getNewArrival(Integer type) throws Exception {
 		gDao = new GoodsDaoImp();
 		data = new HashMap<String, Object>();
-		List<VGoodsId> list = gDao.getNewArrival();
+		if(type==null)type=0;
+		List<VGoodsId> list = gDao.getNewArrival(type);
 		if (list != null) {
 			data.put("list", list);
 		} else {
@@ -126,10 +131,11 @@ public class GoodsController {
 	// 最新上架，按分类返回
 	@RequestMapping("/getNewArrival1")
 	@ResponseBody
-	public Object getNewArrival1() throws Exception {
+	public Object getNewArrival1(Integer type) throws Exception {
 		gDao = new GoodsDaoImp();
 		data = new HashMap<String, Object>();
-		List<Long> gCatalogIds = gDao.getCatalogIds();
+		if(type==null)type=0;
+		List<Long> gCatalogIds = gDao.getCatalogIds(type);
 		if (gCatalogIds == null) {
 			return ResultUtils.toJson(101, "服务器繁忙，请重试", "");
 		}
@@ -143,10 +149,11 @@ public class GoodsController {
 	// 获取目录列表
 	@RequestMapping("/getCatalog")
 	@ResponseBody
-	public Object getCatalog() throws Exception {
+	public Object getCatalog(Integer type) throws Exception {
 		gDao = new GoodsDaoImp();
 		data = new HashMap<String, Object>();
-		List<GoodsCatalog> list = gDao.getCatalog();
+		if(type==null)type=0;
+		List<GoodsCatalog> list = gDao.getCatalog(type);
 		if (list != null) {
 			data.put("list", list);
 		} else {

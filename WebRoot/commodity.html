@@ -98,7 +98,8 @@ ul,li {
 			<ul id="directory">
 			</ul>
 		</div>
-		<div class="r_content" style="overflow-y:scroll; overflow-x:hidden;table-layout: fixed;word-wrap:break-word;word-break:break-all;">
+		<div class="r_content"
+			style="overflow-y:scroll; overflow-x:hidden;table-layout: fixed;word-wrap:break-word;word-break:break-all;">
 			<div class="webdesigntuts-workshop"
 				style="margin:10px; height: 30px;">
 
@@ -140,8 +141,7 @@ ul,li {
 							<table>
 								<tr>
 									<td><label>目录名:</label> <input type="text" name="catalog"
-										id="catalog" />
-									</td>
+										id="catalog" /></td>
 								</tr>
 							</table>
 							<input type="reset" name="reset" style="display: none;" />
@@ -172,8 +172,7 @@ ul,li {
 							<table>
 								<tr>
 									<td><label>目录名:</label> <input type="text"
-										name="xg_catalog" id="xg_catalog" />
-									</td>
+										name="xg_catalog" id="xg_catalog" /></td>
 								</tr>
 							</table>
 							<input type="reset" name="reset" style="display: none;" />
@@ -210,6 +209,11 @@ ul,li {
 								<label for="price">商品价格(必填)</label> <input type="text"
 									class="form-control" name="price" id="price"
 									placeholder="请输入商品价格" aria-describedby="stmp">
+							</div>
+							<div class="form-group">
+								<label for="price">商家定价(必填)</label> <input type="text"
+									class="form-control" name="originPrice" id="origin_price"
+									placeholder="请输入商家定价" aria-describedby="stmp">
 							</div>
 							<div class="form-group">
 								<label for="price">商品单位(必填)</label> <input type="text"
@@ -260,6 +264,15 @@ ul,li {
 								<input type="text" class="form-control" name="catalogId"
 									id="catalogId" aria-describedby="stmp">
 							</div>
+							<div style="display: none;">
+								<input type="text" class="form-control" name="saleNum"
+									id="xg_saleNum" aria-describedby="stmp">
+							</div>
+							
+							<div style="display: none;">
+								<input type="text" class="form-control" name="type" id="xg_type"
+									aria-describedby="stmp">
+							</div>
 							<div class="form-group has-feedback" style="display: none;">
 								<label for="id">商品id(必填)</label> <input type="text"
 									class="form-control" name="id" id="xg_id"
@@ -269,6 +282,11 @@ ul,li {
 								<label for="name">商品名(必填)</label> <input type="text"
 									class="form-control" name="name" id="xg_name"
 									placeholder="请输入商品名称" aria-describedby="stmp">
+							</div>
+							<div class="form-group has-feedback">
+								<label for="id">商家定价(选填)</label> <input type="text"
+									class="form-control" name="originPrice" id="xg_originPrice"
+									aria-describedby="stmp">
 							</div>
 							<div class="form-group">
 								<label for="price">商品价格(必填)</label> <input type="text"

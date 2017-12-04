@@ -31,8 +31,8 @@
             <key-property name="userid" type="java.lang.Long">
                 <column name="userid" />
             </key-property>
-            <key-property name="staffId" type="java.lang.String">
-                <column name="staff_id" length="10" />
+            <key-property name="staffNo" type="java.lang.String">
+                <column name="staff_no" length="10" />
             </key-property>
             <key-property name="isRead" type="java.lang.Integer">
                 <column name="is_read" />

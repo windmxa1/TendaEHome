@@ -16,5 +16,13 @@
         <property name="url" type="java.lang.String">
             <column name="url" length="20" />
         </property>
+        <property name="description" type="java.lang.String">
+            <column name="description" length="200" />
+        </property>
+        <property name="type" type="java.lang.Integer">
+            <column name="type">
+                <comment>0一米菜园，1智能家居，2互助式餐厅</comment>
+            </column>
+        </property>
     </class>
 </hibernate-mapping>

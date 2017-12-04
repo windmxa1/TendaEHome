@@ -36,9 +36,9 @@ public class AfterSaleController {
 	@RequestMapping("/getAfterSaleOrder")
 	@ResponseBody
 	public Object getAfterSaleOrder(HttpServletRequest request, Integer start,
-			Integer limit) {
+			Integer limit,Integer type) {
 		oDao = new OrdersDaoImp();
-		List<VOrdersId> list = oDao.getAfterSaleOrder(null, start, limit);
+		List<VOrdersId> list = oDao.getAfterSaleOrder(null, start, limit,type);
 		if (list == null) {
 			return ResultUtils.toJson(101, "服务器繁忙，请重试", "");
 		}

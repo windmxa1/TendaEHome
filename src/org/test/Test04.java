@@ -6,10 +6,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.dao.AfterSaleDao;
+import org.dao.FranchiseeDao;
 import org.dao.GoodsDao;
 import org.dao.OrdersDao;
 import org.dao.RefundDao;
 import org.dao.imp.AfterSaleDaoImp;
+import org.dao.imp.FranchiseeDaoImp;
 import org.dao.imp.GoodsDaoImp;
 import org.dao.imp.OrdersDaoImp;
 import org.dao.imp.RefundDaoImp;
@@ -25,9 +27,11 @@ import org.model.Orders;
 import org.model.Refund;
 import org.util.AESUtil;
 import org.util.Constants;
+import org.util.Coordinate;
 import org.util.HibernateSessionFactory;
 import org.util.JsonUtils;
 import org.util.MD5;
+import org.util.RedisUtil;
 import org.util.ResultUtils;
 import org.util.WXAPI;
 import org.util.XmlUtils;
@@ -41,14 +45,15 @@ import com.sun.org.apache.xml.internal.security.utils.Base64;
 
 public class Test04 {
 	public static void main(String[] args) throws JsonProcessingException {
-		try {
-			Session session = HibernateSessionFactory.getSession();
-			Query query = session.createQuery("from Orders where id=:id");
-			query.setParameter("id", 443L);
-			List<Orders> list = query.list();
-			System.out.println(JsonUtils.getMapperInstance().writeValueAsString(list));
-		} catch (Exception e) {
-			// TODO: handle exception
+		FranchiseeDao fDao = new FranchiseeDaoImp();
+		List<Object[]> list = fDao.getLatLonList();
+		for (Object[] o : list) {
+			Coordinate coordinate = new Coordinate(
+					Double.parseDouble(o[0] + ""),
+					Double.parseDouble(o[1] + ""), "" + o[2]);
+			System.out.println(JsonUtils.getMapperInstance()
+					.writeValueAsString(coordinate));
+			// RedisUtil.addReo(coordinate);
 		}
 	}
 }

@@ -9,6 +9,9 @@ public class OrderModel {
 	private List<OrdersDetail> details = new ArrayList<>();
 	private Long addressId;
 	private Double total;
+	private Integer type=0;
+	private Long franchiseeId=0L ;
+	private String remarks = "";
 //	private Integer payWay;
 
 //	public Integer getPayWay() {
@@ -18,6 +21,30 @@ public class OrderModel {
 //	public void setPayWay(Integer payWay) {
 //		this.payWay = payWay;
 //	}
+
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
+
+	public Long getFranchiseeId() {
+		return franchiseeId;
+	}
+
+	public void setFranchiseeId(Long franchiseeId) {
+		this.franchiseeId = franchiseeId;
+	}
+
+	public Integer getType() {
+		return type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
+	}
 
 	public List<OrdersDetail> getDetails() {
 		return details;

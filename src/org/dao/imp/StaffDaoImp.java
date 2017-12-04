@@ -9,6 +9,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.model.Staff;
 import org.model.StaffPromotion;
+import org.model.UserStaff;
 import org.util.HibernateSessionFactory;
 import org.view.VGoods;
 import org.view.VGoodsId;
@@ -204,6 +205,84 @@ public class StaffDaoImp implements StaffDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return 0L;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
+	@Override
+	public Long saveOrUpdateUser(UserStaff userStaff) {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			Transaction ts = session.beginTransaction();
+			Long id = 0L;
+			if (userStaff.getId() == null) {
+				id = (Long) session.save(userStaff);
+			} else {
+				session.update(userStaff);
+			}
+			ts.commit();
+			return id;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return -1L;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
+	@Override
+	public UserStaff getUserStaff(String staffNo) {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			Query query = session
+					.createQuery("from UserStaff where staffNo = ?");
+			query.setParameter(0, staffNo);
+			query.setMaxResults(1);
+			UserStaff userStaff = (UserStaff) query.uniqueResult();
+			return userStaff;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
+	@Override
+	public UserStaff getUserStaff(String username, String password) {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			Query query = session
+					.createQuery("from UserStaff where username = ? and password = ?");
+			query.setParameter(0, username);
+			query.setParameter(1, password);
+			query.setMaxResults(1);
+			UserStaff userStaff = (UserStaff) query.uniqueResult();
+			return userStaff;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
+	@Override
+	public boolean updatePwd(String username, String password) {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			Transaction ts = session.beginTransaction();
+			Query query = session
+					.createQuery("update UserStaff set password = ? where username = ?");
+			query.setParameter(0, password);
+			query.setParameter(1, username);
+			query.executeUpdate();
+			ts.commit();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
 		} finally {
 			HibernateSessionFactory.closeSession();
 		}

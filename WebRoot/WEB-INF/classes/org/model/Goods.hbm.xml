@@ -29,7 +29,7 @@
             <column name="time" not-null="true" />
         </property>
         <property name="origin" type="java.lang.String">
-            <column name="origin" length="20">
+            <column name="origin" length="100">
                 <comment>源产地</comment>
             </column>
         </property>
@@ -37,10 +37,23 @@
             <column name="state" />
         </property>
         <property name="unitName" type="java.lang.String">
-            <column name="unit_name" length="11" not-null="true" />
+            <column name="unit_name" length="11" />
         </property>
         <property name="unitNum" type="java.lang.Integer">
-            <column name="unit_num" not-null="true" />
+            <column name="unit_num" />
+        </property>
+        <property name="saleNum" type="java.lang.Long">
+            <column name="sale_num" />
+        </property>
+        <property name="originPrice" type="java.lang.Double">
+            <column name="origin_price" precision="11">
+                <comment>菜品原价</comment>
+            </column>
+        </property>
+        <property name="type" type="java.lang.Integer">
+            <column name="type">
+                <comment>0蔬菜，1智能设备，2菜肴</comment>
+            </column>
         </property>
     </class>
 </hibernate-mapping>

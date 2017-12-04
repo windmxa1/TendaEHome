@@ -31,6 +31,15 @@
             <key-property name="state" type="java.lang.Short">
                 <column name="state" />
             </key-property>
+            <key-property name="saleNum" type="java.lang.Long">
+                <column name="sale_num" />
+            </key-property>
+            <key-property name="originPrice" type="java.lang.Double">
+                <column name="origin_price" precision="11" />
+            </key-property>
+            <key-property name="type" type="java.lang.Integer">
+                <column name="type" />
+            </key-property>
             <key-property name="status" type="java.lang.String">
                 <column name="status" length="3" />
             </key-property>
@@ -59,7 +68,7 @@
                 <column name="goods_url" length="236" />
             </key-property>
             <key-property name="origin" type="java.lang.String">
-                <column name="origin" length="20" />
+                <column name="origin" length="100" />
             </key-property>
         </composite-id>
     </class>

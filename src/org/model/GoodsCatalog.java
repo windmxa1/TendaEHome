@@ -11,6 +11,8 @@ public class GoodsCatalog implements java.io.Serializable {
 	private Long id;
 	private String catalog;
 	private String url;
+	private String description;
+	private Integer type;
 
 	// Constructors
 
@@ -24,9 +26,12 @@ public class GoodsCatalog implements java.io.Serializable {
 	}
 
 	/** full constructor */
-	public GoodsCatalog(String catalog, String url) {
+	public GoodsCatalog(String catalog, String url, String description,
+			Integer type) {
 		this.catalog = catalog;
 		this.url = url;
+		this.description = description;
+		this.type = type;
 	}
 
 	// Property accessors
@@ -53,6 +58,22 @@ public class GoodsCatalog implements java.io.Serializable {
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+
+	public String getDescription() {
+		return this.description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public Integer getType() {
+		return this.type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
 	}
 
 }

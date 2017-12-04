@@ -9,17 +9,20 @@ public class Orders implements java.io.Serializable {
 	// Fields
 
 	private Long id;
+	private String orderNum;
 	private Long userid;
 	private Long time;
 	private String address;
-	private String orderNum;
-	private String staffId;
+	private String staffNo;
 	private Integer isExport;
 	private Integer deliveryState;
 	private Integer payWay;
 	private String refundId;
 	private Long finishTime;
 	private Integer afterSaleState;
+	private Long franchiseeId;
+	private Integer type;
+	private String remarks;
 
 	// Constructors
 
@@ -28,32 +31,55 @@ public class Orders implements java.io.Serializable {
 	}
 
 	/** minimal constructor */
-	public Orders(Long userid, Long time, String address, String orderNum) {
+	public Orders(String orderNum, Long userid, Long time, String address) {
+		this.orderNum = orderNum;
 		this.userid = userid;
 		this.time = time;
 		this.address = address;
-		this.orderNum = orderNum;
 	}
 
 	/** full constructor */
-	public Orders(Long userid, Long time, String address, String orderNum,
-			String staffId, Integer isExport, Integer deliveryState,
+	public Orders(String orderNum, Long userid, Long time, String address,
+			String staffNo, Integer isExport, Integer deliveryState,
 			Integer payWay, String refundId, Long finishTime,
-			Integer afterSaleState) {
+			Integer afterSaleState, Long franchiseeId, Integer type,
+			String remarks) {
+		this.orderNum = orderNum;
 		this.userid = userid;
 		this.time = time;
 		this.address = address;
-		this.orderNum = orderNum;
-		this.staffId = staffId;
+		this.staffNo = staffNo;
 		this.isExport = isExport;
 		this.deliveryState = deliveryState;
 		this.payWay = payWay;
 		this.refundId = refundId;
 		this.finishTime = finishTime;
 		this.afterSaleState = afterSaleState;
+		this.franchiseeId = franchiseeId;
+		this.type = type;
+		this.remarks = remarks;
 	}
 
 	// Property accessors
+
+	public Orders(Long userid, Long time, String address, String orderNum,
+			Long franchiseeId, Integer type) {
+		super();
+		this.orderNum = orderNum;
+		this.userid = userid;
+		this.time = time;
+		this.address = address;
+		this.franchiseeId = franchiseeId;
+		this.type = type;
+	}
+
+	public Orders(Long userid, Long time, String address, String orderNum) {
+		super();
+		this.orderNum = orderNum;
+		this.userid = userid;
+		this.time = time;
+		this.address = address;
+	}
 
 	public Long getId() {
 		return this.id;
@@ -61,6 +87,14 @@ public class Orders implements java.io.Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getOrderNum() {
+		return this.orderNum;
+	}
+
+	public void setOrderNum(String orderNum) {
+		this.orderNum = orderNum;
 	}
 
 	public Long getUserid() {
@@ -87,20 +121,12 @@ public class Orders implements java.io.Serializable {
 		this.address = address;
 	}
 
-	public String getOrderNum() {
-		return this.orderNum;
+	public String getstaffNo() {
+		return this.staffNo;
 	}
 
-	public void setOrderNum(String orderNum) {
-		this.orderNum = orderNum;
-	}
-
-	public String getStaffId() {
-		return this.staffId;
-	}
-
-	public void setStaffId(String staffId) {
-		this.staffId = staffId;
+	public void setstaffNo(String staffNo) {
+		this.staffNo = staffNo;
 	}
 
 	public Integer getIsExport() {
@@ -149,6 +175,30 @@ public class Orders implements java.io.Serializable {
 
 	public void setAfterSaleState(Integer afterSaleState) {
 		this.afterSaleState = afterSaleState;
+	}
+
+	public Long getFranchiseeId() {
+		return this.franchiseeId;
+	}
+
+	public void setFranchiseeId(Long franchiseeId) {
+		this.franchiseeId = franchiseeId;
+	}
+
+	public Integer getType() {
+		return this.type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
+	}
+
+	public String getRemarks() {
+		return this.remarks;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
 	}
 
 }

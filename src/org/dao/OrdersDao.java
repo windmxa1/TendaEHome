@@ -13,7 +13,7 @@ public interface OrdersDao {
 	/**
 	 * 获取单个用户的订单列表
 	 */
-	public List<VOrdersId> getList(Long userid, Integer start, Integer limit,Integer state,Boolean isDish);
+	public List<VOrdersId> getList(Long userid, Integer start, Integer limit,Integer state,Integer type);
 
 	/**
 	 * 获取单个订单
@@ -27,7 +27,7 @@ public interface OrdersDao {
 	 * 获取订单详情列表
 	 */
 	public List<VOrdersDetailsId> getDetailList(Long orderId, Integer start,
-			Integer limit);
+			Integer limit,String origin);
 
 	/**
 	 * 增加订单
@@ -57,12 +57,12 @@ public interface OrdersDao {
 	 * 根据状态获取订单列表,NULL所有,0取消订单,1未支付，2已支付未发货，3发货未签收，4发货已签收
 	 */
 	public List<VOrdersId> getListByState(Integer start, Integer limit,
-			Integer state,Boolean isDish);
+			Integer state,Integer type);
 
 	/**
 	 * 根据状态获取订单总数(如果state为Null，则返回所有的订单总数)
 	 */
-	public Long getCountByState(Integer state,Boolean isDish);
+	public Long getCountByState(Integer state,Integer type);
 
 	/**
 	 * 修改订单状态
@@ -93,11 +93,11 @@ public interface OrdersDao {
 	/**
 	 * 获取当天订单列表，用于订单导出
 	 */
-	public List<VOrdersId> getListByState1(Integer start, Integer limit, Integer state);
+	public List<VOrdersId> getListByState1(Integer start, Integer limit, Integer state,Integer type);
 	/**
 	 * 获取当天订单列表，用于订单导出，分区导出
 	 */
-	public List<VOrdersId> getListByState2(Integer start, Integer limit, Integer state,String address);
+	public List<VOrdersId> getListByState2(Integer start, Integer limit, Integer state,String address,Integer type);
 	/**
 	 * 根据ID获取订单
 	 */
@@ -110,7 +110,7 @@ public interface OrdersDao {
 	/**
 	 * 获取申请了售后处理的订单列表
 	 */
-	List<VOrdersId> getAfterSaleOrder(Long userid, Integer start, Integer limit);
+	List<VOrdersId> getAfterSaleOrder(Long userid, Integer start, Integer limit,Integer type);
 	/**
 	 * 修改订单运货状态
 	 */

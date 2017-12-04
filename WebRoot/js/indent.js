@@ -7,6 +7,7 @@ var pageSize = 20;
 var pageNo = 1;
 var indexState = -1;
 // 加载默认列表（全部订单）
+var type = 0;
 $(function() {
 	builderUQTQueryMsg(getJsonArrayByPageSize(pageSize, pageNo));
 	var totalPage = getTotllePage(pageSize);
@@ -24,6 +25,25 @@ $(function() {
 	kkpager.generPageHtml();
 	$(".dropdown").hover(function() {
 		$(this).toggleClass("open");
+	});
+	$('.navli a').click(function() {
+		$(".navli").removeClass("active");
+		$(this).parent().addClass("active");
+		type = $(this).data("type");
+		builderUQTQueryMsg(getJsonArrayByPageSize(pageSize, pageNo));
+		var totalPage = getTotllePage(pageSize);
+		var totalRecords = total;
+		// 生成分页控件 根据分页的形式在这里设置
+		kkpager.init({
+			pno : pageNo,
+			// 总页码
+			total : totalPage,
+			// 总数据条数
+			totalRecords : totalRecords,
+			// 页面条数
+			pageSize : pageSize
+		});
+		kkpager.generPageHtml();
 	});
 });
 // 切换订单状态
@@ -104,7 +124,7 @@ function popRefund(o) {
 	$('#r_payWay').val(o.payWay);
 	$('#r_total').val(o.total);
 	$('#refundmodal').modal();
-	
+
 }
 function doRefund() {
 	var data = new FormData($('#refund_form')[0]);
@@ -116,7 +136,7 @@ function doRefund() {
 		cache : false,
 		contentType : false,
 		processData : false,
-		data :data,
+		data : data,
 		headers : {
 			"token" : getCookie('token')
 		},
@@ -124,7 +144,7 @@ function doRefund() {
 			if (data.code == 100) {
 				alert("申请成功!");
 				location.reload();
-			}else{
+			} else {
 				alert(data.msg);
 			}
 		},
@@ -368,6 +388,7 @@ var getJsonArrayByPageSize = function(pageSize, pageNo) {
 			data : {
 				'start' : (pageNo - 1) * pageSize,
 				'limit' : pageSize,
+				'type' : type
 			},
 			success : function(data) {
 				if (data.code == 100) {
@@ -392,6 +413,7 @@ var getJsonArrayByPageSize = function(pageSize, pageNo) {
 			data : {
 				'start' : (pageNo - 1) * pageSize,
 				'limit' : pageSize,
+				'type' : type
 			},
 			success : function(data) {
 				if (data.code == 100) {
@@ -416,7 +438,8 @@ var getJsonArrayByPageSize = function(pageSize, pageNo) {
 			data : {
 				'start' : (pageNo - 1) * pageSize,
 				'limit' : pageSize,
-				"state" : indexState
+				"state" : indexState,
+				'type' : type
 			},
 			success : function(data) {
 				if (data.code == 100) {
@@ -470,7 +493,7 @@ function refreshData(pageSize, pageNo) {
 var builderUQTQueryMsg = function(UQTQueryMsg) {
 	var UQT_detailTable = $('#UQT_detailTable');
 	UQT_detailTable.empty();
-	var th = '<tr><th scope="col" class="eng_name" style="width:90px">订单编号</th><th scope="col" class="query_pro" >地址</th><th class="match_type" scope="col">订单状态</th><th scope="col"  class="dis_order">时间</th><th scope="col"  class="dis_order">支付方式</th><th scope="col"  class="dis_dta">操作</th><th class="dis_hidden" style="display: none">隐藏属性</th></tr>';
+	var th = '<tr><th scope="col" class="eng_name" style="width:90px">订单编号</th><th scope="col" class="query_pro" >地址</th><th class="match_type" scope="col" style="width:30px">订单状态</th><th scope="col"  class="dis_order">时间</th><th scope="col"  class="dis_order">支付方式</th><th scope="col"  class="dis_dta">操作</th><th class="dis_hidden" style="display: none">隐藏属性</th></tr>';
 
 	UQT_detailTable.append(th);
 	var tr;
@@ -498,6 +521,8 @@ var builderUQTQueryMsg = function(UQTQueryMsg) {
 							break;
 						}
 						var trString = "<td class='eng_name'>"
+								+ "<button class='btn btn-sm' data-target='#order_"+id+"' data-toggle='collapse' type='button'>"
+								+"<span class='glyphicon glyphicon-triangle-bottom' aria-hidden='true'></span></button>"
 								+ orderNum
 								+ "</td>"
 								+ "<td class='query_pro'>"
@@ -506,7 +531,9 @@ var builderUQTQueryMsg = function(UQTQueryMsg) {
 								+ "<td class='match_type'>"
 								+ status
 								+ "</td>"
-								+ "<td class='match_type'>"
+								+ "<td class='match_type' title='"
+								+ createTime
+								+ "'>"
 								+ createTime
 								+ "</td>"
 								+ "<td class='match_type'>"
@@ -561,6 +588,10 @@ var builderUQTQueryMsg = function(UQTQueryMsg) {
 								+ "</td>"
 								+ "<td class='dis_hidden' style='display: none'></td>";
 						tr.append(trString);
+
+						UQT_detailTable.append(tr);
+						tr = $('<tr id="order_'+id+'" class="collapse">');
+						tr.append('<td colspan="6">订单总价为：'+eachData.total+' 配送的员工为: '+eachData.staffName+' 选择的厨师为: '+eachData.franchiseeName+'</td></tr>');
 						UQT_detailTable.append(tr);
 					});
 }

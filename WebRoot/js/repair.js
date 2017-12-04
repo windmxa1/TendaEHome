@@ -154,7 +154,7 @@ $(document).on('click','.modOrder',function(){
 	var order = $(this).data('order');
 	$('#OrderId').val(order.id);
 	$('#UserId').val(order.userid);
-	$('#OrderstaffId').val(order.staffId);
+	$('#OrderstaffNo').val(order.staffNo);
 	$('#OrderTime').val(order.appointmentTime);
 	$('#Orderphone').val(order.phone);	
 	$('#Orderstatus').val(order.status);

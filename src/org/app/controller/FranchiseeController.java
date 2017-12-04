@@ -1,6 +1,7 @@
 package org.app.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,8 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
+import org.util.Coordinate;
+import org.util.RedisUtil;
 import org.util.ResultUtils;
 import org.util.Utils;
+
+import redis.clients.jedis.GeoRadiusResponse;
 
 @RestController("/app/FranchiseeController")
 @RequestMapping("/app/franchisee")
@@ -42,8 +47,9 @@ public class FranchiseeController {
 	 */
 	@RequestMapping("addFranchisee")
 	public Object addFranchisee(HttpServletRequest request,
-			Franchisee franchisee,@RequestParam(required=false) CommonsMultipartFile healthPic,
-			@RequestParam(required=false) CommonsMultipartFile promissPic) {
+			Franchisee franchisee,
+			@RequestParam(required = false) CommonsMultipartFile healthPic,
+			@RequestParam(required = false) CommonsMultipartFile promissPic) {
 		fDao = new FranchiseeDaoImp();
 		Long time = System.currentTimeMillis() / 1000;
 		if (healthPic != null) {
@@ -89,13 +95,19 @@ public class FranchiseeController {
 	}
 
 	/**
-	 * 获取加盟商列表
+	 * 获取附近的加盟商(厨师)列表
 	 */
 	@RequestMapping("getFranchiseeList")
 	public Object getFranchiseeByCatlog(HttpServletRequest request,
-			Integer catalogId) {
+			Integer catalogId, Double lat, Double lon) {
+		Coordinate coordinate = new Coordinate(lat, lon, "u");
+		List<GeoRadiusResponse> li = RedisUtil.geoQuery(coordinate, "cooker");
+		List<Long> cookerIds = new ArrayList<>();
+		for (GeoRadiusResponse g : li) {
+			cookerIds.add(Long.parseLong(g.getMemberByString()));
+		}
 		fDao = new FranchiseeDaoImp();
-		List<Franchisee> list = fDao.getList(catalogId);
+		List<Franchisee> list = fDao.getList(cookerIds);
 		if (list == null) {
 			return ResultUtils.toJson(101, "服务器繁忙请重试", "");
 		}

@@ -31,11 +31,23 @@
             <key-property name="afterSaleState" type="java.lang.Integer">
                 <column name="after_sale_state" />
             </key-property>
+            <key-property name="franchiseeId" type="java.lang.Long">
+                <column name="franchisee_id" />
+            </key-property>
+            <key-property name="type" type="java.lang.Integer">
+                <column name="type" />
+            </key-property>
             <key-property name="total" type="java.lang.Double">
                 <column name="total" precision="11" />
             </key-property>
             <key-property name="num" type="java.lang.Long">
                 <column name="num" />
+            </key-property>
+            <key-property name="franchiseeName" type="java.lang.String">
+                <column name="franchisee_name" length="20" />
+            </key-property>
+            <key-property name="staffName" type="java.lang.String">
+                <column name="staff_name" length="50" />
             </key-property>
             <key-property name="createTime" type="java.lang.String">
                 <column name="create_time" length="24" />
