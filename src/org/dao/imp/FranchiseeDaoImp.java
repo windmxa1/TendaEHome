@@ -86,6 +86,41 @@ public class FranchiseeDaoImp implements FranchiseeDao {
 	}
 
 	@Override
+	public List<Franchisee> getList(Integer start, Integer limit,
+			Integer catalogId) {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			String sql = "";
+			Query query = null;
+			if (catalogId == null) {
+				sql = " from Franchisee ";
+				query = session.createQuery(sql);
+			} else {
+				sql = " from Franchisee where catalogId= ?";
+				query = session.createQuery(sql);
+				query.setParameter(0, catalogId);
+			}
+			if (start == null)
+				start = 0;
+			if (limit == null) {
+				limit = 15;
+				query.setMaxResults(limit);
+			} else if (limit == -1) {
+			} else {
+				query.setMaxResults(limit);
+			}
+			query.setFirstResult(start);
+			List<Franchisee> list = query.list();
+			return list;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
+	@Override
 	public List<Franchisee> getList(List<Long> ids) {
 		try {
 			Session session = HibernateSessionFactory.getSession();

@@ -16,8 +16,11 @@ public class RepairOrder implements java.io.Serializable {
 	private Integer status;
 	private String handleResult;
 	private Long userid;
-	private String staffNo;
+	private Integer staffId;
 	private Integer isRead;
+	private Integer isStaffRead;
+	private String lat;
+	private String lon;
 
 	// Constructors
 
@@ -27,18 +30,22 @@ public class RepairOrder implements java.io.Serializable {
 
 	/** minimal constructor */
 	public RepairOrder(String appointmentTime, String address,
-			String description, String phone, Long userid) {
+			String description, String phone, Long userid,String lat,String lon) {
 		this.appointmentTime = appointmentTime;
 		this.address = address;
 		this.description = description;
 		this.phone = phone;
 		this.userid = userid;
+		this.lat = lat;
+		this.lon = lon;
 	}
+	
 
 	/** full constructor */
 	public RepairOrder(String appointmentTime, String address,
 			String description, String phone, Integer status,
-			String handleResult, Long userid, String staffNo, Integer isRead) {
+			String handleResult, Long userid, Integer staffId, Integer isRead,
+			Integer isStaffRead, String lat, String lon) {
 		this.appointmentTime = appointmentTime;
 		this.address = address;
 		this.description = description;
@@ -46,8 +53,11 @@ public class RepairOrder implements java.io.Serializable {
 		this.status = status;
 		this.handleResult = handleResult;
 		this.userid = userid;
-		this.staffNo = staffNo;
+		this.staffId = staffId;
 		this.isRead = isRead;
+		this.isStaffRead = isStaffRead;
+		this.lat = lat;
+		this.lon = lon;
 	}
 
 	// Property accessors
@@ -116,12 +126,12 @@ public class RepairOrder implements java.io.Serializable {
 		this.userid = userid;
 	}
 
-	public String getStaffNo() {
-		return this.staffNo;
+	public Integer getStaffId() {
+		return this.staffId;
 	}
 
-	public void setStaffNo(String staffNo) {
-		this.staffNo = staffNo;
+	public void setStaffId(Integer staffId) {
+		this.staffId = staffId;
 	}
 
 	public Integer getIsRead() {
@@ -130,6 +140,30 @@ public class RepairOrder implements java.io.Serializable {
 
 	public void setIsRead(Integer isRead) {
 		this.isRead = isRead;
+	}
+
+	public Integer getIsStaffRead() {
+		return this.isStaffRead;
+	}
+
+	public void setIsStaffRead(Integer isStaffRead) {
+		this.isStaffRead = isStaffRead;
+	}
+
+	public String getLat() {
+		return this.lat;
+	}
+
+	public void setLat(String lat) {
+		this.lat = lat;
+	}
+
+	public String getLon() {
+		return this.lon;
+	}
+
+	public void setLon(String lon) {
+		this.lon = lon;
 	}
 
 }

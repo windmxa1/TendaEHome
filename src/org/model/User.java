@@ -14,6 +14,8 @@ public class User implements java.io.Serializable {
 	private Long time;
 	private String nickname;
 	private String headUrl;
+	private Integer partner;
+	private Integer isFree;
 
 	// Constructors
 
@@ -30,12 +32,14 @@ public class User implements java.io.Serializable {
 
 	/** full constructor */
 	public User(String phone, String password, Long time, String nickname,
-			String headUrl) {
+			String headUrl, Integer partner, Integer isFree) {
 		this.phone = phone;
 		this.password = password;
 		this.time = time;
 		this.nickname = nickname;
 		this.headUrl = headUrl;
+		this.partner = partner;
+		this.isFree = isFree;
 	}
 
 	// Property accessors
@@ -86,6 +90,22 @@ public class User implements java.io.Serializable {
 
 	public void setHeadUrl(String headUrl) {
 		this.headUrl = headUrl;
+	}
+
+	public Integer getPartner() {
+		return this.partner;
+	}
+
+	public void setPartner(Integer partner) {
+		this.partner = partner;
+	}
+
+	public Integer getIsFree() {
+		return this.isFree;
+	}
+
+	public void setIsFree(Integer isFree) {
+		this.isFree = isFree;
 	}
 
 }

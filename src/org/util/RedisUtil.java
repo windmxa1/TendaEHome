@@ -77,59 +77,175 @@ public class RedisUtil {
 		}
 	}
 
-//	public static void main(String[] args) {
-//		Jedis jedis = RedisUtil.getJedis();
-//
-//		// 添加经纬度
-//		Coordinate coordinate = new Coordinate();
-//		coordinate.setLatitude(31.244803); // 维度
-//		coordinate.setLongitude(121.483671); // 经度
-//		coordinate.setKey("1"); // 可以作为用户表的id
-//
-//		// 添加经纬度
-//		Coordinate coordinate1 = new Coordinate();
-//		coordinate1.setLatitude(31.245321); // 维度
-//		coordinate1.setLongitude(121.485015); // 经度
-//		coordinate1.setKey("2"); // 可以作为用户表的id
-//
-//		// 添加经纬度
-//		Coordinate coordinate4 = new Coordinate();
-//		coordinate4.setLatitude(31.245331); // 维度
-//		coordinate4.setLongitude(121.485015); // 经度
-//		coordinate4.setKey("2"); // 可以作为用户表的id
-//
-//		// 添加经纬度
-//		Coordinate coordinate2 = new Coordinate();
-//		coordinate2.setLatitude(31.245321); // 维度
-//		coordinate2.setLongitude(121.485015); // 经度
-//		// coordinate2.setLatitude(31.245456); // 维度
-//		// coordinate2.setLongitude(121.485285); // 经度
-//		coordinate2.setKey("3"); // 可以作为用户表的id
-//
-//		System.out.println(addReo(coordinate, "test"));
-//		System.out.println(addReo(coordinate1, "test"));
-//		System.out.println(addReo(coordinate2, "test"));
-//		System.out.println(addReo(coordinate4, "test"));
-//
-//		Coordinate coordinate3 = new Coordinate();
-//		coordinate3.setLatitude(31.245321); // 维度
-//		coordinate3.setLongitude(121.485015); // 经度
-//		coordinate3.setKey("4"); // 可以作为用户表的id
-//
+	// public static void main(String[] args) {
+	// Jedis jedis = RedisUtil.getJedis();
+	//
+	// // 添加经纬度
+	// Coordinate coordinate = new Coordinate();
+	// coordinate.setLatitude(31.244803); // 维度
+	// coordinate.setLongitude(121.483671); // 经度
+	// coordinate.setKey("1"); // 可以作为用户表的id
+	//
+	// // 添加经纬度
+	// Coordinate coordinate1 = new Coordinate();
+	// coordinate1.setLatitude(31.245321); // 维度
+	// coordinate1.setLongitude(121.485015); // 经度
+	// coordinate1.setKey("2"); // 可以作为用户表的id
+	//
+	// // 添加经纬度
+	// Coordinate coordinate4 = new Coordinate();
+	// coordinate4.setLatitude(31.245331); // 维度
+	// coordinate4.setLongitude(121.485015); // 经度
+	// coordinate4.setKey("2"); // 可以作为用户表的id
+	//
+	// // 添加经纬度
+	// Coordinate coordinate2 = new Coordinate();
+	// coordinate2.setLatitude(31.245321); // 维度
+	// coordinate2.setLongitude(121.485015); // 经度
+	// // coordinate2.setLatitude(31.245456); // 维度
+	// // coordinate2.setLongitude(121.485285); // 经度
+	// coordinate2.setKey("3"); // 可以作为用户表的id
+	//
+	// System.out.println(addReo(coordinate, "test"));
+	// System.out.println(addReo(coordinate1, "test"));
+	// System.out.println(addReo(coordinate2, "test"));
+	// System.out.println(addReo(coordinate4, "test"));
+	//
+	// Coordinate coordinate3 = new Coordinate();
+	// coordinate3.setLatitude(31.245321); // 维度
+	// coordinate3.setLongitude(121.485015); // 经度
+	// coordinate3.setKey("4"); // 可以作为用户表的id
+	//
+	// try {
+	// List<GeoRadiusResponse> list = geoQuery(coordinate3);
+	// System.out.println(JsonUtils.getMapperInstance()
+	// .writeValueAsString(list));
+	// for (GeoRadiusResponse geo : list) {
+	// System.out.println(geo.getMemberByString()); // 主键 有主键了个人信息就很简单了
+	// System.out.println(geo.getDistance() < 0.001 ? 0 : geo
+	// .getDistance()); // 距离多少米
+	// }
+	// } catch (JsonProcessingException e) {
+	// e.printStackTrace();
+	// }
+	// RedisUtil.close(jedis);
+	// }
+	// public static void main(String[] args) {
+	// Jedis jedis = null;
+	// try {
+	// jedis = jedisPool.getResource();
+	// System.out.println(jedis.get("ab"));
+	// } catch (Exception e) {
+	// System.out.println(e.getMessage());
+	// } finally {
+	// if (null != jedis)
+	// jedis.close();
+	// }
+	// }
+
+//	public static void main(String args[]) throws JsonProcessingException {
+//		Jedis jedis = null;
 //		try {
-//			List<GeoRadiusResponse> list = geoQuery(coordinate3);
-//			System.out.println(JsonUtils.getMapperInstance()
-//					.writeValueAsString(list));
-//			for (GeoRadiusResponse geo : list) {
-//				System.out.println(geo.getMemberByString()); // 主键 有主键了个人信息就很简单了
-//				System.out.println(geo.getDistance() < 0.001 ? 0 : geo
-//						.getDistance()); // 距离多少米
-//			}
-//		} catch (JsonProcessingException e) {
+//			jedis = jedisPool.getResource();
+//			
+//		} catch (Exception e) {
 //			e.printStackTrace();
+//		} finally {
+//			if (null != jedis)
+//				jedis.close();
 //		}
-//		RedisUtil.close(jedis);
 //	}
+
+	/**
+	 * 根据键获取值
+	 */
+	public static String getData(String key) {
+		Jedis jedis = null;
+		try {
+			jedis = jedisPool.getResource();
+			return jedis.get(key);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		} finally {
+			if (null != jedis)
+				jedis.close();
+		}
+		return null;
+	}
+
+	/**
+	 * 添加键值对
+	 */
+	public static List<String> getList(String key) {
+		Jedis jedis = null;
+		try {
+			jedis = jedisPool.getResource();
+			return jedis.lrange(key, 0, 1000);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		} finally {
+			if (null != jedis)
+				jedis.close();
+		}
+		return null;
+	}
+
+	/**
+	 * 删除数组元素
+	 */
+	public static boolean popList(String key, String value) {
+		Jedis jedis = null;
+		try {
+			jedis = jedisPool.getResource();
+			jedis.lrem(key, 10, value);
+			return true;
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		} finally {
+			if (null != jedis)
+				jedis.close();
+		}
+		return false;
+	}
+
+	/**
+	 * 添加数组元素
+	 */
+	public static boolean pushList(String key, String value) {
+		Jedis jedis = null;
+		try {
+			jedis = jedisPool.getResource();
+			jedis.lpush(key, value);
+			return true;
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		} finally {
+			if (null != jedis)
+				jedis.close();
+		}
+		return false;
+	}
+
+	/**
+	 * 添加键值对
+	 */
+	public static boolean addData(String key, String value, Long time) {
+		Jedis jedis = null;
+		try {
+			jedis = jedisPool.getResource();
+			jedis.set(key, value);
+			if (time != null) {
+				jedis.expireAt(key, time);
+			}
+			return true;
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		} finally {
+			if (null != jedis)
+				jedis.close();
+		}
+		return false;
+	}
 
 	/**
 	 * 添加坐标 key 经度 维度 距离 return m 表示单位为米
@@ -153,14 +269,36 @@ public class RedisUtil {
 	/**
 	 * 查询附近人 key 经度 维度 距离 return GeoRadiusResponse
 	 */
-	public static List<GeoRadiusResponse> geoQuery(Coordinate coordinate,String tag) {
+	public static List<GeoRadiusResponse> geoQuery(Coordinate coordinate,
+			String tag, Double radius) {
 		Jedis jedis = null;
 		try {
 			jedis = jedisPool.getResource();
 			// 200F GeoUnit.KM表示km
 			return jedis.georadius(tag, coordinate.getLongitude(),
-					coordinate.getLatitude(), 5F, GeoUnit.KM, GeoRadiusParam
-							.geoRadiusParam().withDist());
+					coordinate.getLatitude(), radius, GeoUnit.KM,
+					GeoRadiusParam.geoRadiusParam().withDist());
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		} finally {
+			if (null != jedis)
+				jedis.close();
+		}
+		return null;
+	}
+
+	/**
+	 * 查询附近人 key 经度 维度 距离 return GeoRadiusResponse
+	 */
+	public static List<GeoRadiusResponse> geoQuery(Coordinate coordinate,
+			String tag) {
+		Jedis jedis = null;
+		try {
+			jedis = jedisPool.getResource();
+			// 200F GeoUnit.KM表示km
+			return jedis.georadius(tag, coordinate.getLongitude(), coordinate
+					.getLatitude(), 5F, GeoUnit.KM, GeoRadiusParam
+					.geoRadiusParam().withDist());
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		} finally {

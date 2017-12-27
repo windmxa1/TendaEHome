@@ -16,8 +16,11 @@ public class VRepairOrderId implements java.io.Serializable {
 	private Integer status;
 	private String handleResult;
 	private Long userid;
-	private String staffNo;
+	private Integer staffId;
 	private Integer isRead;
+	private Integer isStaffRead;
+	private String lat;
+	private String lon;
 	private String state;
 
 	// Constructors
@@ -40,8 +43,8 @@ public class VRepairOrderId implements java.io.Serializable {
 	/** full constructor */
 	public VRepairOrderId(Long id, String appointmentTime, String address,
 			String description, String phone, Integer status,
-			String handleResult, Long userid, String staffNo, Integer isRead,
-			String state) {
+			String handleResult, Long userid, Integer staffId, Integer isRead,
+			Integer isStaffRead, String lat, String lon, String state) {
 		this.id = id;
 		this.appointmentTime = appointmentTime;
 		this.address = address;
@@ -50,8 +53,11 @@ public class VRepairOrderId implements java.io.Serializable {
 		this.status = status;
 		this.handleResult = handleResult;
 		this.userid = userid;
-		this.staffNo = staffNo;
+		this.staffId = staffId;
 		this.isRead = isRead;
+		this.isStaffRead = isStaffRead;
+		this.lat = lat;
+		this.lon = lon;
 		this.state = state;
 	}
 
@@ -121,12 +127,12 @@ public class VRepairOrderId implements java.io.Serializable {
 		this.userid = userid;
 	}
 
-	public String getstaffNo() {
-		return this.staffNo;
+	public Integer getStaffId() {
+		return this.staffId;
 	}
 
-	public void setstaffNo(String staffNo) {
-		this.staffNo = staffNo;
+	public void setStaffId(Integer staffId) {
+		this.staffId = staffId;
 	}
 
 	public Integer getIsRead() {
@@ -135,6 +141,30 @@ public class VRepairOrderId implements java.io.Serializable {
 
 	public void setIsRead(Integer isRead) {
 		this.isRead = isRead;
+	}
+
+	public Integer getIsStaffRead() {
+		return this.isStaffRead;
+	}
+
+	public void setIsStaffRead(Integer isStaffRead) {
+		this.isStaffRead = isStaffRead;
+	}
+
+	public String getLat() {
+		return this.lat;
+	}
+
+	public void setLat(String lat) {
+		this.lat = lat;
+	}
+
+	public String getLon() {
+		return this.lon;
+	}
+
+	public void setLon(String lon) {
+		this.lon = lon;
 	}
 
 	public String getState() {
@@ -182,12 +212,22 @@ public class VRepairOrderId implements java.io.Serializable {
 				&& ((this.getUserid() == castOther.getUserid()) || (this
 						.getUserid() != null && castOther.getUserid() != null && this
 						.getUserid().equals(castOther.getUserid())))
-				&& ((this.getstaffNo() == castOther.getstaffNo()) || (this
-						.getstaffNo() != null && castOther.getstaffNo() != null && this
-						.getstaffNo().equals(castOther.getstaffNo())))
+				&& ((this.getStaffId() == castOther.getStaffId()) || (this
+						.getStaffId() != null && castOther.getStaffId() != null && this
+						.getStaffId().equals(castOther.getStaffId())))
 				&& ((this.getIsRead() == castOther.getIsRead()) || (this
 						.getIsRead() != null && castOther.getIsRead() != null && this
 						.getIsRead().equals(castOther.getIsRead())))
+				&& ((this.getIsStaffRead() == castOther.getIsStaffRead()) || (this
+						.getIsStaffRead() != null
+						&& castOther.getIsStaffRead() != null && this
+						.getIsStaffRead().equals(castOther.getIsStaffRead())))
+				&& ((this.getLat() == castOther.getLat()) || (this.getLat() != null
+						&& castOther.getLat() != null && this.getLat().equals(
+						castOther.getLat())))
+				&& ((this.getLon() == castOther.getLon()) || (this.getLon() != null
+						&& castOther.getLon() != null && this.getLon().equals(
+						castOther.getLon())))
 				&& ((this.getState() == castOther.getState()) || (this
 						.getState() != null && castOther.getState() != null && this
 						.getState().equals(castOther.getState())));
@@ -218,9 +258,17 @@ public class VRepairOrderId implements java.io.Serializable {
 		result = 37 * result
 				+ (getUserid() == null ? 0 : this.getUserid().hashCode());
 		result = 37 * result
-				+ (getstaffNo() == null ? 0 : this.getstaffNo().hashCode());
+				+ (getStaffId() == null ? 0 : this.getStaffId().hashCode());
 		result = 37 * result
 				+ (getIsRead() == null ? 0 : this.getIsRead().hashCode());
+		result = 37
+				* result
+				+ (getIsStaffRead() == null ? 0 : this.getIsStaffRead()
+						.hashCode());
+		result = 37 * result
+				+ (getLat() == null ? 0 : this.getLat().hashCode());
+		result = 37 * result
+				+ (getLon() == null ? 0 : this.getLon().hashCode());
 		result = 37 * result
 				+ (getState() == null ? 0 : this.getState().hashCode());
 		return result;

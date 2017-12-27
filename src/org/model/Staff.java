@@ -13,6 +13,10 @@ public class Staff implements java.io.Serializable {
 	private String staffName;
 	private Integer year;
 	private String serviceVange;
+	private String username;
+	private String password;
+	private Integer isLeader;
+	private String distance;
 
 	// Constructors
 
@@ -20,13 +24,38 @@ public class Staff implements java.io.Serializable {
 	public Staff() {
 	}
 
+	/** minimal constructor */
+	public Staff(String staffNo) {
+		this.staffNo = staffNo;
+	}
+
+	public Staff(String staffNo, String username, String password) {
+		super();
+		this.staffNo = staffNo;
+		this.username = username;
+		this.password = password;
+	}
+
+	public Staff(String staffNo, String username, String password,
+			Integer isLeader) {
+		super();
+		this.staffNo = staffNo;
+		this.username = username;
+		this.password = password;
+		this.isLeader = isLeader;
+	}
+
 	/** full constructor */
 	public Staff(String staffNo, String staffName, Integer year,
-			String serviceVange) {
+			String serviceVange, String username, String password,
+			Integer isLeader) {
 		this.staffNo = staffNo;
 		this.staffName = staffName;
 		this.year = year;
 		this.serviceVange = serviceVange;
+		this.username = username;
+		this.password = password;
+		this.isLeader = isLeader;
 	}
 
 	// Property accessors
@@ -69,6 +98,38 @@ public class Staff implements java.io.Serializable {
 
 	public void setServiceVange(String serviceVange) {
 		this.serviceVange = serviceVange;
+	}
+
+	public String getUsername() {
+		return this.username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getPassword() {
+		return this.password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public Integer getIsLeader() {
+		return this.isLeader;
+	}
+
+	public void setIsLeader(Integer isLeader) {
+		this.isLeader = isLeader;
+	}
+
+	public String getDistance() {
+		return distance;
+	}
+
+	public void setDistance(String distance) {
+		this.distance = distance;
 	}
 
 }

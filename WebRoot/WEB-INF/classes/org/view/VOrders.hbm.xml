@@ -37,6 +37,9 @@
             <key-property name="type" type="java.lang.Integer">
                 <column name="type" />
             </key-property>
+            <key-property name="remarks" type="java.lang.String">
+                <column name="remarks" length="100" />
+            </key-property>
             <key-property name="total" type="java.lang.Double">
                 <column name="total" precision="11" />
             </key-property>

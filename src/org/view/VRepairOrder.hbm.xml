@@ -31,11 +31,20 @@
             <key-property name="userid" type="java.lang.Long">
                 <column name="userid" />
             </key-property>
-            <key-property name="staffNo" type="java.lang.String">
-                <column name="staff_no" length="10" />
+            <key-property name="staffId" type="java.lang.Integer">
+                <column name="staff_id" />
             </key-property>
             <key-property name="isRead" type="java.lang.Integer">
                 <column name="is_read" />
+            </key-property>
+            <key-property name="isStaffRead" type="java.lang.Integer">
+                <column name="is_staff_read" />
+            </key-property>
+            <key-property name="lat" type="java.lang.String">
+                <column name="lat" length="11" />
+            </key-property>
+            <key-property name="lon" type="java.lang.String">
+                <column name="lon" length="11" />
             </key-property>
             <key-property name="state" type="java.lang.String">
                 <column name="state" length="4" />

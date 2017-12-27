@@ -14,9 +14,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.util.Constants;
+import org.util.Coordinate;
+import org.util.JsonUtils;
 import org.util.PDFUtil;
+import org.util.RedisUtil;
 import org.util.ResultUtils;
 import org.view.VRepairOrderId;
+
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller("/back/RepairController")
 @RequestMapping("/back/repair")
@@ -76,14 +82,28 @@ public class RepairController {
 	}
 
 	/**
-	 * 修改报修单状态
+	 * 修改报修单状态（负责人APP专用）
 	 */
 	@RequestMapping("/updateRepairOrder")
 	@ResponseBody
 	public Object updateRepairOrder(HttpServletRequest request,
 			@RequestBody RepairOrder repair) throws Exception {
 		rDao = new RepairDaoImp();
-//		repair.setIsRead(1);
+		if (rDao.updateRepairOrder(repair.getId(), repair.getStatus(),
+				repair.getHandleResult(), repair.getStaffId())) {
+			return ResultUtils.toJson(100, "修改成功", "");
+		}
+		return ResultUtils.toJson(101, "修改失败", "");
+	}
+
+	/**
+	 * 修改报修单状态(后台维护使用)
+	 */
+	@RequestMapping("/updateRepairOrder1")
+	@ResponseBody
+	public Object updateRepairOrder1(HttpServletRequest request,
+			RepairOrder repair) throws Exception {
+		rDao = new RepairDaoImp();
 		if (rDao.saveOrUpdate(repair) == 0L) {
 			return ResultUtils.toJson(100, "修改成功", "");
 		}
@@ -123,5 +143,4 @@ public class RepairController {
 		return ResultUtils.toJson(101, "删除失败", "");
 
 	}
-
 }

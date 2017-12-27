@@ -31,7 +31,13 @@ $(function() {
 									+ "</p><span class='ddId' style='display: none;'>"
 									+ data.data.list[i].id
 									+ "</span><span class='ddId' style='display: none;'>"
-									+ data.data.list[i].type + "</span></li>"
+									+ data.data.list[i].type
+									+ "</span><span class='ddId' style='display: none;'>"
+									+ "http://39.108.82.55:8080/"
+									+ data.data.list[i].url
+									+ "</span><span class='ddId' style='display: none;'>"
+									+ data.data.list[i].description
+									+ "</span></li>"
 
 						}
 						$('#directory').html(directoryList);
@@ -108,7 +114,14 @@ $(function() {
 		obj_lis[i].onclick = function() {
 			indexId = $(this).find("span").eq(0).text();
 			goods_type = $(this).find("span").eq(1).text();
+			$('#xg_cid').val($(this).find("span").eq(0).text());
 			$('#xg_catalog').val($(this).find("p").eq(0).text());
+			$('#xg_ml_type').val($(this).find("span").eq(1).text());
+			$('#xg_type').val($(this).find("span").eq(1).text());
+			$('#xg_url').val($(this).find("span").eq(2).text());
+			$('#img_url').text($(this).find("span").eq(2).text());
+			$('#img_url').attr("href", $(this).find("span").eq(2).text());
+			$('#xg_ml_description').val($(this).find("span").eq(3).text());
 			builderUQTQueryMsg(getJsonArrayByPageSize(pageSize, pageNo));
 			var totalPage = getTotllePage(pageSize);
 			var totalRecords = total;
@@ -140,6 +153,99 @@ $(function() {
 	});
 	kkpager.generPageHtml();
 });
+/** ************************** 鼠标跟随显示超链接图片开始*************************** */
+var c$ = {};
+var w$ = function(s) {
+	document.write(s);
+}
+var o$ = function(id) {
+	return document.getElementById(id);
+}
+w$("<div id=\"ts\" style=\"position:absolute;background-color:#FFFFE6;font-size: 12px;padding: 3px; border: 1px solid #FFCC99;display:none\"></div>");
+function moveon(o) {
+	var evt = event || window.event;
+	var x = evt.clientX - 200;
+	var y = evt.clientY +30;
+	console.log(evt.clientY);
+	o$("ts").style.left = x + "px";
+	o$("ts").style.top = y + "px";
+	o$("ts").innerHTML = '<img onload="AutoResizeImage(200,200,this)" src="' + o.innerHTML + '" alt="">';
+	o$("ts").style.display = "";
+}
+c$.mout = function() {
+	o$("ts").style.display = "none";
+}
+/** ************************* 鼠标跟随显示超链接图片结束*************************** */
+/** ************************* 控制图片自适应开始******************************** */
+function AutoResizeImage(maxWidth, maxHeight, objImg) {
+	var img = new Image();
+	img.src = objImg.src;
+	var hRatio;
+	var wRatio;
+	var Ratio = 1;
+	var w = img.width;
+	var h = img.height;
+	wRatio = maxWidth / w;
+	hRatio = maxHeight / h;
+	if (maxWidth == 0 && maxHeight == 0) {
+		Ratio = 1;
+	} else if (maxWidth == 0) {//
+		if (hRatio < 1)
+			Ratio = hRatio;
+	} else if (maxHeight == 0) {
+		if (wRatio < 1)
+			Ratio = wRatio;
+	} else if (wRatio < 1 || hRatio < 1) {
+		Ratio = (wRatio <= hRatio ? wRatio : hRatio);
+	}
+	if (Ratio < 1) {
+		w = w * Ratio;
+		h = h * Ratio;
+	}
+	objImg.height = h;
+	objImg.width = w;
+}
+/** ************************* 控制图片自适应开始******************************** */
+function initTable() {
+	// 初始化商品分页列表
+	var obj_lis = document.getElementById("directory").getElementsByTagName(
+			"li");
+	for (i = 0; i < obj_lis.length; i++) {
+		obj_lis[i].onclick = function() {
+			indexId = $(this).find("span").eq(0).text();
+			goods_type = $(this).find("span").eq(1).text();
+			$('#xg_catalog').val($(this).find("p").eq(0).text());
+			builderUQTQueryMsg(getJsonArrayByPageSize(pageSize, pageNo));
+			var totalPage = getTotllePage(pageSize);
+			var totalRecords = total;
+			// 生成分页控件 根据分页的形式在这里设置
+			kkpager.init({
+				pno : pageNo,
+				// 总页码
+				total : totalPage,
+				// 总数据条数
+				totalRecords : totalRecords,
+				// 页面条数
+				pageSize : pageSize
+			});
+			kkpager.generPageHtml();
+		}
+	}
+	builderUQTQueryMsg(getJsonArrayByPageSize(pageSize, pageNo));
+	var totalPage = getTotllePage(pageSize);
+	var totalRecords = total;
+	// 生成分页控件 根据分页的形式在这里设置
+	kkpager.init({
+		pno : pageNo,
+		// 总页码
+		total : totalPage,
+		// 总数据条数
+		totalRecords : totalRecords,
+		// 页面条数
+		pageSize : pageSize
+	});
+	kkpager.generPageHtml();
+}
 
 // 添加商品目录
 function tjspml() {
@@ -179,21 +285,24 @@ function tjspml() {
 // 修改商品目录
 function xgspml() {
 	var xg_catalog = document.getElementById('xg_catalog').value;
+	var type_ = $('#xg_type').val();
 	if (xg_catalog == '') {
 		alert('目录名不能为空');
+	} else if (type_ == '') {
+		alert('目录类型编号不能为空');
 	} else {
+		var formData = new FormData(document.getElementById("xgspml_form"));
 		$.ajax({
 			type : "post",
 			url : "back/goods/updateCatalog",
 			async : false,
 			cache : false,
+			contentType : false,
+			processData : false,
 			headers : {
 				"token" : getCookie('token')
 			},
-			data : {
-				"catalog" : xg_catalog,
-				"id" : indexId
-			},
+			data : formData,
 			success : function(data) {
 				if (data.code == 100) {
 					$('#xgspml').modal('hide');
@@ -288,7 +397,8 @@ function tjsp() {
 			success : function(data) {
 				if (data.code == 100) {
 					$('#tjsp').modal('hide');
-					location.reload();
+					// location.reload();
+					initTable();
 					alert('添加成功');
 				} else {
 					alert(data.msg);
@@ -304,7 +414,7 @@ function tjsp() {
 
 // 修改商品
 function updateCommodity(v) {
-	 console.log(JSON.stringify(v));
+	console.log(JSON.stringify(v));
 	$('#catalogId').val(v.catalogId);
 	$('#xg_id').val(v.goodsId);
 	$('#xg_name').val(v.name);
@@ -315,7 +425,7 @@ function updateCommodity(v) {
 	$('#xg_origin').val(v.origin);
 	$('#xg_description').val(v.description);
 	$('#xg_saleNum').val(v.saleNum);
-//	alert(v.originPrice);
+	// alert(v.originPrice);
 	$('#xg_originPrice').val(v.originPrice);
 	$('#xg_type').val(v.type);
 
@@ -602,14 +712,10 @@ var builderUQTQueryMsg = function(UQTQueryMsg) {
 								+ "<td class='match_type'>"
 								+ count
 								+ "</td>"
-								+ "<td class='match_type' style='cursor:pointer;' title='"
+								+ "<td class='match_type'>"
+								+ "<a href='#' onmouseover='moveon(this);' onmouseout='c$.mout();' >"
 								+ goodsUrl
-								+ "'><a href="
-								+ goodsUrl
-								+ ">"
-								+ goodsUrl
-								+ "</a>"
-								+ +"</td>"
+								+ "</a></td>"
 								+ "<td class='match_type'>"
 								+ createTime
 								+ "</td>"

@@ -12,7 +12,7 @@
 		$("#btn1").click(function() {
 			var user = {
 				phone : $("#phone").val(),
-				password : "123456"
+				password : "daee2fe3e4e45c5a61c5a1fe3a700e9e"
 			};
 			var admin = {
 				username : "admin",
@@ -20,8 +20,8 @@
 			};
 			$.ajax({
 				type : "post",
-				url : "back/admin/login",
-				data : admin,
+				url : "app/user/login",
+				data : user,
 				success : function(data) {
 					token = data.data.token;
 					console.log("token:" + token);
@@ -86,10 +86,27 @@
 				}
 			});
 		});
+		$("#btn4").click(function() {
+			$.ajax({
+				type : "post",
+				url : "app/repair/getStaffLocation",
+				dataType : "json",
+				processData : false,
+				beforeSend : function(request) {
+					request.setRequestHeader("token", token);
+				},
+				success : function(data) {
+					console.log(JSON.stringify(data));
+				},
+				error : function(data) {
+					console.log('error');
+				}
+			});
+		});
 	});
 </script>
 <body>
-	<input type="text" id="phone">
+	<input type="text" id="phone" value="13590440185">
 	<input type="button" value="btn1" id="btn1">
 	<form action="" id="form1">
 		<input type="text" name="id" value="1"> <input type="text"
@@ -105,5 +122,6 @@
 	<br />
 	<input type="text" id="address" value="生态城">
 	<input type="button" value="btn3" id="btn3">
+	<input type="button" value="btn4" id="btn4">
 </body>
 </html>

@@ -20,6 +20,10 @@ public interface FranchiseeDao {
 	 */
 	List<Franchisee> getList(Integer catalogId);
 	/**
+	 * 获取加盟商列表
+	 */
+	List<Franchisee> getList(Integer start,Integer limit,Integer catalogId);
+	/**
 	 * 根据Id列表获取加盟商(厨师)列表
 	 */
 	List<Franchisee> getList(List<Long> ids);

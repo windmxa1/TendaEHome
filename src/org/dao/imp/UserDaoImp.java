@@ -29,6 +29,22 @@ public class UserDaoImp implements UserDao {
 			HibernateSessionFactory.closeSession();
 		}
 	}
+	public User getUser(Long userid) {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			String sql = "from User u where u.id=? ";
+			Query query = session.createQuery(sql);
+			query.setParameter(0, userid);
+			query.setMaxResults(1);
+			User u = (User) query.uniqueResult();
+			return u;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
 
 	public User getUser(String phone, String password) {
 		try {
@@ -231,6 +247,28 @@ public class UserDaoImp implements UserDao {
 		}
 	}
 
+	@Override
+	public boolean updateFree(Integer isFree, Long userid) {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			Transaction ts = session.beginTransaction();
+
+			String sql = "update from User set isFree=? where id=?";
+			Query query = session.createQuery(sql);
+			query.setParameter(0, isFree);
+			query.setParameter(1, userid);
+			query.executeUpdate();
+
+			ts.commit();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
 	public String getUsedHead(Long userid) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
@@ -283,6 +321,107 @@ public class UserDaoImp implements UserDao {
 			Session session = HibernateSessionFactory.getSession();
 			String sql = "select count(id) from User ";
 			Query query = session.createQuery(sql);
+			query.setMaxResults(1);
+			Long count = (Long) query.uniqueResult();
+			return count;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 0L;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
+	@Override
+	public List<VUserId> getFreeList(Integer start, Integer limit) {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			String sql = "from VUser where id.isFree = 1";
+			Query query = session.createQuery(sql);
+			if (start == null) {
+				start = 0;
+			}
+			if (limit == null) {
+				limit = 15;
+			}
+			query.setFirstResult(start);
+			query.setMaxResults(limit);
+			List<VUser> list = query.list();
+			List<VUserId> list2 = new ArrayList<>();
+			for (VUser v : list) {
+				list2.add(v.getId());
+			}
+			return list2;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
+	@Override
+	public Long getFreeCount() {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			String sql = "select count(id) from User where isFree = 1 ";
+			Query query = session.createQuery(sql);
+			query.setMaxResults(1);
+			Long count = (Long) query.uniqueResult();
+			return count;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 0L;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
+	@Override
+	public List<VUserId> getUserByPhone(String phone, Integer start,
+			Integer limit) {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			String sql = "from VUser where id.phone like ?";
+			Query query = session.createQuery(sql);
+			if (phone.trim().equals("")) {
+				phone = "1";
+			}
+			query.setParameter(0, "%" + phone + "%");
+			if (start == null) {
+				start = 0;
+			}
+			if (limit == null) {
+				limit = 15;
+			}
+			query.setFirstResult(start);
+			query.setMaxResults(limit);
+			List<VUser> list = query.list();
+			List<VUserId> list2 = new ArrayList<>();
+			for (VUser v : list) {
+				list2.add(v.getId());
+			}
+			return list2;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
+	@Override
+	public Long getCount(String phone) {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			String sql = "select count(id) from User where phone like ?";
+			Query query = session.createQuery(sql);
+			if (phone.trim().equals("")) {
+				phone = "1";
+			}
+			query.setParameter(0, "%" + phone + "%");
 			query.setMaxResults(1);
 			Long count = (Long) query.uniqueResult();
 			return count;

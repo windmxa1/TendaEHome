@@ -35,11 +35,20 @@
         <property name="userid" type="java.lang.Long">
             <column name="userid" not-null="true" />
         </property>
-        <property name="staffNo" type="java.lang.String">
-            <column name="staff_no" length="10" />
+        <property name="staffId" type="java.lang.Integer">
+            <column name="staff_id" />
         </property>
         <property name="isRead" type="java.lang.Integer">
             <column name="is_read" />
+        </property>
+        <property name="isStaffRead" type="java.lang.Integer">
+            <column name="is_staff_read" />
+        </property>
+        <property name="lat" type="java.lang.String">
+            <column name="lat" length="11" />
+        </property>
+        <property name="lon" type="java.lang.String">
+            <column name="lon" length="11" />
         </property>
     </class>
 </hibernate-mapping>

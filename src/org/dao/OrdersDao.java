@@ -14,6 +14,10 @@ public interface OrdersDao {
 	 * 获取单个用户的订单列表
 	 */
 	public List<VOrdersId> getList(Long userid, Integer start, Integer limit,Integer state,Integer type);
+	/**
+	 * 获取单个用户申请了退款的订单列表
+	 */
+	public List<VOrdersId> getList(Long userid, Integer start, Integer limit,Integer type);
 
 	/**
 	 * 获取单个订单
@@ -89,7 +93,7 @@ public interface OrdersDao {
 	/**
 	 * 修改订单对应的配送员编号
 	 */
-	public Boolean updateOrdersStaffId(String staffId,String orderNum);
+	public Boolean updateOrdersStaffNo(String staffNo,String orderNum);
 	/**
 	 * 获取当天订单列表，用于订单导出
 	 */
@@ -109,6 +113,7 @@ public interface OrdersDao {
 	int updateRefundId(Long id, Refund r,Integer type);
 	/**
 	 * 获取申请了售后处理的订单列表
+	 *  @param type 订单类型，0为一米菜园，1为智能家居，2为互助式餐厅
 	 */
 	List<VOrdersId> getAfterSaleOrder(Long userid, Integer start, Integer limit,Integer type);
 	/**
@@ -123,6 +128,7 @@ public interface OrdersDao {
 	 * 统计售后订单的数量
 	 */
 	public Long getAfterSaleCount();
+
 
 
 }

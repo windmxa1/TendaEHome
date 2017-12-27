@@ -63,7 +63,7 @@ public class Orders implements java.io.Serializable {
 	// Property accessors
 
 	public Orders(Long userid, Long time, String address, String orderNum,
-			Long franchiseeId, Integer type) {
+			Long franchiseeId, Integer type,String remarks) {
 		super();
 		this.orderNum = orderNum;
 		this.userid = userid;
@@ -71,6 +71,7 @@ public class Orders implements java.io.Serializable {
 		this.address = address;
 		this.franchiseeId = franchiseeId;
 		this.type = type;
+		this.remarks = remarks;
 	}
 
 	public Orders(Long userid, Long time, String address, String orderNum) {

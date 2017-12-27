@@ -154,7 +154,7 @@ $(document).on('click','.modOrder',function(){
 	var order = $(this).data('order');
 	$('#OrderId').val(order.id);
 	$('#UserId').val(order.userid);
-	$('#OrderstaffNo').val(order.staffNo);
+	$('#OrderstaffId').val(order.staffId);
 	$('#OrderTime').val(order.appointmentTime);
 	$('#Orderphone').val(order.phone);	
 	$('#Orderstatus').val(order.status);
@@ -162,6 +162,9 @@ $(document).on('click','.modOrder',function(){
 	$('#Orderaddress').val(order.address);
 	$('#Orderdescription').val(order.description);
 	$('#isRead').val(order.isRead);
+	$('#lat').val(order.lat);
+	$('#lon').val(order.lon);
+	$('#isStaffRead').val(order.isStaffRead);
 	
 });
 
@@ -182,13 +185,16 @@ function toJson(x) {
 }
 
 $(document).on('click','#modOrder_btn',function(){
+	var formdata = new FormData(document.getElementById("modOrder_form"));
 	$.ajax({
 		type : "post",
-		url : "back/repair/updateRepairOrder",
-		data: toJson($("#modOrder_form")),
-		dataType : "json",
-		contentType : "application/json;charset=utf-8",
+		url : "back/repair/updateRepairOrder1",
+		data: formdata,
+		async : false,
+		cache : false,
+		contentType : false,
 		processData : false,
+		dataType : "json",
 		beforeSend : function(request) {
 			request.setRequestHeader("token", getCookie('token'));
 		},

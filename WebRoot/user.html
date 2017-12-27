@@ -1,38 +1,44 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-	<head>
-		<meta charset="utf-8" />
-		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<title></title>
-		<!--jquery库-->
-		<script src="js/jquery.min.js"></script>
-		<!--bootstrap库-->
-		<link href="css/bootstrap.min.css" rel="stylesheet" />
-		<script src="js/bootstrap/bootstrap.min.js"></script>
-		<!--font-awesome字体库-->
-		<link href="css/font-awesome.min.css" rel="stylesheet" />
-		<!--平滑滚动到顶部库-->
-		<script src="js/jquery.scrolltopcontrol/scrolltopcontrol.js" type="text/javascript"></script>
-		<!--主要写的jquery拓展方法-->
-		<script src="js/jquery.extend.js" type="text/javascript"></script>
-		<!--主要写的css代码-->
-		<link href="css/default.css" rel="stylesheet" type="text/css" />
-		<script src="js/default.js" type="text/javascript"></script>
-		<link href="css/query_startic_pro.css" rel="stylesheet" type="text/css" />
-		<script src="js/user.js" type="text/javascript"></script>
-	</head>
-	<body>
-		<div id="browser" class="tbtree" style="text-align: center;">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title></title>
+<!--jquery库-->
+<script src="js/jquery.min.js"></script>
+<!--bootstrap库-->
+<link href="css/bootstrap.min.css" rel="stylesheet" />
+<script src="js/bootstrap/bootstrap.min.js"></script>
+<!--font-awesome字体库-->
+<link href="css/font-awesome.min.css" rel="stylesheet" />
+<!--平滑滚动到顶部库-->
+<script src="js/jquery.scrolltopcontrol/scrolltopcontrol.js"
+	type="text/javascript"></script>
+<!--主要写的jquery拓展方法-->
+<script src="js/jquery.extend.js" type="text/javascript"></script>
+<!--主要写的css代码-->
+<link href="css/default.css" rel="stylesheet" type="text/css" />
+<script src="js/default.js" type="text/javascript"></script>
+<link href="css/query_startic_pro.css" rel="stylesheet" type="text/css" />
+<script src="js/user.js" type="text/javascript"></script>
+</head>
+<body>
+	<div class="webdesigntuts-workshop" style="margin:10px; height: 30px;">
+		<input type="search" id="input_phone" placeholder="请按手机号搜索" onkeyup="seek()">
+		<button onclick="seek()"
+			style="background: #0066CC; border: none; outline: none; color: #FFFFFF;">搜索</button>
+		<button onclick="getFreeList()"
+			style="background: #0066CC; border: none; outline: none; color: #FFFFFF;">免单用户</button>
+	</div>
+	<div id="browser" class="tbtree" style="text-align: center;">
 
-			<div id="mainTbtable" class='uqt_detail'>
-				<table id="UQT_detailTable" class="">
-				</table>
-			</div>
-
-			<div id="div_pager" class="page_con">
-
-			</div>
+		<div id="mainTbtable" class='uqt_detail'>
+			<table id="UQT_detailTable" class="">
+			</table>
 		</div>
-	</body>
+
+		<div id="div_pager" class="page_con"></div>
+	</div>
+</body>
 </html>

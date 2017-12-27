@@ -9,10 +9,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.model.Staff;
 import org.model.StaffPromotion;
-import org.model.UserStaff;
 import org.util.HibernateSessionFactory;
-import org.view.VGoods;
-import org.view.VGoodsId;
 import org.view.VStaffPromotion;
 import org.view.VStaffPromotionId;
 
@@ -211,35 +208,15 @@ public class StaffDaoImp implements StaffDao {
 	}
 
 	@Override
-	public Long saveOrUpdateUser(UserStaff userStaff) {
-		try {
-			Session session = HibernateSessionFactory.getSession();
-			Transaction ts = session.beginTransaction();
-			Long id = 0L;
-			if (userStaff.getId() == null) {
-				id = (Long) session.save(userStaff);
-			} else {
-				session.update(userStaff);
-			}
-			ts.commit();
-			return id;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return -1L;
-		} finally {
-			HibernateSessionFactory.closeSession();
-		}
-	}
-
-	@Override
-	public UserStaff getUserStaff(String staffNo) {
+	public Staff getUserStaff(String staffNo, String username) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
 			Query query = session
-					.createQuery("from UserStaff where staffNo = ?");
+					.createQuery("from Staff where (staffNo = ? or username =?)");
 			query.setParameter(0, staffNo);
+			query.setParameter(1, username);
 			query.setMaxResults(1);
-			UserStaff userStaff = (UserStaff) query.uniqueResult();
+			Staff userStaff = (Staff) query.uniqueResult();
 			return userStaff;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -250,16 +227,16 @@ public class StaffDaoImp implements StaffDao {
 	}
 
 	@Override
-	public UserStaff getUserStaff(String username, String password) {
+	public Staff getStaff(String username, String password) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
 			Query query = session
-					.createQuery("from UserStaff where username = ? and password = ?");
+					.createQuery("from Staff where username = ? and password = ?");
 			query.setParameter(0, username);
 			query.setParameter(1, password);
 			query.setMaxResults(1);
-			UserStaff userStaff = (UserStaff) query.uniqueResult();
-			return userStaff;
+			Staff staff = (Staff) query.uniqueResult();
+			return staff;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -274,7 +251,7 @@ public class StaffDaoImp implements StaffDao {
 			Session session = HibernateSessionFactory.getSession();
 			Transaction ts = session.beginTransaction();
 			Query query = session
-					.createQuery("update UserStaff set password = ? where username = ?");
+					.createQuery("update Staff set password = ? where username = ?");
 			query.setParameter(0, password);
 			query.setParameter(1, username);
 			query.executeUpdate();
@@ -283,6 +260,22 @@ public class StaffDaoImp implements StaffDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
+	@Override
+	public List<Staff> getStaffList(List<Integer> ids) {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			Query query = session.createQuery("from Staff where id in (:ids) and isLeader =0");
+			query.setParameterList("ids", ids);
+			List<Staff> list = query.list();
+			return list;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
 		} finally {
 			HibernateSessionFactory.closeSession();
 		}

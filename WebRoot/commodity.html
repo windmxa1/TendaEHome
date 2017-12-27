@@ -138,13 +138,25 @@ ul,li {
 					</div>
 					<div class="modal-body">
 						<form role="form" id="tjspml_form">
-							<table>
-								<tr>
-									<td><label>目录名:</label> <input type="text" name="catalog"
-										id="catalog" /></td>
-								</tr>
-							</table>
-							<input type="reset" name="reset" style="display: none;" />
+							<div class="form-group has-feedback">
+								<label for="name">目录名</label> <input type="text"
+									class="form-control" name="catalog" id="catalog"
+									placeholder="请输入目录名称" aria-describedby="stmp">
+							</div>
+							<div class="form-group has-feedback">
+								<label for="name">图片</label> <input type="file"
+									class="form-control" name="file" id="ml_file">
+							</div>
+							<div class="form-group has-feedback">
+								<label for="description">描述</label> <input type="text"
+									class="form-control" name="description" id="description"
+									placeholder="请输入描述" aria-describedby="stmp">
+							</div>
+							<div class="form-group has-feedback">
+								<label for="type">类型编号</label> <input type="text"
+									class="form-control" name="type" id="type"
+									placeholder="请输入类型编号" aria-describedby="stmp">
+							</div>
 						</form>
 					</div>
 					<div class="modal-footer">
@@ -169,13 +181,39 @@ ul,li {
 					</div>
 					<div class="modal-body">
 						<form role="form" id="xgspml_form">
-							<table>
-								<tr>
-									<td><label>目录名:</label> <input type="text"
-										name="xg_catalog" id="xg_catalog" /></td>
-								</tr>
-							</table>
-							<input type="reset" name="reset" style="display: none;" />
+							<div class="form-group has-feedback" style="display: none;">
+								<label for="name">目录id</label> <input type="text"
+									class="form-control" name="id" id="xg_cid"
+									aria-describedby="stmp">
+							</div>
+							<div class="form-group has-feedback">
+								<label for="name">目录名</label> <input type="text"
+									class="form-control" name="catalog" id="xg_catalog"
+									placeholder="请输入目录名称" aria-describedby="stmp">
+							</div>
+							<div class="form-group has-feedback">
+								<label for="name">图片</label> <input type="file"
+									class="form-control" name="file" id="xg_ml_file">
+							</div>
+							<div class="form-group has-feedback" style="overflow: hidden;">
+								<label for="name">图片地址</label>
+								<p>
+									<a onmousemove="moveon(this);" onmouseout="c$.mout();"
+										id="img_url"></a>
+								</p>
+								<input readonly type="hidden" class="form-control" name="url"
+									id="xg_url" aria-describedby="stmp">
+							</div>
+							<div class="form-group has-feedback">
+								<label for="description">描述</label>
+								<textarea class="form-control" name="description"
+									id="xg_ml_description" rows="2" placeholder="请输入描述"></textarea>
+							</div>
+							<div class="form-group has-feedback">
+								<label for="type">类型编号</label> <input type="text"
+									class="form-control" name="type" id="xg_ml_type"
+									placeholder="请输入类型编号" aria-describedby="stmp">
+							</div>
 						</form>
 					</div>
 					<div class="modal-footer">
@@ -268,7 +306,7 @@ ul,li {
 								<input type="text" class="form-control" name="saleNum"
 									id="xg_saleNum" aria-describedby="stmp">
 							</div>
-							
+
 							<div style="display: none;">
 								<input type="text" class="form-control" name="type" id="xg_type"
 									aria-describedby="stmp">

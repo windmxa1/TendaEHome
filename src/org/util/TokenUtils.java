@@ -32,17 +32,18 @@ public class TokenUtils {
 				.compact();
 		return jwt;
 	}
+
 	/**
 	 * 生成员工用户token
 	 */
-	public static String buildJwt1(Key key, Date exp, String staffNo) {
+	public static String buildJwt3(Key key, Date exp, Integer staffId) {
 		String jwt = Jwts.builder()
-				// .setExpiration(exp)// expTime是过期时间
+		// .setExpiration(exp)// expTime是过期时间
 				.setIssuedAt(new Date())// 设置当前时间
 				.setIssuer("Marshall")// 设置发行人
 				.setSubject("authentic")// 设置主题
 				.setAudience("panshi")// 设置用户群
-				.claim("staffNo", staffNo)// 该方法是在JWT中加入值为vaule的key字段
+				.claim("staffId", staffId)// 该方法是在JWT中加入值为vaule的key字段
 				.signWith(SignatureAlgorithm.HS512, key)// SECRET_KEY是加密算法对应的密钥，这里使用额是HS256加密算法
 				.compact();
 		return jwt;
@@ -76,7 +77,7 @@ public class TokenUtils {
 			Jwts.parser().setSigningKey(key).parseClaimsJws(token.trim());
 			return true;
 		} catch (Exception e) {
-//			 e.printStackTrace();
+			// e.printStackTrace();
 			System.out.println("验证不通过");
 			return false;
 		}
@@ -102,17 +103,17 @@ public class TokenUtils {
 
 	public static Key getKey() {
 		File file = new File(rootPath + "key.txt");
-//		File file = new File("F:\\" + "key.txt");
+		// File file = new File("F:\\" + "key.txt");
 		try {
 			if (file.exists()) {
-//				System.out.println("key文件存在");
+				// System.out.println("key文件存在");
 				ObjectInputStream ois = new ObjectInputStream(
 						new FileInputStream(file));
 				Key key = (Key) ois.readObject();
 				ois.close();
 				return key;
 			} else {
-//				System.out.println("key文件不存在，重新生成");
+				// System.out.println("key文件不存在，重新生成");
 				file.createNewFile();
 				Key key = MacProvider.generateKey(SignatureAlgorithm.HS512);
 				ObjectOutputStream oo = new ObjectOutputStream(

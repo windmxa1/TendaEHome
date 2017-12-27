@@ -591,7 +591,7 @@ var builderUQTQueryMsg = function(UQTQueryMsg) {
 
 						UQT_detailTable.append(tr);
 						tr = $('<tr id="order_'+id+'" class="collapse">');
-						tr.append('<td colspan="6">订单总价为：'+eachData.total+' 配送的员工为: '+eachData.staffName+' 选择的厨师为: '+eachData.franchiseeName+'</td></tr>');
+						tr.append('<td colspan="6">订单总价为：'+eachData.total+' 配送的员工为: '+eachData.staffName+' 选择的厨师为: '+eachData.franchiseeName+' 备注: '+eachData.remarks+'</td></tr>');
 						UQT_detailTable.append(tr);
 					});
 }

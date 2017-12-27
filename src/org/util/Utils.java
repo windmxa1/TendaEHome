@@ -29,6 +29,17 @@ public class Utils {
 	}
 
 	/**
+	 * 转换Int
+	 */
+	public static Integer parseInt(String s) {
+		try {
+			return Integer.parseInt(s);
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	/**
 	 * 实体转Map
 	 */
 	public static LinkedHashMap<String, Object> objectToMap(Object obj)
@@ -50,23 +61,26 @@ public class Utils {
 
 	public static String getFileUrl(String realBasePath,
 			CommonsMultipartFile file, Long time, String path) {
-		String filename = time + "_" + file.getOriginalFilename();
-		String filePath = realBasePath + path.replace("/", File.separator) + File.separator + filename;
-		System.out.println(filePath);
-		File newFile = new File(filePath);
-		if (!newFile.getParentFile().exists()) {
-			System.out.println("目标文件的目录不存在，准备创建目录...");
-			if (!newFile.getParentFile().mkdirs()) {
-				System.out.println("创建目录失败");
-			}
-		}
-		// 通过CommonsMultipartFile的方法直接写文件（注意这个时候）
 		try {
+			if(file.getOriginalFilename().equals("")){
+				return null;
+			}
+			String filename = time + "_" + file.getOriginalFilename();
+			String filePath = realBasePath + path.replace("/", File.separator)
+					+ File.separator + filename;
+			File newFile = new File(filePath);
+			if (!newFile.getParentFile().exists()) {
+				System.out.println("目标文件的目录不存在，准备创建目录...");
+				if (!newFile.getParentFile().mkdirs()) {
+					System.out.println("创建目录失败");
+				}
+			}
+			// 通过CommonsMultipartFile的方法直接写文件（注意这个时候）
 			file.transferTo(newFile);
+			return path + "/" + filename;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
-		return path + "/" + filename;
 	}
 }

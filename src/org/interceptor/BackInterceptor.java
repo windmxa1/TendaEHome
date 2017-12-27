@@ -37,7 +37,7 @@ public class BackInterceptor implements HandlerInterceptor {
 		Key key = TokenUtils.getKey();
 		String token = request.getHeader("token");
 		if (TokenUtils.isValid(token, key)) {
-//			System.out.println(request.getServletPath());
+			// System.out.println(request.getServletPath());
 			return true;
 		} else {
 			Map<String, Object> result = ResultUtils.toJson(400,

@@ -25,5 +25,13 @@
         <property name="headUrl" type="java.lang.String">
             <column name="head_url" length="200" />
         </property>
+        <property name="partner" type="java.lang.Integer">
+            <column name="partner">
+                <comment>加盟者的标志位</comment>
+            </column>
+        </property>
+        <property name="isFree" type="java.lang.Integer">
+            <column name="is_free" />
+        </property>
     </class>
 </hibernate-mapping>

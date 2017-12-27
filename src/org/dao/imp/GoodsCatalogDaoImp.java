@@ -15,6 +15,7 @@ public class GoodsCatalogDaoImp implements GoodsCatalogDao {
 			Session session = HibernateSessionFactory.getSession();
 			String sql = "from GoodsCatalog where catalog=?";
 			Query query = session.createQuery(sql);
+			query.setParameter(0, catalog);
 			query.setMaxResults(1);
 			GoodsCatalog goodsCatalog = (GoodsCatalog) query.uniqueResult();
 			return goodsCatalog;

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.model.RepairComment;
 import org.model.RepairOrder;
+import org.model.Staff;
 import org.view.VRepairOrderId;
 
 public interface RepairDao {
@@ -41,7 +42,38 @@ public interface RepairDao {
 
 	/**
 	 * 获取未读消息数目
+	 * 
+	 * @param staffId
 	 */
 	public int getUnRead();
+
+	/**
+	 * 获取未读消息数目
+	 * 
+	 * @param staffId
+	 */
+	public int getUnRead(Integer staffId);
+
+	/**
+	 * 获取单人的维修单列表
+	 */
+	public List<VRepairOrderId> getRepairListByStaffId(Integer staffId,
+			Integer status, Integer start, Integer limit);
+
+	/**
+	 * 修改维修单状态和为维修人员
+	 */
+	public boolean updateRepairOrder(Long id, Integer status,
+			String handleResult,Integer staffId);
+	/**
+	 * 修改维修单状态
+	 */
+	public boolean updateRepairOrder(Long id, Integer status,
+			String handleResult);
+
+	/**
+	 * 修改订单的维修人员ID 
+	 */
+	public boolean updateRepairOrder(Integer staffId, Long repairOrderId);
 
 }

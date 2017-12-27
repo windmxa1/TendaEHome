@@ -11,20 +11,29 @@
             <generator class="identity" />
         </id>
         <property name="staffNo" type="java.lang.String">
-            <column name="staff_no" length="11" not-null="true" />
+            <column name="staff_no" length="11" />
         </property>
         <property name="staffName" type="java.lang.String">
-            <column name="staff_name" length="50" not-null="true" />
+            <column name="staff_name" length="50" />
         </property>
         <property name="year" type="java.lang.Integer">
-            <column name="year" not-null="true">
+            <column name="year">
                 <comment>工龄</comment>
             </column>
         </property>
         <property name="serviceVange" type="java.lang.String">
-            <column name="service_vange" length="200" not-null="true">
+            <column name="service_vange" length="200">
                 <comment>服务范围</comment>
             </column>
+        </property>
+        <property name="username" type="java.lang.String">
+            <column name="username" length="20" />
+        </property>
+        <property name="password" type="java.lang.String">
+            <column name="password" length="50" />
+        </property>
+        <property name="isLeader" type="java.lang.Integer">
+            <column name="is_leader" />
         </property>
     </class>
 </hibernate-mapping>

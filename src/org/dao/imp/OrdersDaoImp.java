@@ -119,6 +119,38 @@ public class OrdersDaoImp implements OrdersDao {
 		}
 	}
 
+	public List<VOrdersId> getList(Long userid, Integer start, Integer limit,
+			Integer type) {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			String sql = "";
+			Query query = null;
+			sql = "from VOrders v where v.id.userid=? and v.id.state>4 and v.id.type = :type order by v.id.time desc";
+			query = session.createQuery(sql);
+			query.setParameter(0, userid);
+			query.setParameter("type", type);
+			if (start == null) {
+				start = 0;
+			}
+			if (limit == null) {
+				limit = 15;
+			}
+			query.setFirstResult(start);
+			query.setMaxResults(limit);
+			List<VOrders> vOrders = query.list();
+			List<VOrdersId> list = new ArrayList<VOrdersId>();
+			for (VOrders v : vOrders) {
+				list.add(v.getId());
+			}
+			return list;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
 	@Override
 	public VOrdersId getOrder(String orderNum) {
 		try {
@@ -708,13 +740,13 @@ public class OrdersDaoImp implements OrdersDao {
 	}
 
 	@Override
-	public Boolean updateOrdersStaffId(String staffId, String orderNum) {
+	public Boolean updateOrdersStaffNo(String staffNo, String orderNum) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
 			Transaction ts = session.beginTransaction();
-			String sql = "update Orders set staffId=?,deliveryState=1  where orderNum=? and delivery_state=0";
+			String sql = "update Orders set staffNo=?,deliveryState=1  where orderNum=? and delivery_state=0";
 			Query query = session.createQuery(sql);
-			query.setParameter(0, staffId);
+			query.setParameter(0, staffNo);
 			query.setParameter(1, orderNum);
 			int r = query.executeUpdate();
 			ts.commit();

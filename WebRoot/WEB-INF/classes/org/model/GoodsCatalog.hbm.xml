@@ -14,7 +14,7 @@
             <column name="catalog" length="20" not-null="true" />
         </property>
         <property name="url" type="java.lang.String">
-            <column name="url" length="20" />
+            <column name="url" length="200" />
         </property>
         <property name="description" type="java.lang.String">
             <column name="description" length="200" />

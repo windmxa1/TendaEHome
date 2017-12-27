@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.util.ResultUtils;
+import org.util.Utils;
 import org.view.VGarouselId;
 import org.view.VGoodsId;
 
@@ -69,6 +70,21 @@ public class GoodsController {
 	}
 
 	// 获取目录列表
+	@RequestMapping("/getRestaurantList")
+	@ResponseBody
+	public Object getRestaurantList() throws Exception {
+		gDao = new GoodsDaoImp();
+		data = new HashMap<String, Object>();
+		List<GoodsCatalog> list = gDao.getCatalog(2);
+		if (list == null) {
+			return ResultUtils.toJson(101, "服务器繁忙", "");
+		} else {
+			data.put("list", list);
+		}
+		return ResultUtils.toJson(100, "", data);
+	}
+
+	// 获取目录列表
 	@RequestMapping("/getCatalog")
 	@ResponseBody
 	public Object getCatalog() throws Exception {
@@ -86,12 +102,18 @@ public class GoodsController {
 
 	@RequestMapping("/addCatalog")
 	@ResponseBody
-	public Object addCatalog(String catalog) throws Exception {
+	public Object addCatalog(HttpServletRequest request, GoodsCatalog catalog,
+			@RequestParam(required = false) CommonsMultipartFile file)
+			throws Exception {
 		gcDao = new GoodsCatalogDaoImp();
-		if (gcDao.getCatalog(catalog) != null) {
+		if (gcDao.getCatalog(catalog.getCatalog()) != null) {
 			return ResultUtils.toJson(101, "添加失败,该目录已存在", "");
 		}
-		GoodsCatalog goodsCatalog = new GoodsCatalog(catalog);
+		String url = Utils.getFileUrl(request.getSession().getServletContext()
+				.getRealPath("/"), file, System.currentTimeMillis() / 1000,
+				"upload/catalog");
+		GoodsCatalog goodsCatalog = new GoodsCatalog(catalog.getCatalog(), url,
+				catalog.getDescription(), catalog.getType());
 		if (gcDao.saveOrUpdate(goodsCatalog) > 0) {
 			return ResultUtils.toJson(100, "添加成功", "");
 		}
@@ -133,11 +155,20 @@ public class GoodsController {
 
 	@RequestMapping("/updateCatalog")
 	@ResponseBody
-	public Object updateCatalog(@RequestParam Long id,
-			@RequestParam String catalog) throws Exception {
+	public Object updateCatalog(HttpServletRequest request,
+			GoodsCatalog catalog,
+			@RequestParam(required = false) CommonsMultipartFile file)
+			throws Exception {
 		gcDao = new GoodsCatalogDaoImp();
-		GoodsCatalog goodsCatalog = new GoodsCatalog(catalog);
-		goodsCatalog.setId(id);
+		String url = Utils.getFileUrl(request.getSession().getServletContext()
+				.getRealPath("/"), file, System.currentTimeMillis() / 1000,
+				"upload/catalog");
+		if (url == null) {
+			url = catalog.getUrl();
+		}
+		GoodsCatalog goodsCatalog = new GoodsCatalog(catalog.getId(),
+				catalog.getCatalog(), url, catalog.getDescription(),
+				catalog.getType());
 		if (gcDao.saveOrUpdate(goodsCatalog) == 0) {
 			return ResultUtils.toJson(100, "修改成功", "");
 		}

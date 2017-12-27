@@ -34,7 +34,17 @@ public class GoodsCatalog implements java.io.Serializable {
 		this.type = type;
 	}
 
+	public GoodsCatalog(Long id, String catalog, String url,
+			String description, Integer type) {
+		super();
+		this.id = id;
+		this.catalog = catalog;
+		this.url = url;
+		this.description = description;
+		this.type = type;
+	}
 	// Property accessors
+
 
 	public Long getId() {
 		return this.id;

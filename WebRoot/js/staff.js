@@ -22,7 +22,7 @@ $(function() {
 		pageSize : pageSize
 	});
 	kkpager.generPageHtml();
-
+	
 });
 
 function selectOrder() {
@@ -131,7 +131,7 @@ function refreshData(pageSize, pageNo) {
 var builderUQTQueryMsg = function(UQTQueryMsg) {
 	var UQT_detailTable = $('#UQT_detailTable');
 	UQT_detailTable.empty();
-	var th = '<tr><th scope="col"  class="dis_order">员工编号</th><th scope="col" class="match_type" >姓名</th><th scope="col" class="match_type">工龄</th><th scope="col" class="query_pro">服务范围</th><th scope="col" class="dis_dta">操作</th><th class="dis_hidden" style="display: none">隐藏属性</th></tr>';
+	var th = '<tr><th scope="col"  class="dis_order">员工编号</th><th scope="col" class="match_type" >姓名</th><th scope="col" class="match_type">工龄</th><th scope="col" class="query_pro">服务范围</th><th scope="col" class="match_type">账号</th><th scope="col" class="match_type">密码</th><th scope="col" class="dis_dta">操作</th><th class="dis_hidden" style="display: none">隐藏属性</th></tr>';
 
 	UQT_detailTable.append(th);
 	var tr;
@@ -158,6 +158,12 @@ var builderUQTQueryMsg = function(UQTQueryMsg) {
 										+ "<td class='match_type'>"
 										+ serviceVange
 										+ "</td>"
+										+ "<td class='match_type'>"
+										+ eachData.username
+										+ "</td>"
+										+ "<td class='match_type'>"
+										+ eachData.password
+										+ "</td>"
 										+ "<td class='dis_dta'><button data-toggle='modal' id='modStaff' data-target='#modOrder' style='height:30px;margin-right:10px' class='btn' data-order='"
 										+ JSON.stringify(eachData)
 										+ "'>修改</button><button class='btn' id='delStaff' style='height:30px;margin-right:10px' data-oid='"
@@ -174,6 +180,9 @@ $(document).on('click', '#modStaff', function() {
 	$('#staffName').val(order.staffName);
 	$('#year').val(order.year);
 	$('#serviceVange').val(order.serviceVange);
+	$('#username').val(order.username);
+	$('#password').val(order.password);
+	$('#isLeader').val(order.isLeader);
 });
 
 function toJson(x) {
@@ -198,6 +207,7 @@ $(document).on('click', '#modOrder_btn', function() {
 	var year = $('#year').val();
 	var serviceVange = $('#serviceVange').val();
 	var _reg = /^\d+$/;
+	var password = $("#password").val();
 	if (staffNo == '' || staffName == '' || year == '' || serviceVange == '') {
 		alert("您有未填写的必填项，请补充完整后提交");
 	} else if (!_reg.test(year)) {
@@ -205,13 +215,19 @@ $(document).on('click', '#modOrder_btn', function() {
 	} else if (!_reg.test(staffNo)) {
 		alert("工号请填写数字");
 	} else {
+		if(password!=''){
+			$("#password").val(hex_md5(hex_md5(password+"szsiyann_dcl")));
+		}
+		var formData = new FormData(document.getElementById("modOrder_form"));
 		$.ajax({
 			type : "post",
 			url : "back/staff/updateStaff",
-			data : toJson($("#modOrder_form")),
-			dataType : "json",
-			contentType : "application/json;charset=utf-8",
+			data : formData,
+			async : false,
+			cache : false,
+			contentType : false,
 			processData : false,
+			dataType : "json",
 			beforeSend : function(request) {
 				request.setRequestHeader("token", getCookie('token'));
 			},
@@ -230,12 +246,13 @@ $(document).on('click', '#modOrder_btn', function() {
 	}
 });
 // 添加员工信息
-function tjyg(){
+function tjyg() {
 	var formData = new FormData(document.getElementById("tjyg_form"));
 	var staffNo = $('#xg_staffNo').val();
 	var staffName = $('#xg_staffName').val();
 	var year = $('#xg_year').val();
 	var serviceVange = $('#xg_serviceVange').val();
+	var password = $("#xg_password").val();
 	var _reg = /^\d+$/;
 	if (staffNo == '' || staffName == '' || year == '' || serviceVange == '') {
 		alert("您有未填写的必填项，请补充完整后提交");
@@ -244,6 +261,9 @@ function tjyg(){
 	} else if (!_reg.test(staffNo)) {
 		alert("员工编号请填写数字");
 	} else {
+		if(password!=''){
+			$("#password").val(hex_md5(hex_md5(password+"szsiyann_dcl")));
+		}
 		$.ajax({
 			type : "post",
 			url : "back/staff/addStaff",

@@ -20,6 +20,7 @@ public class VUserId implements java.io.Serializable {
 	private String url;
 	private String address;
 	private BigDecimal addressId;
+	private Integer isFree;
 
 	// Constructors
 
@@ -38,7 +39,7 @@ public class VUserId implements java.io.Serializable {
 	/** full constructor */
 	public VUserId(Long id, String phone, String password, Long time,
 			String nickname, String headUrl, String createTime, String url,
-			String address, BigDecimal addressId) {
+			String address, BigDecimal addressId, Integer isFree) {
 		this.id = id;
 		this.phone = phone;
 		this.password = password;
@@ -49,6 +50,7 @@ public class VUserId implements java.io.Serializable {
 		this.url = url;
 		this.address = address;
 		this.addressId = addressId;
+		this.isFree = isFree;
 	}
 
 	// Property accessors
@@ -133,6 +135,14 @@ public class VUserId implements java.io.Serializable {
 		this.addressId = addressId;
 	}
 
+	public Integer getIsFree() {
+		return this.isFree;
+	}
+
+	public void setIsFree(Integer isFree) {
+		this.isFree = isFree;
+	}
+
 	public boolean equals(Object other) {
 		if ((this == other))
 			return true;
@@ -175,7 +185,10 @@ public class VUserId implements java.io.Serializable {
 				&& ((this.getAddressId() == castOther.getAddressId()) || (this
 						.getAddressId() != null
 						&& castOther.getAddressId() != null && this
-						.getAddressId().equals(castOther.getAddressId())));
+						.getAddressId().equals(castOther.getAddressId())))
+				&& ((this.getIsFree() == castOther.getIsFree()) || (this
+						.getIsFree() != null && castOther.getIsFree() != null && this
+						.getIsFree().equals(castOther.getIsFree())));
 	}
 
 	public int hashCode() {
@@ -202,6 +215,8 @@ public class VUserId implements java.io.Serializable {
 				+ (getAddress() == null ? 0 : this.getAddress().hashCode());
 		result = 37 * result
 				+ (getAddressId() == null ? 0 : this.getAddressId().hashCode());
+		result = 37 * result
+				+ (getIsFree() == null ? 0 : this.getIsFree().hashCode());
 		return result;
 	}
 

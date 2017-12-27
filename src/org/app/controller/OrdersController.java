@@ -13,16 +13,21 @@ import org.dao.GoodsDao;
 import org.dao.OrdersDao;
 import org.dao.RefundDao;
 import org.dao.UserAddressDao;
+import org.dao.UserDao;
 import org.dao.imp.OrdersDaoImp;
 import org.dao.imp.UserAddressDaoImp;
+import org.dao.imp.UserDaoImp;
 import org.model.Orders;
 import org.model.Refund;
+import org.model.User;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.util.ALIPAY;
+import org.util.ChangeTime;
+import org.util.RedisUtil;
 import org.util.ResultUtils;
 import org.util.TokenUtils;
 import org.util.Utils;
@@ -37,6 +42,7 @@ public class OrdersController {
 	GoodsDao gDao;
 	RefundDao rDao;
 	UserAddressDao uAddressDao;
+	UserDao uDao;
 	// Long userid;
 	Map<String, Object> data;
 
@@ -65,12 +71,38 @@ public class OrdersController {
 		return ResultUtils.toJson(100, "", data);
 	}
 
+	@RequestMapping("/getRefundList")
+	@ResponseBody
+	public Object getRefundList(HttpServletRequest request, Integer start,
+			Integer limit, Integer type) throws Exception {
+		oDao = new OrdersDaoImp();
+		/**** 获取header中的token并取出userid ****/
+		String token = request.getHeader("token");
+		Long userid = Long.parseLong(""
+				+ TokenUtils.getValue(token, TokenUtils.getKey(), "userid"));
+		/*********************************/
+		if (type == null)
+			type = 0;
+		List<VOrdersId> list = oDao.getList(userid, start, limit, type);
+		data = new HashMap<String, Object>();
+		if (list == null || list.size() == 0) {
+			data.put("list", new ArrayList<>());
+		} else {
+			for (VOrdersId order : list) {
+				order.setUrlList(oDao.getUrlList(order.getId()));
+			}
+			data.put("list", list);
+		}
+		return ResultUtils.toJson(100, "", data);
+	}
+
 	@RequestMapping("/getOrdersDetailList")
 	@ResponseBody
 	public Object getOrdersDetailList(Long orderId, Integer start, Integer limit)
 			throws Exception {
 		oDao = new OrdersDaoImp();
-		List<VOrdersDetailsId> list = oDao.getDetailList(orderId, start, limit,null);
+		List<VOrdersDetailsId> list = oDao.getDetailList(orderId, start, limit,
+				null);
 		data = new HashMap<>();
 		if (list != null) {
 			data.put("list", list);
@@ -180,7 +212,23 @@ public class OrdersController {
 		/*********************************/
 		Orders orders = new Orders(userid, time / 1000,
 				uAddressDao.getAddressById(o.getAddressId()), orderNum,
-				o.getFranchiseeId(), o.getType());
+				o.getFranchiseeId(), o.getType(), o.getRemarks());
+		uDao = new UserDaoImp();
+		User user = uDao.getUser(userid);
+		boolean isFree = false;
+		if (o.getType() == 0 && user.getIsFree() == 1 && o.getTotal() < 50d) {// 有免单特权且总价低于50
+			Integer count = Utils
+					.parseInt(RedisUtil.getData("userid" + userid));
+			if (count == null) {// 当天未免单，则免单
+				orders.setPayWay(2);
+				isFree = true;
+			} else if (count != null && count < 3) { // 本周有下单且免单数小于3，则免单
+				RedisUtil.addData("userid" + userid, "" + (count++),
+						ChangeTime.weekendTime(24, time));
+				orders.setPayWay(2);
+				isFree = true;
+			}
+		}
 		System.out.println(o.getAddressId() + "|||" + orders.getAddress());
 		Long id = oDao.generateOrder(orders, o.getDetails());
 		if (id > 0) {
@@ -195,6 +243,9 @@ public class OrdersController {
 			String msg = "生成订单成功";
 			if (Calendar.getInstance().get(Calendar.HOUR_OF_DAY) > 21) {
 				msg = "生成订单成功，超过21点的订单将于后天送达";
+			}
+			if (isFree) {
+				msg = msg + "，您在体验期间享受免单特权，每周限免3单，每单限购50元";
 			}
 			return ResultUtils.toJson(100, msg, data);
 		} else {

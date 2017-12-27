@@ -44,6 +44,8 @@
 			<mvc:exclude-mapping path="/app/staff/login" />
 			<mvc:exclude-mapping path="/app/staff/updatePassword" />
 			<mvc:exclude-mapping path="/app/staff/register" />
+			<mvc:exclude-mapping path="/app/staff/register1" />
+			<mvc:exclude-mapping path="/app/scrollNews/**" />
 			<bean class="org.interceptor.AppInterceptor"></bean>
 		</mvc:interceptor>
 		<mvc:interceptor>
@@ -56,6 +58,7 @@
 			<mvc:exclude-mapping path="/back/orders/notifyAliPay" />
 			<mvc:exclude-mapping path="/back/orders/notifyWxRefund" />
 			<mvc:exclude-mapping path="/back/repair/getRepairOrderList1" />
+			<mvc:exclude-mapping path="/back/repair/repairNotice" />
 			<mvc:exclude-mapping path="/back/repair/repairNotice" />
 			<bean class="org.interceptor.BackInterceptor"></bean>
 		</mvc:interceptor>
