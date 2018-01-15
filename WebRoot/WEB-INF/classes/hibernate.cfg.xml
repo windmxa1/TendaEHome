@@ -53,6 +53,10 @@
 	<mapping resource="org/model/Franchisee.hbm.xml" />
 	<mapping resource="org/model/RepairOrderRead.hbm.xml" />
 	<mapping resource="org/model/ScrollNews.hbm.xml" />
+	<mapping resource="org/model/Comment.hbm.xml" />
+	<mapping resource="org/model/CommentImg.hbm.xml" />
+	<mapping resource="org/view/VComment.hbm.xml" />
+	<mapping resource="org/view/VFranchisee.hbm.xml" />
 
 </session-factory>
 

@@ -108,7 +108,7 @@ public interface OrdersDao {
 	public VOrdersId getOrder(Long id);
 	/**
 	 * 更新退款单编号，同时创建退款单，同时请求API
-	 * @param type 类型，0代表APP，1代表后台
+	 * @param type 类型，0代表APP，1代表后台,后台申请绑定退款单号到售后单上，app申请绑定退款单号到订单上
 	 */
 	int updateRefundId(Long id, Refund r,Integer type);
 	/**
@@ -128,6 +128,11 @@ public interface OrdersDao {
 	 * 统计售后订单的数量
 	 */
 	public Long getAfterSaleCount();
+	/**
+	 * 获取订单列表（已评价和待评价）
+	 */
+	public List<VOrdersId> getListByIsComment(Long userid, Integer start,
+			Integer limit, Integer isComment, Integer type);
 
 
 

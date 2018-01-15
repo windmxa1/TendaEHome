@@ -1,6 +1,5 @@
 package org.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,15 +10,8 @@ import org.dao.FranchiseeDao;
 import org.dao.imp.FranchiseeDaoImp;
 import org.model.Franchisee;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
-import org.util.Coordinate;
-import org.util.RedisUtil;
 import org.util.ResultUtils;
-import org.util.Utils;
-
-import redis.clients.jedis.GeoRadiusResponse;
 
 @RestController("/back/FranchiseeController")
 @RequestMapping("/back/franchisee")

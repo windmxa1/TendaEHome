@@ -8,13 +8,8 @@ import org.dao.OrdersDao;
 import org.dao.UserDao;
 import org.dao.imp.OrdersDaoImp;
 import org.dao.imp.UserDaoImp;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.model.Orders;
 import org.model.OrdersDetail;
-import org.model.User;
-import org.util.HibernateSessionFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;

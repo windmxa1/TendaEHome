@@ -35,6 +35,7 @@ public class VOrdersId implements java.io.Serializable {
 	private List<VOrdersDetailsId> details;
 	private List<String> urlList;
 	private AfterSale afterSale;
+	private Integer isComment;
 
 	// Constructors
 
@@ -56,9 +57,9 @@ public class VOrdersId implements java.io.Serializable {
 	public VOrdersId(Long id, Long userid, Long time, Integer isExport,
 			Integer payWay, Integer deliveryState, String refundId,
 			Integer afterSaleState, Long franchiseeId, Integer type,
-			String remarks, Double total, Long num, String franchiseeName,
-			String staffName, String createTime, Integer state, String status,
-			String address, String orderNum) {
+			String remarks, String address, String orderNum, Integer isComment,
+			Double total, Long num, String franchiseeName, String staffName,
+			String createTime, Integer state, String status) {
 		this.id = id;
 		this.userid = userid;
 		this.time = time;
@@ -70,6 +71,9 @@ public class VOrdersId implements java.io.Serializable {
 		this.franchiseeId = franchiseeId;
 		this.type = type;
 		this.remarks = remarks;
+		this.address = address;
+		this.orderNum = orderNum;
+		this.isComment = isComment;
 		this.total = total;
 		this.num = num;
 		this.franchiseeName = franchiseeName;
@@ -77,9 +81,8 @@ public class VOrdersId implements java.io.Serializable {
 		this.createTime = createTime;
 		this.state = state;
 		this.status = status;
-		this.address = address;
-		this.orderNum = orderNum;
 	}
+
 
 	// Property accessors
 
@@ -267,87 +270,12 @@ public class VOrdersId implements java.io.Serializable {
 		this.afterSale = afterSale;
 	}
 
-	public boolean equals(Object other) {
-		if ((this == other))
-			return true;
-		if ((other == null))
-			return false;
-		if (!(other instanceof VOrdersId))
-			return false;
-		VOrdersId castOther = (VOrdersId) other;
+	public Integer getIsComment() {
+		return isComment;
+	}
 
-		return ((this.getId() == castOther.getId()) || (this.getId() != null
-				&& castOther.getId() != null && this.getId().equals(
-				castOther.getId())))
-				&& ((this.getUserid() == castOther.getUserid()) || (this
-						.getUserid() != null && castOther.getUserid() != null && this
-						.getUserid().equals(castOther.getUserid())))
-				&& ((this.getTime() == castOther.getTime()) || (this.getTime() != null
-						&& castOther.getTime() != null && this.getTime()
-						.equals(castOther.getTime())))
-				&& ((this.getIsExport() == castOther.getIsExport()) || (this
-						.getIsExport() != null
-						&& castOther.getIsExport() != null && this
-						.getIsExport().equals(castOther.getIsExport())))
-				&& ((this.getPayWay() == castOther.getPayWay()) || (this
-						.getPayWay() != null && castOther.getPayWay() != null && this
-						.getPayWay().equals(castOther.getPayWay())))
-				&& ((this.getDeliveryState() == castOther.getDeliveryState()) || (this
-						.getDeliveryState() != null
-						&& castOther.getDeliveryState() != null && this
-						.getDeliveryState()
-						.equals(castOther.getDeliveryState())))
-				&& ((this.getRefundId() == castOther.getRefundId()) || (this
-						.getRefundId() != null
-						&& castOther.getRefundId() != null && this
-						.getRefundId().equals(castOther.getRefundId())))
-				&& ((this.getAfterSaleState() == castOther.getAfterSaleState()) || (this
-						.getAfterSaleState() != null
-						&& castOther.getAfterSaleState() != null && this
-						.getAfterSaleState().equals(
-								castOther.getAfterSaleState())))
-				&& ((this.getFranchiseeId() == castOther.getFranchiseeId()) || (this
-						.getFranchiseeId() != null
-						&& castOther.getFranchiseeId() != null && this
-						.getFranchiseeId().equals(castOther.getFranchiseeId())))
-				&& ((this.getType() == castOther.getType()) || (this.getType() != null
-						&& castOther.getType() != null && this.getType()
-						.equals(castOther.getType())))
-				&& ((this.getRemarks() == castOther.getRemarks()) || (this
-						.getRemarks() != null && castOther.getRemarks() != null && this
-						.getRemarks().equals(castOther.getRemarks())))
-				&& ((this.getTotal() == castOther.getTotal()) || (this
-						.getTotal() != null && castOther.getTotal() != null && this
-						.getTotal().equals(castOther.getTotal())))
-				&& ((this.getNum() == castOther.getNum()) || (this.getNum() != null
-						&& castOther.getNum() != null && this.getNum().equals(
-						castOther.getNum())))
-				&& ((this.getFranchiseeName() == castOther.getFranchiseeName()) || (this
-						.getFranchiseeName() != null
-						&& castOther.getFranchiseeName() != null && this
-						.getFranchiseeName().equals(
-								castOther.getFranchiseeName())))
-				&& ((this.getStaffName() == castOther.getStaffName()) || (this
-						.getStaffName() != null
-						&& castOther.getStaffName() != null && this
-						.getStaffName().equals(castOther.getStaffName())))
-				&& ((this.getCreateTime() == castOther.getCreateTime()) || (this
-						.getCreateTime() != null
-						&& castOther.getCreateTime() != null && this
-						.getCreateTime().equals(castOther.getCreateTime())))
-				&& ((this.getState() == castOther.getState()) || (this
-						.getState() != null && castOther.getState() != null && this
-						.getState().equals(castOther.getState())))
-				&& ((this.getStatus() == castOther.getStatus()) || (this
-						.getStatus() != null && castOther.getStatus() != null && this
-						.getStatus().equals(castOther.getStatus())))
-				&& ((this.getAddress() == castOther.getAddress()) || (this
-						.getAddress() != null && castOther.getAddress() != null && this
-						.getAddress().equals(castOther.getAddress())))
-				&& ((this.getOrderNum() == castOther.getOrderNum()) || (this
-						.getOrderNum() != null
-						&& castOther.getOrderNum() != null && this
-						.getOrderNum().equals(castOther.getOrderNum())));
+	public void setIsComment(Integer isComment) {
+		this.isComment = isComment;
 	}
 
 	public int hashCode() {
@@ -381,6 +309,12 @@ public class VOrdersId implements java.io.Serializable {
 		result = 37 * result
 				+ (getRemarks() == null ? 0 : this.getRemarks().hashCode());
 		result = 37 * result
+				+ (getAddress() == null ? 0 : this.getAddress().hashCode());
+		result = 37 * result
+				+ (getOrderNum() == null ? 0 : this.getOrderNum().hashCode());
+		result = 37 * result
+				+ (getIsComment() == null ? 0 : this.getIsComment().hashCode());
+		result = 37 * result
 				+ (getTotal() == null ? 0 : this.getTotal().hashCode());
 		result = 37 * result
 				+ (getNum() == null ? 0 : this.getNum().hashCode());
@@ -398,10 +332,6 @@ public class VOrdersId implements java.io.Serializable {
 				+ (getState() == null ? 0 : this.getState().hashCode());
 		result = 37 * result
 				+ (getStatus() == null ? 0 : this.getStatus().hashCode());
-		result = 37 * result
-				+ (getAddress() == null ? 0 : this.getAddress().hashCode());
-		result = 37 * result
-				+ (getOrderNum() == null ? 0 : this.getOrderNum().hashCode());
 		return result;
 	}
 }

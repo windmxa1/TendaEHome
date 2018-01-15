@@ -16,32 +16,34 @@ import org.util.HibernateSessionFactory;
 
 public class AfterSaleDaoImp implements AfterSaleDao {
 	@Override
-	public boolean addAfterSale(final AfterSale afterSale,
-			final List<String> urlList) {
+	public boolean addAfterSale(AfterSale afterSale, final List<String> urlList) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
 			Transaction ts = session.beginTransaction();
 			// 增加售后记录
-			session.save(afterSale);
+			final String id = (String) session.save(afterSale);
 			// 更新售后状态
 			String sql = "update Orders set afterSaleState=1 where id=?";
 			Query query = session.createQuery(sql);
-			query.setParameter(0, afterSale.getOrderId());
+			query.setParameter(0, id);
 			query.executeUpdate();
 			// 添加图片记录
-			session.doWork(new Work() {
-				public void execute(Connection connection) throws SQLException {
-					PreparedStatement stmt = connection
-							.prepareStatement("insert into after_sale_pic(after_sale_id,url) values(?,?)");
-					connection.setAutoCommit(false);
-					for (String url : urlList) {
-						stmt.setString(1, afterSale.getAfterSaleId());
-						stmt.setString(2, url);
-						stmt.addBatch();
+			if (urlList.size() > 0) {
+				session.doWork(new Work() {
+					public void execute(Connection connection)
+							throws SQLException {
+						PreparedStatement stmt = connection
+								.prepareStatement("insert into after_sale_pic(after_sale_id,url) values(?,?)");
+						connection.setAutoCommit(false);
+						for (String url : urlList) {
+							stmt.setString(1, id);
+							stmt.setString(2, url);
+							stmt.addBatch();
+						}
+						stmt.executeBatch();
 					}
-					stmt.executeBatch();
-				}
-			});
+				});
+			}
 			ts.commit();
 			session.flush();
 			session.clear();

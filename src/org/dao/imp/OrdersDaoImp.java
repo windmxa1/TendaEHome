@@ -16,7 +16,6 @@ import org.model.Orders;
 import org.model.OrdersDetail;
 import org.model.Refund;
 import org.util.ALIPAY;
-import org.util.ChangeTime;
 import org.util.HibernateSessionFactory;
 import org.util.WXAPI;
 import org.view.VOrders;
@@ -74,6 +73,38 @@ public class OrdersDaoImp implements OrdersDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return 0L;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
+	@Override
+	public List<VOrdersId> getListByIsComment(Long userid, Integer start,
+			Integer limit, Integer isComment, Integer type) {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			String sql = "from VOrders v where v.id.userid=? and v.id.isComment=? and v.id.type = :type order by v.id.time desc";
+			Query query = session.createQuery(sql);
+			query.setParameter(0, userid);
+			query.setParameter(1, isComment);
+			query.setParameter("type", type);
+			if (start == null) {
+				start = 0;
+			}
+			if (limit == null) {
+				limit = 15;
+			}
+			query.setFirstResult(start);
+			query.setMaxResults(limit);
+			List<VOrders> vOrders = query.list();
+			List<VOrdersId> list = new ArrayList<VOrdersId>();
+			for (VOrders v : vOrders) {
+				list.add(v.getId());
+			}
+			return list;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
 		} finally {
 			HibernateSessionFactory.closeSession();
 		}
@@ -256,13 +287,20 @@ public class OrdersDaoImp implements OrdersDao {
 		try {
 			Session session = HibernateSessionFactory.getSession();
 			Transaction ts = session.beginTransaction();
-			session.save(r);
+			session.save(r);// 生成退款单
 			String sql = "from Orders where id = ? ";
 			Query query = session.createQuery(sql);
 			query.setParameter(0, id);
 			Orders o = (Orders) query.uniqueResult();
 			if (o.getPayWay() > 0) {// 订单已支付
-				o.setRefundId(r.getRefundId());
+				if (type == 0) {// app申请退款，绑定退款单号到订单上
+					o.setRefundId(r.getRefundId());
+				} else {
+					Query query2 = session
+							.createQuery("update AfterSale set refundId = ? where orderId= ?");
+					query2.setParameter(0, id);
+					query2.executeUpdate();
+				}
 				switch (o.getPayWay()) {
 				case 1:// 微信
 					Query query2 = session
@@ -537,7 +575,7 @@ public class OrdersDaoImp implements OrdersDao {
 			if (ids.size() > 0) {
 				Query query2 = session
 						.createQuery("update Orders set isExport=1 where from_unixtime(time,'%Y-%m-%d') = curdate() and address like ? and id in (:idList)");
-				query2.setParameter(0, "%" + "生态城" + "%");
+				query2.setParameter(0, "%" + address + "%");
 				query2.setParameterList("idList", ids);
 				query2.executeUpdate();
 			}

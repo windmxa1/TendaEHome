@@ -1,5 +1,6 @@
 package org.dao.imp;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.dao.FranchiseeDao;
@@ -8,6 +9,8 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.model.Franchisee;
 import org.util.HibernateSessionFactory;
+import org.view.VFranchisee;
+import org.view.VFranchiseeId;
 
 public class FranchiseeDaoImp implements FranchiseeDao {
 
@@ -69,14 +72,18 @@ public class FranchiseeDaoImp implements FranchiseeDao {
 	}
 
 	@Override
-	public List<Franchisee> getList(Integer catalogId) {
+	public List<VFranchiseeId> getList(Integer catalogId) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
-			String sql = " from Franchisee where catalogId= ?";
+			String sql = " from VFranchisee where id.catalogId= ? order by id.rating desc";
 			Query query = session.createQuery(sql);
 			query.setParameter(0, catalogId);
-			List<Franchisee> list = query.list();
-			return list;
+			List<VFranchisee> list = query.list();
+			List<VFranchiseeId> list2 = new ArrayList<>();
+			for (VFranchisee v : list) {
+				list2.add(v.getId());
+			}
+			return list2;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -121,14 +128,18 @@ public class FranchiseeDaoImp implements FranchiseeDao {
 	}
 
 	@Override
-	public List<Franchisee> getList(List<Long> ids) {
+	public List<VFranchiseeId> getList(List<Long> ids) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
-			String sql = " from Franchisee where id in (:ids) ?";
+			String sql = " from VFranchisee where id.id in (:ids) order by id.rating desc";
 			Query query = session.createQuery(sql);
 			query.setParameterList("ids", ids);
-			List<Franchisee> list = query.list();
-			return list;
+			List<VFranchisee> list = query.list();
+			List<VFranchiseeId> list2 = new ArrayList<>();
+			for (VFranchisee v : list) {
+				list2.add(v.getId());
+			}
+			return list2;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;

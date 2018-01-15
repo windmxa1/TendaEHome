@@ -71,7 +71,7 @@ public class AfterSaleController {
 		oDao = new OrdersDaoImp();
 		Long time = System.currentTimeMillis() / 1000;
 		String refundId = time + Utils.ran4();
-		Refund refund = new Refund(refundId, orderId, totalFee, 1, reason, time);
+		Refund refund = new Refund(refundId, orderId, totalFee, 0, reason, time);
 		switch (oDao.updateRefundId(orderId, refund, 1)) {
 		case 0:
 			return ResultUtils.toJson(101, "该订单尚未付款，无法进行退款操作，请重试", "");

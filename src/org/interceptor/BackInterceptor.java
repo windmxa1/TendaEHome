@@ -1,13 +1,7 @@
 package org.interceptor;
 
 import java.security.Key;
-import java.util.Calendar;
-import java.util.HashMap;
 import java.util.Map;
-
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.impl.crypto.MacProvider;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

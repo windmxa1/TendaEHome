@@ -15,10 +15,8 @@ import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.domain.AlipayTradeAppPayModel;
 import com.alipay.api.request.AlipayTradeAppPayRequest;
-import com.alipay.api.request.AlipayTradeFastpayRefundQueryRequest;
 import com.alipay.api.request.AlipayTradeRefundRequest;
 import com.alipay.api.response.AlipayTradeAppPayResponse;
-import com.alipay.api.response.AlipayTradeFastpayRefundQueryResponse;
 import com.alipay.api.response.AlipayTradeRefundResponse;
 
 public class ALIPAY {
@@ -144,6 +142,7 @@ public class ALIPAY {
 			case "TRADE_CLOSED":
 				System.out.println("退款单号：" + params.get("out_biz_no"));
 				Refund r = rDao.getRefund(params.get("out_trade_no"));
+				r.setState(1);
 				if (r != null
 						&& r.getRefundFee() == Double.parseDouble((params
 								.get("refund_fee"))) && rDao.saveOrUpdate(r)) {

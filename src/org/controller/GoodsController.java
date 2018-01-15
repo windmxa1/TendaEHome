@@ -3,7 +3,6 @@ package org.controller;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +23,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.util.ResultUtils;
 import org.util.Utils;
-import org.view.VGarouselId;
 import org.view.VGoodsId;
 
 @Controller

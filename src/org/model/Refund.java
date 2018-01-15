@@ -33,7 +33,6 @@ public class Refund implements java.io.Serializable {
 		this.refundId = refundId;
 		this.orderId = orderId;
 		this.refundFee = refundFee;
-		this.state = state;
 		this.description = description;
 		this.time = time;
 	}

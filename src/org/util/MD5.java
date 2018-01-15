@@ -1,10 +1,7 @@
 package org.util;
 
-import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-
-import sun.misc.BASE64Encoder;
 
 /**
  * Created by szjdj on 2016-11-23. md5加密解密

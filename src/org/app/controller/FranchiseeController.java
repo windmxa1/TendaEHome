@@ -1,7 +1,8 @@
 package org.app.controller;
 
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,7 @@ import org.util.Coordinate;
 import org.util.RedisUtil;
 import org.util.ResultUtils;
 import org.util.Utils;
+import org.view.VFranchiseeId;
 
 import redis.clients.jedis.GeoRadiusResponse;
 
@@ -79,13 +81,13 @@ public class FranchiseeController {
 	}
 
 	/**
-	 * 获取加盟商昵称列表
+	 * 获取所有加盟商(厨师)列表
 	 */
-	@RequestMapping("getFranchiseeNameList")
-	public Object getFranchiseeNameByCatlog(HttpServletRequest request,
+	@RequestMapping("getFranchiseeList")
+	public Object getFranchiseeList(HttpServletRequest request,
 			Integer catalogId) {
 		fDao = new FranchiseeDaoImp();
-		List<String> list = fDao.getNicknameList(catalogId);
+		List<VFranchiseeId> list = fDao.getList(catalogId);
 		if (list == null) {
 			return ResultUtils.toJson(101, "服务器繁忙请重试", "");
 		}
@@ -97,19 +99,22 @@ public class FranchiseeController {
 	/**
 	 * 获取附近的加盟商(厨师)列表
 	 */
-	@RequestMapping("getFranchiseeList")
-	public Object getFranchiseeByCatlog(HttpServletRequest request,
+	@RequestMapping("getNearFranchiseeList")
+	public Object getNearFranchiseeList(HttpServletRequest request,
 			Integer catalogId, Double lat, Double lon) {
 		Coordinate coordinate = new Coordinate(lat, lon, "u");
-		List<GeoRadiusResponse> li = RedisUtil.geoQuery(coordinate, "cooker");
+		List<GeoRadiusResponse> li = RedisUtil.geoQuery(coordinate, "cooker",5.0);
 		List<Long> cookerIds = new ArrayList<>();
 		for (GeoRadiusResponse g : li) {
 			cookerIds.add(Long.parseLong(g.getMemberByString()));
 		}
 		fDao = new FranchiseeDaoImp();
-		List<Franchisee> list = fDao.getList(cookerIds);
+		if (cookerIds.isEmpty()) {
+			return ResultUtils.toJson(101, "您的附近暂无厨师", "");
+		}
+		List<VFranchiseeId> list = fDao.getList(cookerIds);
 		if (list == null) {
-			return ResultUtils.toJson(101, "服务器繁忙请重试", "");
+			return ResultUtils.toJson(101, "您的附近暂无厨师，如有疑问请联系客服人员，期待为您服务", "");
 		}
 		data = new HashMap<String, Object>();
 		data.put("list", list);

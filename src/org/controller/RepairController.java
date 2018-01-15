@@ -14,15 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.util.Constants;
-import org.util.Coordinate;
-import org.util.JsonUtils;
 import org.util.PDFUtil;
-import org.util.RedisUtil;
 import org.util.ResultUtils;
 import org.view.VRepairOrderId;
-
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller("/back/RepairController")
 @RequestMapping("/back/repair")

@@ -205,14 +205,15 @@ function refundDetail(refundId) {
 		async : false,
 		cache : false,
 		data : {
-			id : refundId
+			refundId : refundId
 		},
 		headers : {
 			"token" : getCookie('token')
 		},
 		success : function(data) {
 			if (data.code == 100) {
-				var r = data.refund;
+				r= data.data.refund;
+				$("#refundDiv").html('');
 				$("#refundDiv").append(
 						"退款单号" + r.refundId + " 退款金额" + r.refundFee + "<br />"
 								+ "退款状态" + r.state + " 退款描述" + r.description);
@@ -510,10 +511,10 @@ var builderUQTQueryMsg = function(UQTQueryMsg) {
 						var afterSaleState = eachData.afterSaleState;
 						var payWay = "";
 						switch (eachData.payWay) {
-						case 0:
+						case 1:
 							payWay = "微信支付";
 							break;
-						case 1:
+						case 2:
 							payWay = "支付宝支付";
 							break;
 						default:

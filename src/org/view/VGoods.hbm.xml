@@ -55,15 +55,6 @@
             <key-property name="count" type="java.lang.Long">
                 <column name="count" />
             </key-property>
-            <key-property name="disPrice" type="java.lang.Double">
-                <column name="dis_price" precision="11" />
-            </key-property>
-            <key-property name="startDate" type="java.lang.String">
-                <column name="start_date" length="24" />
-            </key-property>
-            <key-property name="endDate" type="java.lang.String">
-                <column name="end_date" length="24" />
-            </key-property>
             <key-property name="goodsUrl" type="java.lang.String">
                 <column name="goods_url" length="236" />
             </key-property>

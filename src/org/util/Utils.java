@@ -1,10 +1,13 @@
 package org.util;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
+import java.util.List;
 
+import org.model.Franchisee;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 public class Utils {
@@ -62,7 +65,7 @@ public class Utils {
 	public static String getFileUrl(String realBasePath,
 			CommonsMultipartFile file, Long time, String path) {
 		try {
-			if(file.getOriginalFilename().equals("")){
+			if (file.getOriginalFilename().equals("")) {
 				return null;
 			}
 			String filename = time + "_" + file.getOriginalFilename();
@@ -83,4 +86,6 @@ public class Utils {
 			return null;
 		}
 	}
+
+	
 }

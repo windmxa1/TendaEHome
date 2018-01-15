@@ -24,7 +24,6 @@ import org.util.ALIPAY;
 import org.util.Constants;
 import org.util.PDFUtil;
 import org.util.ResultUtils;
-import org.util.TokenUtils;
 import org.util.Utils;
 import org.util.WXAPI;
 import org.util.XmlUtils;
@@ -226,7 +225,7 @@ public class OrdersController {
 							+ map2.get("out_refund_no"));
 					switch (map2.get("refund_status") + "") {
 					case "SUCCESS":
-						refund.setState(2);
+						refund.setState(0);
 						break;
 					case "CHANGE":
 						refund.setState(-1);

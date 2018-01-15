@@ -1,7 +1,5 @@
 package org.test;
 
-import java.util.List;
-
 import org.dao.AdminDao;
 import org.dao.GarouselCatalogDao;
 import org.dao.GarouselDao;
@@ -18,14 +16,7 @@ import org.dao.imp.GoodsDaoImp;
 import org.dao.imp.OrdersDaoImp;
 import org.dao.imp.UserAddressDaoImp;
 import org.dao.imp.UserDaoImp;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.model.GarouselCatalog;
-import org.util.HibernateSessionFactory;
 import org.util.JsonUtils;
-import org.util.PDFUtil;
-import org.view.VOrdersId;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

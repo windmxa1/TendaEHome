@@ -9,17 +9,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.dao.OrdersDao;
-import org.dao.imp.OrdersDaoImp;
 import org.dom4j.Attribute;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
-import org.dom4j.Node;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.XMLWriter;
-import org.w3c.dom.NodeList;
 
 public class XmlUtils {
 //	public static void main(String[] args) {

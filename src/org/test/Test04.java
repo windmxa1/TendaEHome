@@ -1,19 +1,23 @@
 package org.test;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
-import org.dao.RepairDao;
+import org.dao.FranchiseeDao;
+import org.dao.imp.FranchiseeDaoImp;
 import org.dao.imp.OrdersDaoImp;
-import org.dao.imp.RepairDaoImp;
-import org.util.ChangeTime;
+import org.model.Franchisee;
+import org.model.Refund;
 import org.util.JsonUtils;
-import org.util.MD5;
-import org.view.VRepairOrderId;
+import org.util.Utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 public class Test04 {
 	public static void main(String[] args) throws JsonProcessingException {
-		System.out.println(new OrdersDaoImp().getList(233L, null, null, 6, 0).size());
+		Calendar calendar = Calendar.getInstance();
+		System.out.println(calendar.get(calendar.DAY_OF_WEEK));
+		
 	}
 }

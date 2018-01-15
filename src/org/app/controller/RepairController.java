@@ -1,6 +1,8 @@
 package org.app.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +13,7 @@ import org.dao.RepairDao;
 import org.dao.StaffDao;
 import org.dao.imp.RepairDaoImp;
 import org.dao.imp.StaffDaoImp;
+import org.model.Franchisee;
 import org.model.RepairComment;
 import org.model.RepairOrder;
 import org.model.Staff;
@@ -25,10 +28,10 @@ import org.util.ResultUtils;
 import org.util.TokenUtils;
 import org.view.VRepairOrderId;
 
+import redis.clients.jedis.GeoRadiusResponse;
+
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import redis.clients.jedis.GeoRadiusResponse;
 
 @Controller("/app/RepairController")
 @RequestMapping("/app/repair")
@@ -230,6 +233,20 @@ public class RepairController {
 		if (list3 == null || list3.size() == 0) {
 			return ResultUtils.toJson(101, "该订单附近5KM没有维修人员，无法进行派单", "");
 		}
+		final List<Integer> list4 = list2;
+		/******************按指定顺序排序开始******************************/
+		Comparator comparator = new Comparator() {
+			@Override
+			public int compare(Object o1, Object o2) {
+				if (list4.indexOf(((Staff) o1).getId()) < list4
+						.indexOf(((Staff) o2).getId())) {
+					return -1;
+				} else
+					return 1;
+			}
+		};
+		Collections.sort(list3, comparator);
+		/******************按指定顺序排序结束******************************/
 		for (int i = 0; i < list3.size(); i++) {
 			list3.get(i).setDistance("" + distanceList.get(i) * 1000);
 		}

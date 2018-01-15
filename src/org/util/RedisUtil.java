@@ -2,8 +2,6 @@ package org.util;
 
 import java.util.List;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import redis.clients.jedis.GeoCoordinate;
 import redis.clients.jedis.GeoRadiusResponse;
 import redis.clients.jedis.GeoUnit;
@@ -254,7 +252,7 @@ public class RedisUtil {
 		Jedis jedis = null;
 		try {
 			jedis = jedisPool.getResource();
-			// 第一个参数可以理解为表名
+			// 第一个参数可以理解为表名			
 			return jedis.geoadd(tag, coordinate.getLongitude(),
 					coordinate.getLatitude(), coordinate.getKey());
 		} catch (Exception e) {
@@ -267,7 +265,10 @@ public class RedisUtil {
 	}
 
 	/**
-	 * 查询附近人 key 经度 维度 距离 return GeoRadiusResponse
+	 * 查询附近人
+	 * @param coordinate 经纬度
+	 * @param tag 标签，相当于表名
+	 * @param radius 范围(单位为千米)
 	 */
 	public static List<GeoRadiusResponse> geoQuery(Coordinate coordinate,
 			String tag, Double radius) {

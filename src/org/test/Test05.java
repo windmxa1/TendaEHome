@@ -1,25 +1,11 @@
 package org.test;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.dao.GoodsDao;
-import org.dao.OrdersDao;
-import org.dao.imp.GoodsDaoImp;
-import org.dao.imp.OrdersDaoImp;
-import org.util.Constants;
-import org.util.JsonUtils;
-import org.util.MatrixToImageWriter;
-import org.util.PDFUtil;
-import org.view.VGoods;
-import org.view.VOrdersId;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.util.MatrixToImageWriter;
+
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;

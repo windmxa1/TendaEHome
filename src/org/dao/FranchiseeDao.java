@@ -3,6 +3,7 @@ package org.dao;
 import java.util.List;
 
 import org.model.Franchisee;
+import org.view.VFranchiseeId;
 
 public interface FranchiseeDao {
 	/**
@@ -16,17 +17,17 @@ public interface FranchiseeDao {
 	List<String> getNicknameList(Integer catalogId);
 
 	/**
-	 * 获取加盟商(厨师)列表
+	 * 获取当前餐厅所有加盟商(厨师)列表，按评分高到低排序
 	 */
-	List<Franchisee> getList(Integer catalogId);
+	List<VFranchiseeId> getList(Integer catalogId);
 	/**
 	 * 获取加盟商列表
 	 */
 	List<Franchisee> getList(Integer start,Integer limit,Integer catalogId);
 	/**
-	 * 根据Id列表获取加盟商(厨师)列表
+	 * 根据Id列表获取加盟商(厨师)列表，按评分高到低排序
 	 */
-	List<Franchisee> getList(List<Long> ids);
+	List<VFranchiseeId> getList(List<Long> ids);
 
 	/**
 	 * 获取加盟商(厨师)的坐标以及编号列表

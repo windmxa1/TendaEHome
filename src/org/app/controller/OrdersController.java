@@ -70,6 +70,30 @@ public class OrdersController {
 		}
 		return ResultUtils.toJson(100, "", data);
 	}
+	@RequestMapping("/getOrdersListByIsComment")
+	@ResponseBody
+	public Object getOrdersListByIsComment(HttpServletRequest request, Integer start,
+			Integer limit, Integer isComment, Integer type) throws Exception {
+		oDao = new OrdersDaoImp();
+		/**** 获取header中的token并取出userid ****/
+		String token = request.getHeader("token");
+		Long userid = Long.parseLong(""
+				+ TokenUtils.getValue(token, TokenUtils.getKey(), "userid"));
+		/*********************************/
+		if (type == null)
+			type = 0;
+		List<VOrdersId> list = oDao.getListByIsComment(userid, start, limit, isComment, type);
+		data = new HashMap<String, Object>();
+		if (list == null || list.size() == 0) {
+			data.put("list", new ArrayList<>());
+		} else {
+			for (VOrdersId order : list) {
+				order.setUrlList(oDao.getUrlList(order.getId()));
+			}
+			data.put("list", list);
+		}
+		return ResultUtils.toJson(100, "", data);
+	}
 
 	@RequestMapping("/getRefundList")
 	@ResponseBody

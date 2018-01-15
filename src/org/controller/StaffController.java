@@ -11,7 +11,6 @@ import org.dao.imp.StaffDaoImp;
 import org.model.Staff;
 import org.model.StaffPromotion;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.util.ResultUtils;
@@ -78,7 +77,7 @@ public class StaffController {
 			return ResultUtils.toJson(101, "后台错误，请重试", "");
 		}
 		data = new HashMap<>();
-		data.put("total", sDao.getStaffPromotionCount());
+		data.put("total", sDao.getStaffCount());
 		data.put("list", list);
 		return ResultUtils.toJson(100, "", data);
 	}

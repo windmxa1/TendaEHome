@@ -66,5 +66,8 @@
         <property name="remarks" type="java.lang.String">
             <column name="remarks" length="100" />
         </property>
+        <property name="isComment" type="java.lang.Integer">
+            <column name="is_comment" />
+        </property>
     </class>
 </hibernate-mapping>

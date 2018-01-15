@@ -8,14 +8,12 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.dao.AdminDao;
 import org.dao.imp.AdminDaoImp;
-import org.dao.imp.UserDaoImp;
 import org.model.Admin;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.util.ResultUtils;
 import org.util.TokenUtils;
-import org.view.VAdminId;
 
 @Controller
 @RequestMapping("/back/admin")

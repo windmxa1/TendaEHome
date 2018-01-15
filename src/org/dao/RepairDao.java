@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.model.RepairComment;
 import org.model.RepairOrder;
-import org.model.Staff;
 import org.view.VRepairOrderId;
 
 public interface RepairDao {

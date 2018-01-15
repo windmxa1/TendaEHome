@@ -44,6 +44,16 @@ public class Staff implements java.io.Serializable {
 		this.password = password;
 		this.isLeader = isLeader;
 	}
+	
+
+	public Staff(String staffNo, String staffName, String username,
+			String password) {
+		super();
+		this.staffNo = staffNo;
+		this.staffName = staffName;
+		this.username = username;
+		this.password = password;
+	}
 
 	/** full constructor */
 	public Staff(String staffNo, String staffName, Integer year,

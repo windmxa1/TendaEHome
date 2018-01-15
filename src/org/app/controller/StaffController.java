@@ -41,20 +41,21 @@ public class StaffController {
 				}
 			}
 		} else {
-			Staff staff2 = new Staff(staffNo, username, password,1);
+			Staff staff2 = new Staff(staffNo, username, password, 1);
 			if (sDao.saveOrUpdate(staff2) > 0) {
 				return ResultUtils.toJson(100, "注册成功", "");
 			}
 		}
 		return ResultUtils.toJson(101, "注册失败，请重试", "");
 	}
+
 	/**
 	 * 新增员工账户
 	 */
 	@RequestMapping("/register")
 	@ResponseBody
 	public Object register(HttpServletRequest request, String username,
-			String password, String staffNo) throws Exception {
+			String password, String staffNo, String staffName) throws Exception {
 		sDao = new StaffDaoImp();
 		Staff staff = sDao.getUserStaff(staffNo, username);
 		if (staff != null) {
@@ -63,12 +64,19 @@ public class StaffController {
 			} else {
 				staff.setUsername(username);
 				staff.setPassword(password);
+				if (staffName != null)
+					staff.setStaffName(staffName);
 				if (sDao.saveOrUpdate(staff) == 0) {
 					return ResultUtils.toJson(100, "注册成功", "");
 				}
 			}
 		} else {
-			Staff staff2 = new Staff(staffNo, username, password);
+			Staff staff2;
+			if (staffName != null) {
+				staff2 = new Staff(staffNo,staffName, username, password );
+			} else {
+				staff2 = new Staff(staffNo, username, password);
+			}
 			if (sDao.saveOrUpdate(staff2) > 0) {
 				return ResultUtils.toJson(100, "注册成功", "");
 			}

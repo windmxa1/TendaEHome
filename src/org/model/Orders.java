@@ -23,6 +23,7 @@ public class Orders implements java.io.Serializable {
 	private Long franchiseeId;
 	private Integer type;
 	private String remarks;
+	private Integer isComment;
 
 	// Constructors
 
@@ -31,7 +32,7 @@ public class Orders implements java.io.Serializable {
 	}
 
 	/** minimal constructor */
-	public Orders(String orderNum, Long userid, Long time, String address) {
+	public Orders(Long userid, Long time, String address,String orderNum) {
 		this.orderNum = orderNum;
 		this.userid = userid;
 		this.time = time;
@@ -43,7 +44,7 @@ public class Orders implements java.io.Serializable {
 			String staffNo, Integer isExport, Integer deliveryState,
 			Integer payWay, String refundId, Long finishTime,
 			Integer afterSaleState, Long franchiseeId, Integer type,
-			String remarks) {
+			String remarks, Integer isComment) {
 		this.orderNum = orderNum;
 		this.userid = userid;
 		this.time = time;
@@ -58,12 +59,23 @@ public class Orders implements java.io.Serializable {
 		this.franchiseeId = franchiseeId;
 		this.type = type;
 		this.remarks = remarks;
+		this.isComment = isComment;
+	}
+
+	public Orders(Long userid, Long time, String address, String staffNo,
+			String orderNum) {
+		super();
+		this.orderNum = orderNum;
+		this.userid = userid;
+		this.time = time;
+		this.address = address;
+		this.staffNo = staffNo;
 	}
 
 	// Property accessors
 
 	public Orders(Long userid, Long time, String address, String orderNum,
-			Long franchiseeId, Integer type,String remarks) {
+			Long franchiseeId, Integer type, String remarks) {
 		super();
 		this.orderNum = orderNum;
 		this.userid = userid;
@@ -72,14 +84,6 @@ public class Orders implements java.io.Serializable {
 		this.franchiseeId = franchiseeId;
 		this.type = type;
 		this.remarks = remarks;
-	}
-
-	public Orders(Long userid, Long time, String address, String orderNum) {
-		super();
-		this.orderNum = orderNum;
-		this.userid = userid;
-		this.time = time;
-		this.address = address;
 	}
 
 	public Long getId() {
@@ -122,11 +126,11 @@ public class Orders implements java.io.Serializable {
 		this.address = address;
 	}
 
-	public String getstaffNo() {
+	public String getStaffNo() {
 		return this.staffNo;
 	}
 
-	public void setstaffNo(String staffNo) {
+	public void setStaffNo(String staffNo) {
 		this.staffNo = staffNo;
 	}
 
@@ -200,6 +204,14 @@ public class Orders implements java.io.Serializable {
 
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
+	}
+
+	public Integer getIsComment() {
+		return this.isComment;
+	}
+
+	public void setIsComment(Integer isComment) {
+		this.isComment = isComment;
 	}
 
 }
