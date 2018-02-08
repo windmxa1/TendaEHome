@@ -10,14 +10,14 @@ import org.dao.imp.OrdersDaoImp;
 import org.model.Franchisee;
 import org.model.Refund;
 import org.util.JsonUtils;
+import org.util.RedisUtil;
 import org.util.Utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 public class Test04 {
 	public static void main(String[] args) throws JsonProcessingException {
-		Calendar calendar = Calendar.getInstance();
-		System.out.println(calendar.get(calendar.DAY_OF_WEEK));
-		
+		String json = "{\"command_code\":1000,\"description\":\"heartbeat\",\"seq_num\":\"xxxx\"}";
+		System.out.println(json.getBytes().length);
 	}
 }

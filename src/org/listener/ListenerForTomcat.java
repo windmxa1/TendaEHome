@@ -26,6 +26,7 @@ public class ListenerForTomcat implements ServletContextListener {
 					(double) o[1], "" + o[2]);
 			RedisUtil.addReo(coordinate, "cooker");
 		}
+		
 	}
 
 }

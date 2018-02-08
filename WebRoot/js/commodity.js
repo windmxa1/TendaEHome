@@ -33,8 +33,7 @@ $(function() {
 									+ "</span><span class='ddId' style='display: none;'>"
 									+ data.data.list[i].type
 									+ "</span><span class='ddId' style='display: none;'>"
-									+ "http://39.108.82.55:8080/"
-									+ data.data.list[i].url
+									+data.data.list[i].url
 									+ "</span><span class='ddId' style='display: none;'>"
 									+ data.data.list[i].description
 									+ "</span></li>"
@@ -165,11 +164,12 @@ w$("<div id=\"ts\" style=\"position:absolute;background-color:#FFFFE6;font-size:
 function moveon(o) {
 	var evt = event || window.event;
 	var x = evt.clientX - 200;
-	var y = evt.clientY +30;
+	var y = evt.clientY + 30;
 	console.log(evt.clientY);
 	o$("ts").style.left = x + "px";
 	o$("ts").style.top = y + "px";
-	o$("ts").innerHTML = '<img onload="AutoResizeImage(200,200,this)" src="' + o.innerHTML + '" alt="">';
+	o$("ts").innerHTML = '<img onload="AutoResizeImage(200,200,this)" src="'
+			+ o.innerHTML + '" alt="">';
 	o$("ts").style.display = "";
 }
 c$.mout = function() {

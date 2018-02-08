@@ -1,28 +1,24 @@
 package org.model;
 
-/**
- * OrdersDetail entity. @author MyEclipse Persistence Tools
- */
-
 public class OrdersDetail implements java.io.Serializable {
-
 	// Fields
-
 	private Long id;
 	private Long orderId;
 	private Long goodsId; // 商品编号
-	private Integer num;// 已选商品数目
+	private Integer num=1;// 已选商品数目
 	private Double prices; // 商品总价
 	private String goodsUrl;// 商品图片
 	private String name; // 商品名称
 	private Double price; // 商品单价
 	private String description; // 商品描述
 	public boolean isSelect; // CheckBox的选中状态
+//	public boolean select; // CheckBox的选中状态
 	private Long time; // 商品最新修改时间
-	private Integer baseObjId;
-	// Constructors
+	private Integer isGift;
+	private Integer actId;
+	private String actName;
 
-	
+	// Constructors
 
 	/** default constructor */
 	public OrdersDetail() {
@@ -34,10 +30,42 @@ public class OrdersDetail implements java.io.Serializable {
 		this.goodsId = goodsId;
 		this.num = num;
 	}
+
+	public OrdersDetail(Long orderId, Long goodsId, Integer num, Integer actId) {
+		this.orderId = orderId;
+		this.goodsId = goodsId;
+		this.num = num;
+		this.actId = actId;
+	}
+
 	public OrdersDetail(Long goodsId, Long time) {
 		this.goodsId = goodsId;
 		this.time = time;
 	}
+
+	public Long getTime() {
+		return time;
+	}
+
+	public void setTime(Long time) {
+		this.time = time;
+	}
+
+	public boolean getIsSelect() {
+		return isSelect;
+	}
+
+	public void setIsSelect(boolean isSelect) {
+		this.isSelect = isSelect;
+	}
+
+//	public boolean isSelect() {
+//		return select;
+//	}
+//
+//	public void setSelect(boolean select) {
+//		this.select = select;
+//	}
 
 	// Property accessors
 
@@ -66,7 +94,7 @@ public class OrdersDetail implements java.io.Serializable {
 	}
 
 	public Integer getNum() {
-		return this.num;
+		return num;
 	}
 
 	public void setNum(Integer num) {
@@ -113,26 +141,32 @@ public class OrdersDetail implements java.io.Serializable {
 		this.description = description;
 	}
 
-	public boolean isSelect() {
-		return isSelect;
+	public Integer getIsGift() {
+		return isGift;
+	}
+
+	public void setIsGift(Integer isGift) {
+		this.isGift = isGift;
+	}
+
+	public Integer getActId() {
+		return actId;
+	}
+
+	public void setActId(Integer actId) {
+		this.actId = actId;
+	}
+
+	public String getActName() {
+		return actName;
+	}
+
+	public void setActName(String actName) {
+		this.actName = actName;
 	}
 
 	public void setSelect(boolean isSelect) {
 		this.isSelect = isSelect;
 	}
 
-	public Long getTime() {
-		return time;
-	}
-
-	public void setTime(Long time) {
-		this.time = time;
-	}
-	public Integer getBaseObjId() {
-		return baseObjId;
-	}
-
-	public void setBaseObjId(Integer baseObjId) {
-		this.baseObjId = baseObjId;
-	}
 }

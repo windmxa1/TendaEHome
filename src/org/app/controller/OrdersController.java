@@ -1,5 +1,6 @@
 package org.app.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -18,6 +19,7 @@ import org.dao.imp.OrdersDaoImp;
 import org.dao.imp.UserAddressDaoImp;
 import org.dao.imp.UserDaoImp;
 import org.model.Orders;
+import org.model.OrdersDetail;
 import org.model.Refund;
 import org.model.User;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.util.ALIPAY;
 import org.util.ChangeTime;
+import org.util.JsonUtils;
 import org.util.RedisUtil;
 import org.util.ResultUtils;
 import org.util.TokenUtils;
@@ -34,6 +37,10 @@ import org.util.Utils;
 import org.util.WXAPI;
 import org.view.VOrdersDetailsId;
 import org.view.VOrdersId;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller("/app/OrdersController")
 @RequestMapping("/app/orders")
@@ -70,10 +77,12 @@ public class OrdersController {
 		}
 		return ResultUtils.toJson(100, "", data);
 	}
+
 	@RequestMapping("/getOrdersListByIsComment")
 	@ResponseBody
-	public Object getOrdersListByIsComment(HttpServletRequest request, Integer start,
-			Integer limit, Integer isComment, Integer type) throws Exception {
+	public Object getOrdersListByIsComment(HttpServletRequest request,
+			Integer start, Integer limit, Integer isComment, Integer type)
+			throws Exception {
 		oDao = new OrdersDaoImp();
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");
@@ -82,7 +91,8 @@ public class OrdersController {
 		/*********************************/
 		if (type == null)
 			type = 0;
-		List<VOrdersId> list = oDao.getListByIsComment(userid, start, limit, isComment, type);
+		List<VOrdersId> list = oDao.getListByIsComment(userid, start, limit,
+				isComment, type);
 		data = new HashMap<String, Object>();
 		if (list == null || list.size() == 0) {
 			data.put("list", new ArrayList<>());
@@ -221,6 +231,38 @@ public class OrdersController {
 		return ResultUtils.toJson(101, "您不能删除正在进行的订单，如需请联系客服人员", "");
 	}
 
+	private Map<String, List<OrdersDetail>> getCart(Long userid,
+			List<String> selectIds) throws IOException {
+		String cartInfoStr = RedisUtil.getData("cart-" + userid);
+		ObjectMapper mapper = JsonUtils.getMapperInstance();
+		Map<String, List<OrdersDetail>> cartInfo = null;
+		if (cartInfoStr != null) {// 购物车存在
+			cartInfo = mapper.readValue(cartInfoStr, HashMap.class);
+			Map<String, List<OrdersDetail>> orderMap = cartInfo;
+			JavaType javaType = JsonUtils.getCollectionType(ArrayList.class,
+					OrdersDetail.class);
+			for (String actId : cartInfo.keySet()) {
+				String s1 = mapper.writeValueAsString(cartInfo.get("" + actId));
+				List<OrdersDetail> list = (List<OrdersDetail>) mapper
+						.readValue(s1, javaType);
+				List<OrdersDetail> orderList = new ArrayList<>();
+				for (int i = 0; i < list.size(); i++) {
+					if (selectIds.contains(actId + "-"
+							+ list.get(i).getGoodsId())) {// 从购物车中移除选择的商品列表
+						list.remove(i);
+						orderList.add(list.get(i));
+					}
+				}
+				cartInfo.put(actId, list);
+				orderMap.put(actId, orderList);
+			}
+			RedisUtil.addData("cart-" + userid,
+					mapper.writeValueAsString(cartInfo), null);
+			return orderMap;
+		}
+		return null;
+	}
+
 	@RequestMapping("/addOrder")
 	@ResponseBody
 	public Object addOrder(HttpServletRequest request, @RequestBody OrderModel o)
@@ -254,7 +296,8 @@ public class OrdersController {
 			}
 		}
 		System.out.println(o.getAddressId() + "|||" + orders.getAddress());
-		Long id = oDao.generateOrder(orders, o.getDetails());
+		Long id = oDao
+				.generateOrder2(orders, getCart(userid, o.getSelectIds()));
 		if (id > 0) {
 			Double Realtotal = oDao.getTotal(orderNum);
 			System.out.println(Realtotal);

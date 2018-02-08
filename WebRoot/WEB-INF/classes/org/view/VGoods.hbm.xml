@@ -40,6 +40,15 @@
             <key-property name="type" type="java.lang.Integer">
                 <column name="type" />
             </key-property>
+            <key-property name="actType" type="java.lang.String">
+                <column name="act_type" length="341" />
+            </key-property>
+            <key-property name="actId" type="java.lang.String">
+                <column name="act_id" length="341" />
+            </key-property>
+            <key-property name="actName" type="java.lang.String">
+                <column name="act_name" length="341" />
+            </key-property>
             <key-property name="status" type="java.lang.String">
                 <column name="status" length="3" />
             </key-property>

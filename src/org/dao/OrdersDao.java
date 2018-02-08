@@ -1,6 +1,7 @@
 package org.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.model.Orders;
 import org.model.OrdersDetail;
@@ -43,6 +44,10 @@ public interface OrdersDao {
 	 * 生成订单
 	 */
 	public Long generateOrder(Orders orders, List<OrdersDetail> details);
+	/**
+	 * 生成订单2
+	 */
+	public Long generateOrder2(Orders orders, Map<String, List<OrdersDetail>> orderMap);
 
 	/**
 	 * 未付款进行取消订单

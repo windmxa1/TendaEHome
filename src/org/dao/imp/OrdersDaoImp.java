@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.dao.OrdersDao;
 import org.hibernate.Query;
@@ -419,6 +420,43 @@ public class OrdersDaoImp implements OrdersDao {
 						stmt.setLong(2, d.getGoodsId());
 						stmt.setDouble(3, d.getNum());
 						stmt.addBatch();
+					}
+					stmt.executeBatch();
+				}
+			});
+			ts.commit();
+			session.flush();
+			session.clear();
+			return id;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return -1L;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
+	@Override
+	public Long generateOrder2(Orders orders,
+			final Map<String, List<OrdersDetail>> orderMap) {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			Transaction ts = session.beginTransaction();
+
+			final Long id = (Long) session.save(orders);
+			session.doWork(new Work() {
+				public void execute(Connection connection) throws SQLException {
+					PreparedStatement stmt = connection
+							.prepareStatement("insert into orders_detail(order_id,goods_id,num,act_id) values(?,?,?)");
+					connection.setAutoCommit(false);
+					for (List<OrdersDetail> details : orderMap.values()) {
+						for (OrdersDetail d : details) {
+							stmt.setLong(1, id);
+							stmt.setLong(2, d.getGoodsId());
+							stmt.setDouble(3, d.getNum());
+							stmt.setInt(4, d.getActId());
+							stmt.addBatch();
+						}
 					}
 					stmt.executeBatch();
 				}

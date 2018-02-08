@@ -40,26 +40,26 @@ public class GoodsController {
 		return ResultUtils.toJson(100, "", data);
 	}
 
-	@RequestMapping("/checkGoods")
-	@ResponseBody
-	public Object checkGoods(@RequestBody OrderModel o) throws Exception {
-		StringBuffer list = new StringBuffer();
-		gDao = new GoodsDaoImp();
-		for (OrdersDetail od : o.getDetails()) {
-			if (gDao.getGoods(od.getGoodsId(), od.getTime(), (short) 1) == null) {
-				if (list.length() == 0) {
-					list.append(od.getName());
-				} else {
-					list.append("、" + od.getName());
-				}
-			}
-		}
-		if (list.length() > 0) {
-			return ResultUtils.toJson(101,
-					"您的购物车中如下商品信息已过期，请重新选购:" + list.toString(), "");
-		}
-		return ResultUtils.toJson(100, "", "");
-	}
+//	@RequestMapping("/checkGoods")
+//	@ResponseBody
+//	public Object checkGoods(@RequestBody OrderModel o) throws Exception {
+//		StringBuffer list = new StringBuffer();
+//		gDao = new GoodsDaoImp();
+//		for (OrdersDetail od : o.getDetails()) {
+//			if (gDao.getGoods(od.getGoodsId(), od.getTime(), (short) 1) == null) {
+//				if (list.length() == 0) {
+//					list.append(od.getName());
+//				} else {
+//					list.append("、" + od.getName());
+//				}
+//			}
+//		}
+//		if (list.length() > 0) {
+//			return ResultUtils.toJson(101,
+//					"您的购物车中如下商品信息已过期，请重新选购:" + list.toString(), "");
+//		}
+//		return ResultUtils.toJson(100, "", "");
+//	}
 
 	// 获取销量最高的10个商品
 	@RequestMapping("/getBestSell")

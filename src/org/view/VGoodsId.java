@@ -1,5 +1,9 @@
 package org.view;
 
+import java.util.List;
+
+import org.model.Activity;
+
 /**
  * VGoodsId entity. @author MyEclipse Persistence Tools
  */
@@ -7,27 +11,30 @@ package org.view;
 public class VGoodsId implements java.io.Serializable {
 
 	// Fields
-
 	private Long goodsId;
-	private String name;		//名称
-	private Double price;		//单价
+	private String name; // 名称
+	private Double price; // 单价
 	private String url;
 	private Long catalogId;
-	private String description;//描述
+	private String description;// 描述
 	private Long time;
 	private Short state;
 	private Long saleNum;
 	private Double originPrice;
 	private Integer type;
 	private String status;
-	private String unit;		//单位
-	private String createTime;	//最新修改时间
-	private String catalog;		//商品种类
-	private Long count;		//商品已售数目
-	private String goodsUrl;	//商品图片地址
-	private String origin;		//原产地
+	private String unit; // 单位
+	private String createTime; // 最新修改时间
+	private String catalog; // 商品种类
+	private Long count; // 商品已售数目
+	private String goodsUrl; // 商品图片地址
+	private String origin; // 原产地
+	private String actType; //活动类型
+	private String actId;	//活动id
+	private String actName;	//活动名称
 
 	// Constructors
+
 
 	/** default constructor */
 	public VGoodsId() {
@@ -47,9 +54,10 @@ public class VGoodsId implements java.io.Serializable {
 	/** full constructor */
 	public VGoodsId(Long goodsId, String name, Double price, String url,
 			Long catalogId, String description, Long time, Short state,
-			Long saleNum, Double originPrice, Integer type, String status,
-			String unit, String createTime, String catalog, Long count,
-			String goodsUrl, String origin) {
+			Long saleNum, Double originPrice, Integer type, String actType,
+			String actId, String actName, String status, String unit,
+			String createTime, String catalog, Long count, String goodsUrl,
+			String origin) {
 		this.goodsId = goodsId;
 		this.name = name;
 		this.price = price;
@@ -61,6 +69,9 @@ public class VGoodsId implements java.io.Serializable {
 		this.saleNum = saleNum;
 		this.originPrice = originPrice;
 		this.type = type;
+		this.actType = actType;
+		this.actId = actId;
+		this.actName = actName;
 		this.status = status;
 		this.unit = unit;
 		this.createTime = createTime;
@@ -160,6 +171,14 @@ public class VGoodsId implements java.io.Serializable {
 		this.type = type;
 	}
 
+	public String getActType() {
+		return this.actType;
+	}
+
+	public void setActType(String actType) {
+		this.actType = actType;
+	}
+
 	public String getStatus() {
 		return this.status;
 	}
@@ -216,6 +235,22 @@ public class VGoodsId implements java.io.Serializable {
 		this.origin = origin;
 	}
 
+	public String getActId() {
+		return actId;
+	}
+
+	public void setActId(String actId) {
+		this.actId = actId;
+	}
+
+	public String getActName() {
+		return actName;
+	}
+
+	public void setActName(String actName) {
+		this.actName = actName;
+	}
+
 	public boolean equals(Object other) {
 		if ((this == other))
 			return true;
@@ -261,6 +296,15 @@ public class VGoodsId implements java.io.Serializable {
 				&& ((this.getType() == castOther.getType()) || (this.getType() != null
 						&& castOther.getType() != null && this.getType()
 						.equals(castOther.getType())))
+				&& ((this.getActType() == castOther.getActType()) || (this
+						.getActType() != null && castOther.getActType() != null && this
+						.getActType().equals(castOther.getActType())))
+				&& ((this.getActId() == castOther.getActId()) || (this
+						.getActId() != null && castOther.getActId() != null && this
+						.getActId().equals(castOther.getActId())))
+				&& ((this.getActName() == castOther.getActName()) || (this
+						.getActName() != null && castOther.getActName() != null && this
+						.getActName().equals(castOther.getActName())))
 				&& ((this.getStatus() == castOther.getStatus()) || (this
 						.getStatus() != null && castOther.getStatus() != null && this
 						.getStatus().equals(castOther.getStatus())))
@@ -315,6 +359,12 @@ public class VGoodsId implements java.io.Serializable {
 						.hashCode());
 		result = 37 * result
 				+ (getType() == null ? 0 : this.getType().hashCode());
+		result = 37 * result
+				+ (getActType() == null ? 0 : this.getActType().hashCode());
+		result = 37 * result
+				+ (getActId() == null ? 0 : this.getActId().hashCode());
+		result = 37 * result
+				+ (getActName() == null ? 0 : this.getActName().hashCode());
 		result = 37 * result
 				+ (getStatus() == null ? 0 : this.getStatus().hashCode());
 		result = 37 * result

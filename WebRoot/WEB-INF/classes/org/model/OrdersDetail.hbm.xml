@@ -19,5 +19,15 @@
         <property name="num" type="java.lang.Integer">
             <column name="num" not-null="true" />
         </property>
+        <property name="isGift" type="java.lang.Integer">
+            <column name="is_gift">
+                <comment>是否为赠品</comment>
+            </column>
+        </property>
+        <property name="actId" type="java.lang.Integer">
+            <column name="act_id">
+                <comment>活动编号</comment>
+            </column>
+        </property>
     </class>
 </hibernate-mapping>
