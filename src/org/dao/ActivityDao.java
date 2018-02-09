@@ -14,5 +14,9 @@ public interface ActivityDao {
 	 * 根据商品id获取活动
 	 */
 	public List<Activity> getList(Long goodsId);
+	/**
+	 * 根据ID获取活动
+	 */
+	public VActivityId getById(Integer actId);
 	
 }

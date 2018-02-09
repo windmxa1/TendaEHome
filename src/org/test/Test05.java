@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.bean.CartBean;
 import org.dao.ActivityDao;
 import org.dao.imp.ActivityDaoImp;
 import org.model.OrdersDetail;
@@ -23,31 +24,31 @@ public class Test05 {
 		OrdersDetail od4 = new OrdersDetail(4L, System.currentTimeMillis());
 		OrdersDetail od5 = new OrdersDetail(5L, System.currentTimeMillis());
 		OrdersDetail od6 = new OrdersDetail(6L, System.currentTimeMillis());
-		List<Map<String, Object>> actList = new ArrayList();
-		Map<String, Object> detailMap = new HashMap<>();
+		List<CartBean> actList = new ArrayList();
+		CartBean cartBean1 = new CartBean();
 		List<OrdersDetail> details1 = new ArrayList<>();
 		details1.add(od1);
 		details1.add(od2);
-		detailMap.put("list", details1);
-		detailMap.put("name", "满二十减一");
-		detailMap.put("actId", 1);
-		actList.add(detailMap);
-		detailMap = new HashMap<>();
+		cartBean1.setList(details1);
+		cartBean1.setName("满二十减一");
+		cartBean1.setActId(1);
+		actList.add(cartBean1);
+		CartBean cartBean2 = new CartBean();
 		List<OrdersDetail> details2 = new ArrayList<>();
 		details2.add(od3);
 		details2.add(od4);
 		details2.add(od5);
-		detailMap.put("list", details2);
-		detailMap.put("name", "满三十减4");
-		detailMap.put("actId", 2);
-		actList.add(detailMap);
-		detailMap = new HashMap<>();
+		cartBean2.setList(details2);
+		cartBean2.setName("满三十减4");
+		cartBean2.setActId(2);
+		actList.add(cartBean2);
+		CartBean cartBean3 = new CartBean();
 		List<OrdersDetail> details3 = new ArrayList<>();
 		details3.add(od6);
-		detailMap.put("list", details3);
-		detailMap.put("name", "满六十赠送礼品");
-		detailMap.put("actId", 3);
-		actList.add(detailMap);
+		cartBean3.setList(details3);
+		cartBean3.setName("满六十赠送礼品");
+		cartBean3.setActId(3);
+		actList.add(cartBean3);
 		Map<String, Object> result = new HashMap<>();
 		result.put("code", 100);
 		result.put("msg", "success");
@@ -56,51 +57,51 @@ public class Test05 {
 				result));
 		ActivityDao aDao = new ActivityDaoImp();
 		Double totalPrice = 0d;
-//		for (Entry<Integer, List<OrdersDetail>> entry : detailMap.entrySet()) {
-//			// 遍历商品数组，确认活动类型
-//			String type = "";
-//			VActivityId activity = null;
-//			if (entry.getKey() != 0) {
-//				activity = aDao.getActivity(entry.getKey());
-//				type = activity.getTypeName();
-//			}
-//			switch (type) {// 判断活动类型
-//			case "满减":
-//				Double total1 = 0d;
-//				for (OrdersDetail od : entry.getValue()) {
-//					total1 += od.getPrice();
-//				}
-//				if (activity.getMinPrice() < total1) {
-//					totalPrice = totalPrice + total1 - activity.getNum();
-//				}
-//				break;
-//			case "满赠":
-//				Double total2 = 0d;
-//				for (OrdersDetail od : entry.getValue()) {
-//					if (od.getIsGift() == 0) {
-//						total2 += od.getPrice();
-//					}
-//					totalPrice += total2;
-//				}
-//				break;
-//			case "折扣":
-//				Double total3 = 0d;
-//				for (OrdersDetail od : entry.getValue()) {
-//					if (od.getIsGift() == 0) {
-//						total3 += od.getPrice();
-//					}
-//				}
-//				break;
-//			case "":
-//				Double total4 = 0d;
-//				for (OrdersDetail od : entry.getValue()) {
-//					if (od.getIsGift() == 0) {
-//						total4 += od.getPrice();
-//					}
-//					totalPrice += total4;
-//				}
-//				break;
-//			}
-//		}
+		for (CartBean cartBean : actList) {
+			// 遍历商品数组，确认活动类型
+			String type = "";
+			VActivityId activity = null;
+			if (cartBean.getActId() != 0) {
+				activity = aDao.getById(cartBean.getActId());
+				type = activity.getTypeName();
+			}
+			switch (type) {// 判断活动类型
+			case "满减":
+				Double total1 = 0d;
+				for (OrdersDetail od : cartBean.getList()) {
+					total1 += od.getPrice();
+				}
+				if (activity.getMinPrice() < total1) {
+					totalPrice = totalPrice + total1 - activity.getNum();
+				}
+				break;
+			case "满赠":
+				Double total2 = 0d;
+				for (OrdersDetail od : cartBean.getList()) {
+					if (od.getIsGift() == 0) {
+						total2 += od.getPrice();
+					}
+					totalPrice += total2;
+				}
+				break;
+			case "折扣":
+				Double total3 = 0d;
+				for (OrdersDetail od : cartBean.getList()) {
+					if (od.getIsGift() == 0) {
+						total3 += od.getPrice();
+					}
+				}
+				break;
+			case "":
+				Double total4 = 0d;
+				for (OrdersDetail od : cartBean.getList()) {
+					if (od.getIsGift() == 0) {
+						total4 += od.getPrice();
+					}
+					totalPrice += total4;
+				}
+				break;
+			}
+		}
 	}
 }

@@ -12,6 +12,8 @@ import java.util.Map.Entry;
 import javax.servlet.http.HttpServletRequest;
 
 import org.bean.CartBean;
+import org.dao.ActivityDao;
+import org.dao.imp.ActivityDaoImp;
 import org.model.OrdersDetail;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +22,7 @@ import org.util.JsonUtils;
 import org.util.RedisUtil;
 import org.util.ResultUtils;
 import org.util.TokenUtils;
+import org.view.VActivityId;
 
 import com.alipay.api.domain.OrderDetail;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -75,6 +78,73 @@ public class CartController {
 					iterator.remove();
 				}
 				m++;
+			}
+		} else {
+			cartList = new ArrayList<>();
+		}
+		RedisUtil.addData("cart-" + userid,
+				mapper.writeValueAsString(cartList), null);
+		return ResultUtils.toJson(100, "", cartList);
+	}
+
+	@RequestMapping("selectGoods")
+	public Object selectGoods(HttpServletRequest request, OrdersDetail od1)
+			throws JsonParseException, JsonMappingException, IOException {
+		/**** 获取header中的token并取出userid ****/
+		String token = request.getHeader("token");
+		Long userid = Long.parseLong(""
+				+ TokenUtils.getValue(token, TokenUtils.getKey(), "userid"));
+		/*********************************/
+		String cartListStr = RedisUtil.getData("cart-" + userid);
+		ObjectMapper mapper = JsonUtils.getMapperInstance();
+		List<CartBean> cartList;
+		if (cartListStr != null && !cartListStr.equals("")) {// 购物车存在
+			JavaType javaType = JsonUtils.getCollectionType(ArrayList.class,
+					CartBean.class);
+			cartList = mapper.readValue(cartListStr, javaType);
+			for (CartBean cartBean : cartList) {
+				if (cartBean.getActId() == od1.getActId()) {// 活动存在
+					List<OrdersDetail> list = cartBean.getList();
+					for (OrdersDetail od : list) {
+						if (od.getGoodsId() == od1.getGoodsId()) {// 商品存在
+							od.setIsSelect(od1.getIsSelect());
+							break;
+						}
+					}
+					cartBean.setList(list);
+				}
+			}
+		} else {
+			cartList = new ArrayList<>();
+		}
+		RedisUtil.addData("cart-" + userid,
+				mapper.writeValueAsString(cartList), null);
+		return ResultUtils.toJson(100, "", cartList);
+	}
+
+	@RequestMapping("selectActivity")
+	public Object selectActivity(HttpServletRequest request, OrdersDetail od1)
+			throws JsonParseException, JsonMappingException, IOException {
+		/**** 获取header中的token并取出userid ****/
+		String token = request.getHeader("token");
+		Long userid = Long.parseLong(""
+				+ TokenUtils.getValue(token, TokenUtils.getKey(), "userid"));
+		/*********************************/
+		String cartListStr = RedisUtil.getData("cart-" + userid);
+		ObjectMapper mapper = JsonUtils.getMapperInstance();
+		List<CartBean> cartList;
+		if (cartListStr != null && !cartListStr.equals("")) {// 购物车存在
+			JavaType javaType = JsonUtils.getCollectionType(ArrayList.class,
+					CartBean.class);
+			cartList = mapper.readValue(cartListStr, javaType);
+			for (CartBean cartBean : cartList) {
+				if (cartBean.getActId() == od1.getActId()) {// 活动存在
+					List<OrdersDetail> list = cartBean.getList();
+					for (OrdersDetail od : list) {
+						od.setIsSelect(od1.getIsSelect());
+					}
+					cartBean.setList(list);
+				}
 			}
 		} else {
 			cartList = new ArrayList<>();
@@ -408,40 +478,117 @@ public class CartController {
 		return ResultUtils.toJson(100, "", cartList);
 	}
 
-//	@RequestMapping("subObj")
-//	public Object subObj(HttpServletRequest request, OrdersDetail od1)
-//			throws JsonParseException, JsonMappingException, IOException {
-//		/**** 获取header中的token并取出userid ****/
-//		String token = request.getHeader("token");
-//		Long userid = Long.parseLong(""
-//				+ TokenUtils.getValue(token, TokenUtils.getKey(), "userid"));
-//		/*********************************/
-//		String cartListStr = RedisUtil.getData("cart-" + userid);
-//		ObjectMapper mapper = JsonUtils.getMapperInstance();
-//		List<CartBean> cartList;
-//		if (cartListStr != null && !cartListStr.equals("")) {// 购物车存在
-//			JavaType javaType = JsonUtils.getCollectionType(ArrayList.class,
-//					CartBean.class);
-//			cartList = mapper.readValue(cartListStr, javaType);
-//			for (CartBean cartBean : cartList) {
-//				if (cartBean.getActId() == od1.getActId()) {// 活动存在
-//					List<OrdersDetail> list = cartBean.getList();
-//					for (OrdersDetail od : list) {
-//						if (od.getGoodsId() == od1.getGoodsId()) {// 商品存在，数量加1
-//							if (od.getNum() != 1) {
-//								od.setNum(od.getNum() - 1);
-//							}
-//							break;
-//						}
-//					}
-//					cartBean.setList(list);
-//				}
-//			}
-//		} else {
-//			cartList = new ArrayList<>();
-//		}
-//		RedisUtil.addData("cart-" + userid,
-//				mapper.writeValueAsString(cartList), null);
-//		return ResultUtils.toJson(100, "", cartList);
-//	}
+	/**
+	 * 计算订单促销价格
+	 * 
+	 * @throws IOException
+	 * @throws JsonMappingException
+	 * @throws JsonParseException
+	 */
+	public Object getTotalPrice(HttpServletRequest request)
+			throws JsonParseException, JsonMappingException, IOException {
+		ActivityDao aDao = new ActivityDaoImp();
+		/**** 获取header中的token并取出userid ****/
+		String token = request.getHeader("token");
+		Long userid = Long.parseLong(""
+				+ TokenUtils.getValue(token, TokenUtils.getKey(), "userid"));
+		/*********************************/
+		String cartListStr = RedisUtil.getData("cart-" + userid);
+		ObjectMapper mapper = JsonUtils.getMapperInstance();
+		List<CartBean> cartList;
+		if (cartListStr != null && !cartListStr.equals("")) {// 购物车存在
+			JavaType javaType = JsonUtils.getCollectionType(ArrayList.class,
+					CartBean.class);
+			cartList = mapper.readValue(cartListStr, javaType);
+			Double totalPrice = 0d;
+			for (CartBean cartBean : cartList) {
+				// 遍历商品数组，确认活动类型
+				String type = "";
+				VActivityId activity = null;
+				if (cartBean.getActId() != 0) {
+					activity = aDao.getById(cartBean.getActId());
+					type = activity.getTypeName();
+				}
+				switch (type) {// 判断活动类型
+				case "满减":
+					Double total1 = 0d;
+					for (OrdersDetail od : cartBean.getList()) {
+						if (od.getIsSelect()) {
+							
+							total1 += od.getPrice();
+						}
+					}
+					if (activity.getMinPrice() < total1) {
+						totalPrice = totalPrice + total1 - activity.getNum();
+					}
+					break;
+				case "满赠":
+					Double total2 = 0d;
+					for (OrdersDetail od : cartBean.getList()) {
+						if (od.getIsGift() == 0 && od.getIsSelect()) {
+							total2 += od.getPrice();
+						}
+						totalPrice += total2;
+					}
+					break;
+				case "折扣":
+					Double total3 = 0d;
+					for (OrdersDetail od : cartBean.getList()) {
+						if (od.getIsSelect()) {
+							total3 += od.getPrice() * activity.getNum() / 100;
+						}
+					}
+					totalPrice += total3;
+					break;
+				case "":
+					Double total4 = 0d;
+					for (OrdersDetail od : cartBean.getList()) {
+						if (od.getIsSelect()) {
+							total4 += od.getPrice();
+						}
+					}
+					totalPrice += total4;
+					break;
+				}
+			}
+		}
+		return null;
+	}
+
+	// @RequestMapping("subObj")
+	// public Object subObj(HttpServletRequest request, OrdersDetail od1)
+	// throws JsonParseException, JsonMappingException, IOException {
+	// /**** 获取header中的token并取出userid ****/
+	// String token = request.getHeader("token");
+	// Long userid = Long.parseLong(""
+	// + TokenUtils.getValue(token, TokenUtils.getKey(), "userid"));
+	// /*********************************/
+	// String cartListStr = RedisUtil.getData("cart-" + userid);
+	// ObjectMapper mapper = JsonUtils.getMapperInstance();
+	// List<CartBean> cartList;
+	// if (cartListStr != null && !cartListStr.equals("")) {// 购物车存在
+	// JavaType javaType = JsonUtils.getCollectionType(ArrayList.class,
+	// CartBean.class);
+	// cartList = mapper.readValue(cartListStr, javaType);
+	// for (CartBean cartBean : cartList) {
+	// if (cartBean.getActId() == od1.getActId()) {// 活动存在
+	// List<OrdersDetail> list = cartBean.getList();
+	// for (OrdersDetail od : list) {
+	// if (od.getGoodsId() == od1.getGoodsId()) {// 商品存在，数量加1
+	// if (od.getNum() != 1) {
+	// od.setNum(od.getNum() - 1);
+	// }
+	// break;
+	// }
+	// }
+	// cartBean.setList(list);
+	// }
+	// }
+	// } else {
+	// cartList = new ArrayList<>();
+	// }
+	// RedisUtil.addData("cart-" + userid,
+	// mapper.writeValueAsString(cartList), null);
+	// return ResultUtils.toJson(100, "", cartList);
+	// }
 }

@@ -45,4 +45,22 @@ public class ActivityDaoImp implements ActivityDao {
 		}
 	}
 
+	@Override
+	public VActivityId getById(Integer actId) {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			String sql = " from VActivity a where a.id.id=?";
+			Query query = session.createSQLQuery(sql);
+			query.setParameter(0, actId);
+			query.setMaxResults(1);
+			VActivityId v = ((VActivity) query.uniqueResult()).getId();
+			return v;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
 }
