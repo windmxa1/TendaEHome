@@ -2,7 +2,9 @@ package org.test;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.dao.FranchiseeDao;
 import org.dao.imp.FranchiseeDaoImp;
@@ -17,7 +19,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 public class Test04 {
 	public static void main(String[] args) throws JsonProcessingException {
-		String json = "{\"command_code\":1000,\"description\":\"heartbeat\",\"seq_num\":\"xxxx\"}";
-		System.out.println(json.getBytes().length);
+		Set<String> set = new HashSet<>();
+		set.add("asd");
+		set.add("asdd");
+		System.out.println(set.toString());
 	}
 }

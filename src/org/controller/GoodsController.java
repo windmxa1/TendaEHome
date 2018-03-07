@@ -180,7 +180,6 @@ public class GoodsController {
 			Long catalogId, String description, String origin, String unit,
 			Double originPrice, Integer type) throws Exception {
 		Long time = System.currentTimeMillis() / 1000;
-
 		String path = request.getSession().getServletContext()
 				.getRealPath("/upload/goods/");
 		String filename = time + "_" + file.getOriginalFilename();

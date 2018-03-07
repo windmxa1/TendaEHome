@@ -1,5 +1,6 @@
 package org.dao.imp;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.dao.ActivityDao;
@@ -10,6 +11,8 @@ import org.model.Activity;
 import org.util.HibernateSessionFactory;
 import org.view.VActivity;
 import org.view.VActivityId;
+import org.view.VGoods;
+import org.view.VGoodsId;
 
 public class ActivityDaoImp implements ActivityDao {
 
@@ -50,11 +53,32 @@ public class ActivityDaoImp implements ActivityDao {
 		try {
 			Session session = HibernateSessionFactory.getSession();
 			String sql = " from VActivity a where a.id.id=?";
-			Query query = session.createSQLQuery(sql);
+			Query query = session.createQuery(sql);
 			query.setParameter(0, actId);
 			query.setMaxResults(1);
 			VActivityId v = ((VActivity) query.uniqueResult()).getId();
 			return v;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
+	@Override
+	public List<VGoodsId> getGiftById(Integer actId) {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			String sql = " select v.* from v_goods v,activity_gift ag where ag.act_id=? and ag.goods_id = v.goods_id ";
+			SQLQuery query = session.createSQLQuery(sql);
+			query.setParameter(0, actId);
+			List<VGoods> v = query.addEntity(VGoods.class).list();
+			List<VGoodsId> list = new ArrayList<>();
+			for (VGoods goods : v) {
+				list.add(goods.getId());
+			}
+			return list;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;

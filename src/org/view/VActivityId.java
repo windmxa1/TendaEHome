@@ -22,11 +22,8 @@ public class VActivityId implements java.io.Serializable {
 	private Double minPrice;
 	private Integer type;
 	private Integer num;
-	private String gift;
 	private String goods;
-	/**
-	 * when type = 0 then '满减' 1 THEN '满赠' ELSE '折扣'
-	 */
+	private String gift;
 	private String typeName;
 
 	// Constructors
@@ -46,7 +43,7 @@ public class VActivityId implements java.io.Serializable {
 	public VActivityId(Integer id, String title, String url, Integer range,
 			Timestamp startDate, Timestamp endDate, Integer useType,
 			Integer userGroupId, Double maxPrice, Double minPrice,
-			Integer type, Integer num, String gift, String goods,
+			Integer type, Integer num, String goods, String gift,
 			String typeName) {
 		this.id = id;
 		this.title = title;
@@ -60,8 +57,8 @@ public class VActivityId implements java.io.Serializable {
 		this.minPrice = minPrice;
 		this.type = type;
 		this.num = num;
-		this.gift = gift;
 		this.goods = goods;
+		this.gift = gift;
 		this.typeName = typeName;
 	}
 
@@ -163,20 +160,20 @@ public class VActivityId implements java.io.Serializable {
 		this.num = num;
 	}
 
-	public String getGift() {
-		return this.gift;
-	}
-
-	public void setGift(String gift) {
-		this.gift = gift;
-	}
-
 	public String getGoods() {
 		return this.goods;
 	}
 
 	public void setGoods(String goods) {
 		this.goods = goods;
+	}
+
+	public String getGift() {
+		return this.gift;
+	}
+
+	public void setGift(String gift) {
+		this.gift = gift;
 	}
 
 	public String getTypeName() {
@@ -236,12 +233,12 @@ public class VActivityId implements java.io.Serializable {
 				&& ((this.getNum() == castOther.getNum()) || (this.getNum() != null
 						&& castOther.getNum() != null && this.getNum().equals(
 						castOther.getNum())))
-				&& ((this.getGift() == castOther.getGift()) || (this.getGift() != null
-						&& castOther.getGift() != null && this.getGift()
-						.equals(castOther.getGift())))
 				&& ((this.getGoods() == castOther.getGoods()) || (this
 						.getGoods() != null && castOther.getGoods() != null && this
 						.getGoods().equals(castOther.getGoods())))
+				&& ((this.getGift() == castOther.getGift()) || (this.getGift() != null
+						&& castOther.getGift() != null && this.getGift()
+						.equals(castOther.getGift())))
 				&& ((this.getTypeName() == castOther.getTypeName()) || (this
 						.getTypeName() != null
 						&& castOther.getTypeName() != null && this
@@ -277,9 +274,9 @@ public class VActivityId implements java.io.Serializable {
 		result = 37 * result
 				+ (getNum() == null ? 0 : this.getNum().hashCode());
 		result = 37 * result
-				+ (getGift() == null ? 0 : this.getGift().hashCode());
-		result = 37 * result
 				+ (getGoods() == null ? 0 : this.getGoods().hashCode());
+		result = 37 * result
+				+ (getGift() == null ? 0 : this.getGift().hashCode());
 		result = 37 * result
 				+ (getTypeName() == null ? 0 : this.getTypeName().hashCode());
 		return result;

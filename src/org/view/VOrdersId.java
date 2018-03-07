@@ -36,7 +36,7 @@ public class VOrdersId implements java.io.Serializable {
 	private List<String> urlList;
 	private AfterSale afterSale;
 	private Integer isComment;
-
+	private List<VOrdersGiftId> giftList;
 	// Constructors
 
 	/** default constructor */
@@ -276,6 +276,14 @@ public class VOrdersId implements java.io.Serializable {
 
 	public void setIsComment(Integer isComment) {
 		this.isComment = isComment;
+	}
+
+	public List<VOrdersGiftId> getGiftList() {
+		return giftList;
+	}
+
+	public void setGiftList(List<VOrdersGiftId> giftList) {
+		this.giftList = giftList;
 	}
 
 	public int hashCode() {

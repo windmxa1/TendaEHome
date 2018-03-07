@@ -32,10 +32,10 @@
                 <column name="user_group_id" />
             </key-property>
             <key-property name="maxPrice" type="java.lang.Double">
-                <column name="maxPrice" precision="10" />
+                <column name="max_price" precision="10" />
             </key-property>
             <key-property name="minPrice" type="java.lang.Double">
-                <column name="minPrice" precision="10" />
+                <column name="min_price" precision="10" />
             </key-property>
             <key-property name="type" type="java.lang.Integer">
                 <column name="type" />
@@ -43,11 +43,11 @@
             <key-property name="num" type="java.lang.Integer">
                 <column name="num" />
             </key-property>
-            <key-property name="gift" type="java.lang.String">
-                <column name="gift" length="341" />
-            </key-property>
             <key-property name="goods" type="java.lang.String">
                 <column name="goods" length="341" />
+            </key-property>
+            <key-property name="gift" type="java.lang.String">
+                <column name="gift" length="341" />
             </key-property>
             <key-property name="typeName" type="java.lang.String">
                 <column name="type_name" length="2" />

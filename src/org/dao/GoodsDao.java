@@ -124,5 +124,10 @@ public interface GoodsDao {
 	 * 获取商品总数
 	 */
 	public Long getCount(Short[] state);
+	/**
+	 * 根据原产地获取商品列表
+	 */
+	List<VGoodsId> getGoodsByOriginAndCatalogId(Integer start, Integer limit,
+			String origin, Short[] state,Long catalogId);
 
 }

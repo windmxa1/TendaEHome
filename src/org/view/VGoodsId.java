@@ -1,9 +1,5 @@
 package org.view;
 
-import java.util.List;
-
-import org.model.Activity;
-
 /**
  * VGoodsId entity. @author MyEclipse Persistence Tools
  */
@@ -11,6 +7,7 @@ import org.model.Activity;
 public class VGoodsId implements java.io.Serializable {
 
 	// Fields
+
 	private Long goodsId;
 	private String name; // 名称
 	private Double price; // 单价
@@ -29,12 +26,12 @@ public class VGoodsId implements java.io.Serializable {
 	private Long count; // 商品已售数目
 	private String goodsUrl; // 商品图片地址
 	private String origin; // 原产地
-	private String actType; //活动类型
-	private String actId;	//活动id
-	private String actName;	//活动名称
+	private String actType; // 活动类型
+	private String actId; // 活动id
+	private String actName; // 活动名称
+	private String actMinPrice; // 最低价格
 
 	// Constructors
-
 
 	/** default constructor */
 	public VGoodsId() {
@@ -55,9 +52,9 @@ public class VGoodsId implements java.io.Serializable {
 	public VGoodsId(Long goodsId, String name, Double price, String url,
 			Long catalogId, String description, Long time, Short state,
 			Long saleNum, Double originPrice, Integer type, String actType,
-			String actId, String actName, String status, String unit,
-			String createTime, String catalog, Long count, String goodsUrl,
-			String origin) {
+			String actId, String actName, String actMinPrice, String status,
+			String unit, String createTime, String catalog, Long count,
+			String goodsUrl, String origin) {
 		this.goodsId = goodsId;
 		this.name = name;
 		this.price = price;
@@ -72,6 +69,7 @@ public class VGoodsId implements java.io.Serializable {
 		this.actType = actType;
 		this.actId = actId;
 		this.actName = actName;
+		this.actMinPrice = actMinPrice;
 		this.status = status;
 		this.unit = unit;
 		this.createTime = createTime;
@@ -179,6 +177,30 @@ public class VGoodsId implements java.io.Serializable {
 		this.actType = actType;
 	}
 
+	public String getActId() {
+		return this.actId;
+	}
+
+	public void setActId(String actId) {
+		this.actId = actId;
+	}
+
+	public String getActName() {
+		return this.actName;
+	}
+
+	public void setActName(String actName) {
+		this.actName = actName;
+	}
+
+	public String getActMinPrice() {
+		return this.actMinPrice;
+	}
+
+	public void setActMinPrice(String actMinPrice) {
+		this.actMinPrice = actMinPrice;
+	}
+
 	public String getStatus() {
 		return this.status;
 	}
@@ -235,22 +257,6 @@ public class VGoodsId implements java.io.Serializable {
 		this.origin = origin;
 	}
 
-	public String getActId() {
-		return actId;
-	}
-
-	public void setActId(String actId) {
-		this.actId = actId;
-	}
-
-	public String getActName() {
-		return actName;
-	}
-
-	public void setActName(String actName) {
-		this.actName = actName;
-	}
-
 	public boolean equals(Object other) {
 		if ((this == other))
 			return true;
@@ -305,6 +311,10 @@ public class VGoodsId implements java.io.Serializable {
 				&& ((this.getActName() == castOther.getActName()) || (this
 						.getActName() != null && castOther.getActName() != null && this
 						.getActName().equals(castOther.getActName())))
+				&& ((this.getActMinPrice() == castOther.getActMinPrice()) || (this
+						.getActMinPrice() != null
+						&& castOther.getActMinPrice() != null && this
+						.getActMinPrice().equals(castOther.getActMinPrice())))
 				&& ((this.getStatus() == castOther.getStatus()) || (this
 						.getStatus() != null && castOther.getStatus() != null && this
 						.getStatus().equals(castOther.getStatus())))
@@ -365,6 +375,10 @@ public class VGoodsId implements java.io.Serializable {
 				+ (getActId() == null ? 0 : this.getActId().hashCode());
 		result = 37 * result
 				+ (getActName() == null ? 0 : this.getActName().hashCode());
+		result = 37
+				* result
+				+ (getActMinPrice() == null ? 0 : this.getActMinPrice()
+						.hashCode());
 		result = 37 * result
 				+ (getStatus() == null ? 0 : this.getStatus().hashCode());
 		result = 37 * result

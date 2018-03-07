@@ -58,6 +58,8 @@
 	<mapping resource="org/view/VFranchisee.hbm.xml" />
 	<mapping resource="org/model/Activity.hbm.xml" />
 	<mapping resource="org/view/VActivity.hbm.xml" />
+	<mapping resource="org/model/OrdersGift.hbm.xml" />
+	<mapping resource="org/view/VOrdersGift.hbm.xml" />
 
 </session-factory>
 

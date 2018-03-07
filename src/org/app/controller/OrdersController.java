@@ -4,22 +4,30 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.bean.CartBean;
 import org.bean.OrderModel;
 import org.dao.GoodsDao;
 import org.dao.OrdersDao;
+import org.dao.OrdersGiftDao;
 import org.dao.RefundDao;
 import org.dao.UserAddressDao;
 import org.dao.UserDao;
+import org.dao.imp.GoodsDaoImp;
 import org.dao.imp.OrdersDaoImp;
+import org.dao.imp.OrdersGiftDaoImp;
 import org.dao.imp.UserAddressDaoImp;
 import org.dao.imp.UserDaoImp;
 import org.model.Orders;
 import org.model.OrdersDetail;
+import org.model.OrdersGift;
 import org.model.Refund;
 import org.model.User;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -36,10 +44,13 @@ import org.util.TokenUtils;
 import org.util.Utils;
 import org.util.WXAPI;
 import org.view.VOrdersDetailsId;
+import org.view.VOrdersGiftId;
 import org.view.VOrdersId;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller("/app/OrdersController")
@@ -50,6 +61,7 @@ public class OrdersController {
 	RefundDao rDao;
 	UserAddressDao uAddressDao;
 	UserDao uDao;
+	OrdersGiftDao ordersGiftDao;
 	// Long userid;
 	Map<String, Object> data;
 
@@ -75,6 +87,21 @@ public class OrdersController {
 			}
 			data.put("list", list);
 		}
+		return ResultUtils.toJson(100, "", data);
+	}
+
+	@RequestMapping("/getOrdersDetailList")
+	@ResponseBody
+	public Object getOrdersDetailList(Long orderId, Integer start, Integer limit)
+			throws Exception {
+		oDao = new OrdersDaoImp();
+		List<VOrdersDetailsId> list = oDao.getDetailList(orderId, start, limit,
+				null);
+		ordersGiftDao = new OrdersGiftDaoImp();
+		List<VOrdersGiftId> giftList = ordersGiftDao.getAllByOrderId(orderId);
+		data = new HashMap<>();
+		data.put("list", list);
+		data.put("giftList", giftList);
 		return ResultUtils.toJson(100, "", data);
 	}
 
@@ -126,22 +153,6 @@ public class OrdersController {
 				order.setUrlList(oDao.getUrlList(order.getId()));
 			}
 			data.put("list", list);
-		}
-		return ResultUtils.toJson(100, "", data);
-	}
-
-	@RequestMapping("/getOrdersDetailList")
-	@ResponseBody
-	public Object getOrdersDetailList(Long orderId, Integer start, Integer limit)
-			throws Exception {
-		oDao = new OrdersDaoImp();
-		List<VOrdersDetailsId> list = oDao.getDetailList(orderId, start, limit,
-				null);
-		data = new HashMap<>();
-		if (list != null) {
-			data.put("list", list);
-		} else {
-			data.put("list", new ArrayList<>());
 		}
 		return ResultUtils.toJson(100, "", data);
 	}
@@ -231,42 +242,66 @@ public class OrdersController {
 		return ResultUtils.toJson(101, "您不能删除正在进行的订单，如需请联系客服人员", "");
 	}
 
-	private Map<String, List<OrdersDetail>> getCart(Long userid,
-			List<String> selectIds) throws IOException {
-		String cartInfoStr = RedisUtil.getData("cart-" + userid);
+	/**
+	 * @param selectIds
+	 *            参数格式为活动Id+"-"+商品Id
+	 */
+	private Map<String, Object> getDetailsAndBenefit(Long userid,
+			List<String> selectIds) throws JsonParseException,
+			JsonMappingException, IOException {
+		gDao = new GoodsDaoImp();
+		String cartListStr = RedisUtil.getData("cart-" + userid);
 		ObjectMapper mapper = JsonUtils.getMapperInstance();
-		Map<String, List<OrdersDetail>> cartInfo = null;
-		if (cartInfoStr != null) {// 购物车存在
-			cartInfo = mapper.readValue(cartInfoStr, HashMap.class);
-			Map<String, List<OrdersDetail>> orderMap = cartInfo;
+		List<CartBean> cartList;
+		Map<String, Object> result = new HashMap<>();
+		List<OrdersDetail> orderList = new ArrayList<>();
+		List<OrdersGift> giftList = new ArrayList<>();
+		Set<String> benefit = new HashSet<String>();
+		StringBuffer sb = new StringBuffer();
+		if (cartListStr != null && !cartListStr.equals("")) {// 购物车存在
 			JavaType javaType = JsonUtils.getCollectionType(ArrayList.class,
-					OrdersDetail.class);
-			for (String actId : cartInfo.keySet()) {
-				String s1 = mapper.writeValueAsString(cartInfo.get("" + actId));
-				List<OrdersDetail> list = (List<OrdersDetail>) mapper
-						.readValue(s1, javaType);
-				List<OrdersDetail> orderList = new ArrayList<>();
-				for (int i = 0; i < list.size(); i++) {
-					if (selectIds.contains(actId + "-"
-							+ list.get(i).getGoodsId())) {// 从购物车中移除选择的商品列表
-						list.remove(i);
-						orderList.add(list.get(i));
+					CartBean.class);
+			cartList = mapper.readValue(cartListStr, javaType);
+			for (CartBean cartBean : cartList) {
+				Iterator<OrdersDetail> iterator = cartBean.getList().iterator();
+				if (cartBean.getGift() != null) {
+					OrdersDetail od1 = cartBean.getGift();
+					giftList.add(new OrdersGift(null, null, od1.getGoodsId(),
+							od1.getActId()));
+				}
+				while (iterator.hasNext()) {
+					OrdersDetail od = iterator.next();
+					if (selectIds.contains(cartBean.getActId() + "-"
+							+ od.getGoodsId())) {// 从购物车中移除选择的商品列表
+						if (!cartBean.getName().equals("")) {
+							benefit.add(cartBean.getName());
+						}
+						iterator.remove();
+						orderList.add(od);
+					}
+					if (gDao.getGoods(od.getGoodsId(), od.getTime(), (short) 1) == null) {
+						if (sb.length() == 0) {
+							sb.append(od.getName());
+						} else {
+							sb.append("、" + od.getName());
+						}
 					}
 				}
-				cartInfo.put(actId, list);
-				orderMap.put(actId, orderList);
 			}
 			RedisUtil.addData("cart-" + userid,
-					mapper.writeValueAsString(cartInfo), null);
-			return orderMap;
+					mapper.writeValueAsString(cartList), null);
 		}
-		return null;
+		result.put("details", orderList);
+		result.put("benefit", benefit.size() == 0 ? "无" : benefit.toString());
+		result.put("giftList", giftList);
+		result.put("illegalList", sb.toString());
+		return result;
 	}
 
-	@RequestMapping("/addOrder")
+	@RequestMapping("/addVegetableOrder")
 	@ResponseBody
-	public Object addOrder(HttpServletRequest request, @RequestBody OrderModel o)
-			throws Exception {
+	public Object addVegetableOrder(HttpServletRequest request,
+			@RequestBody OrderModel o) {
 		oDao = new OrdersDaoImp();
 		uAddressDao = new UserAddressDaoImp();
 		/**** 获取header中的token并取出userid ****/
@@ -275,10 +310,33 @@ public class OrdersController {
 				+ TokenUtils.getValue(token, TokenUtils.getKey(), "userid"));
 		Long time = System.currentTimeMillis();
 		String orderNum = time + Utils.ran6();
+
+		Map<String, Object> result = null;
+		try {
+			result = getDetailsAndBenefit(userid, o.getSelectIds());
+		} catch (JsonParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String illegalList = (String) result.get("illegalList");
+		if (illegalList.length() > 0) {
+			return ResultUtils.toJson(101, "您的购物车中如下商品信息已过期，请重新选购:"
+					+ illegalList.toString(), "");
+		}
+		String benefit = (String) result.get("benefit");
+		List<OrdersDetail> details = (List<OrdersDetail>) result.get("details");
+		List<OrdersGift> giftList = (List<OrdersGift>) result.get("giftList");
 		/*********************************/
-		Orders orders = new Orders(userid, time / 1000,
-				uAddressDao.getAddressById(o.getAddressId()), orderNum,
-				o.getFranchiseeId(), o.getType(), o.getRemarks());
+		Orders orders = new Orders(orderNum, userid, time / 1000,
+				uAddressDao.getAddressById(o.getAddressId()),
+				o.getFranchiseeId(), o.getType(), o.getRemarks(), o.getTotal(),
+				benefit);
 		uDao = new UserDaoImp();
 		User user = uDao.getUser(userid);
 		boolean isFree = false;
@@ -296,10 +354,46 @@ public class OrdersController {
 			}
 		}
 		System.out.println(o.getAddressId() + "|||" + orders.getAddress());
-		Long id = oDao
-				.generateOrder2(orders, getCart(userid, o.getSelectIds()));
+		Long id = oDao.generateOrder(orders, details, giftList);
 		if (id > 0) {
-			Double Realtotal = oDao.getTotal(orderNum);
+			data = new HashMap<>();
+			data.put("orderNum", orderNum);
+			String msg = "生成订单成功";
+			if (Calendar.getInstance().get(Calendar.HOUR_OF_DAY) > 21) {
+				msg = "生成订单成功，超过21点的订单将于后天送达";
+			}
+			if (isFree) {
+				msg = msg + "，您在体验期间享受免单特权，每周限免3单，每单限购50元";
+			}
+			return ResultUtils.toJson(100, msg, data);
+		} else {
+			return ResultUtils.toJson(101, "生成订单失败，请重试", "");
+		}
+	}
+
+	@RequestMapping("/addOrder")
+	@ResponseBody
+	public Object addOrder(HttpServletRequest request, @RequestBody OrderModel o)
+			throws Exception {
+		oDao = new OrdersDaoImp();
+		uAddressDao = new UserAddressDaoImp();
+		/**** 获取header中的token并取出userid ****/
+		String token = request.getHeader("token");
+		Long userid = Long.parseLong(""
+				+ TokenUtils.getValue(token, TokenUtils.getKey(), "userid"));
+		Long time = System.currentTimeMillis();
+		String orderNum = time + Utils.ran6();
+
+		/*********************************/
+		Orders orders = new Orders(orderNum, userid, time / 1000,
+				uAddressDao.getAddressById(o.getAddressId()),
+				o.getFranchiseeId(), o.getType(), o.getRemarks(), o.getTotal(),
+				"无");
+		uDao = new UserDaoImp();
+		System.out.println(o.getAddressId() + "|||" + orders.getAddress());
+		Long id = oDao.generateOrder(orders, o.getDetails(), null);
+		if (id > 0) {
+			Double Realtotal = oDao.getTotal(id);
 			System.out.println(Realtotal);
 			if (!("" + Realtotal).equals("" + o.getTotal())) {
 				oDao.delOrder(id);
@@ -310,9 +404,6 @@ public class OrdersController {
 			String msg = "生成订单成功";
 			if (Calendar.getInstance().get(Calendar.HOUR_OF_DAY) > 21) {
 				msg = "生成订单成功，超过21点的订单将于后天送达";
-			}
-			if (isFree) {
-				msg = msg + "，您在体验期间享受免单特权，每周限免3单，每单限购50元";
 			}
 			return ResultUtils.toJson(100, msg, data);
 		} else {

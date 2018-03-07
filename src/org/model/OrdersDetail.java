@@ -2,21 +2,24 @@ package org.model;
 
 public class OrdersDetail implements java.io.Serializable {
 	// Fields
+
 	private Long id;
 	private Long orderId;
 	private Long goodsId; // 商品编号
-	private Integer num=1;// 已选商品数目
+	private Integer num = 1;// 已选商品数目
 	private Double prices; // 商品总价
 	private String goodsUrl;// 商品图片
 	private String name; // 商品名称
 	private Double price; // 商品单价
 	private String description; // 商品描述
-	public boolean isSelect; // CheckBox的选中状态
-//	public boolean select; // CheckBox的选中状态
+	private Boolean isSelect; // CheckBox的选中状态
 	private Long time; // 商品最新修改时间
 	private Integer isGift;
 	private Integer actId;
 	private String actName;
+	private Double actMinPrice;
+	private Boolean isShopSelect;
+	private Boolean isFirst;
 
 	// Constructors
 
@@ -51,21 +54,21 @@ public class OrdersDetail implements java.io.Serializable {
 		this.time = time;
 	}
 
-	public boolean getIsSelect() {
+	public Boolean getIsSelect() {
 		return isSelect;
 	}
 
-	public void setIsSelect(boolean isSelect) {
+	public void setIsSelect(Boolean isSelect) {
 		this.isSelect = isSelect;
 	}
 
-//	public boolean isSelect() {
-//		return select;
-//	}
-//
-//	public void setSelect(boolean select) {
-//		this.select = select;
-//	}
+	// public boolean isSelect() {
+	// return select;
+	// }
+	//
+	// public void setSelect(boolean select) {
+	// this.select = select;
+	// }
 
 	// Property accessors
 
@@ -94,7 +97,7 @@ public class OrdersDetail implements java.io.Serializable {
 	}
 
 	public Integer getNum() {
-		return num;
+		return this.num;
 	}
 
 	public void setNum(Integer num) {
@@ -118,7 +121,7 @@ public class OrdersDetail implements java.io.Serializable {
 	}
 
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	public void setName(String name) {
@@ -126,7 +129,7 @@ public class OrdersDetail implements java.io.Serializable {
 	}
 
 	public Double getPrice() {
-		return price;
+		return this.price;
 	}
 
 	public void setPrice(Double price) {
@@ -134,7 +137,7 @@ public class OrdersDetail implements java.io.Serializable {
 	}
 
 	public String getDescription() {
-		return description;
+		return this.description;
 	}
 
 	public void setDescription(String description) {
@@ -142,7 +145,7 @@ public class OrdersDetail implements java.io.Serializable {
 	}
 
 	public Integer getIsGift() {
-		return isGift;
+		return this.isGift;
 	}
 
 	public void setIsGift(Integer isGift) {
@@ -150,7 +153,7 @@ public class OrdersDetail implements java.io.Serializable {
 	}
 
 	public Integer getActId() {
-		return actId;
+		return this.actId;
 	}
 
 	public void setActId(Integer actId) {
@@ -158,15 +161,37 @@ public class OrdersDetail implements java.io.Serializable {
 	}
 
 	public String getActName() {
-		return actName;
+		return this.actName;
 	}
 
 	public void setActName(String actName) {
 		this.actName = actName;
 	}
 
-	public void setSelect(boolean isSelect) {
-		this.isSelect = isSelect;
+	public Double getActMinPrice() {
+		return this.actMinPrice;
 	}
+
+	public void setActMinPrice(Double actMinPrice) {
+		this.actMinPrice = actMinPrice;
+	}
+
+	public Boolean getIsShopSelect() {
+		return isShopSelect;
+	}
+
+	public void setIsShopSelect(Boolean isShopSelect) {
+		this.isShopSelect = isShopSelect;
+	}
+
+	public Boolean getIsFirst() {
+		return isFirst;
+	}
+
+	public void setIsFirst(Boolean isFirst) {
+		this.isFirst = isFirst;
+	}
+
+
 
 }

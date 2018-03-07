@@ -24,6 +24,8 @@ public class Orders implements java.io.Serializable {
 	private Integer type;
 	private String remarks;
 	private Integer isComment;
+	private Double total;
+	private String benefit;
 
 	// Constructors
 
@@ -32,11 +34,13 @@ public class Orders implements java.io.Serializable {
 	}
 
 	/** minimal constructor */
-	public Orders(Long userid, Long time, String address,String orderNum) {
+	public Orders(String orderNum, Long userid, Long time, String address,
+			Double total) {
 		this.orderNum = orderNum;
 		this.userid = userid;
 		this.time = time;
 		this.address = address;
+		this.total = total;
 	}
 
 	/** full constructor */
@@ -44,7 +48,8 @@ public class Orders implements java.io.Serializable {
 			String staffNo, Integer isExport, Integer deliveryState,
 			Integer payWay, String refundId, Long finishTime,
 			Integer afterSaleState, Long franchiseeId, Integer type,
-			String remarks, Integer isComment) {
+			String remarks, Integer isComment, Double total, 
+			String benefit) {
 		this.orderNum = orderNum;
 		this.userid = userid;
 		this.time = time;
@@ -60,22 +65,16 @@ public class Orders implements java.io.Serializable {
 		this.type = type;
 		this.remarks = remarks;
 		this.isComment = isComment;
-	}
-
-	public Orders(Long userid, Long time, String address, String staffNo,
-			String orderNum) {
-		super();
-		this.orderNum = orderNum;
-		this.userid = userid;
-		this.time = time;
-		this.address = address;
-		this.staffNo = staffNo;
+		this.total = total;
+		this.benefit = benefit;
 	}
 
 	// Property accessors
 
-	public Orders(Long userid, Long time, String address, String orderNum,
-			Long franchiseeId, Integer type, String remarks) {
+
+	public Orders(String orderNum, Long userid, Long time, String address,
+			Long franchiseeId, Integer type, String remarks, Double total,
+			String benefit) {
 		super();
 		this.orderNum = orderNum;
 		this.userid = userid;
@@ -84,6 +83,8 @@ public class Orders implements java.io.Serializable {
 		this.franchiseeId = franchiseeId;
 		this.type = type;
 		this.remarks = remarks;
+		this.total = total;
+		this.benefit = benefit;
 	}
 
 	public Long getId() {
@@ -212,6 +213,22 @@ public class Orders implements java.io.Serializable {
 
 	public void setIsComment(Integer isComment) {
 		this.isComment = isComment;
+	}
+
+	public Double getTotal() {
+		return this.total;
+	}
+
+	public void setTotal(Double total) {
+		this.total = total;
+	}
+
+	public String getBenefit() {
+		return this.benefit;
+	}
+
+	public void setBenefit(String benefit) {
+		this.benefit = benefit;
 	}
 
 }

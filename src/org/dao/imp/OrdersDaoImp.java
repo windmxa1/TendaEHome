@@ -6,8 +6,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.dao.OrdersDao;
+import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
@@ -15,6 +17,7 @@ import org.hibernate.Transaction;
 import org.hibernate.jdbc.Work;
 import org.model.Orders;
 import org.model.OrdersDetail;
+import org.model.OrdersGift;
 import org.model.Refund;
 import org.util.ALIPAY;
 import org.util.HibernateSessionFactory;
@@ -23,6 +26,8 @@ import org.view.VOrders;
 import org.view.VOrdersDetails;
 import org.view.VOrdersDetailsId;
 import org.view.VOrdersId;
+
+import com.sun.istack.internal.FinalArrayList;
 
 public class OrdersDaoImp implements OrdersDao {
 	@Override
@@ -404,7 +409,8 @@ public class OrdersDaoImp implements OrdersDao {
 	}
 
 	@Override
-	public Long generateOrder(Orders orders, final List<OrdersDetail> details) {
+	public Long generateOrder(Orders orders, final List<OrdersDetail> details,
+			final List<OrdersGift> gifts) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
 			Transaction ts = session.beginTransaction();
@@ -424,6 +430,23 @@ public class OrdersDaoImp implements OrdersDao {
 					stmt.executeBatch();
 				}
 			});
+			if (gifts != null) {
+				session.doWork(new Work() {
+					public void execute(Connection connection)
+							throws SQLException {
+						PreparedStatement stmt = connection
+								.prepareStatement("insert into orders_gift(order_id,goods_id,act_id) values(?,?,?)");
+						connection.setAutoCommit(false);
+						for (OrdersGift gift : gifts) {
+							stmt.setLong(1, id);
+							stmt.setLong(2, gift.getGoodsId());
+							stmt.setInt(3, gift.getActId());
+							stmt.addBatch();
+						}
+						stmt.executeBatch();
+					}
+				});
+			}
 			ts.commit();
 			session.flush();
 			session.clear();
@@ -677,6 +700,32 @@ public class OrdersDaoImp implements OrdersDao {
 			query.setParameter(0, orderNum);
 			query.setMaxResults(1);
 			Double total = (Double) query.uniqueResult();
+			return total;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 0.00;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
+	@Override
+	public Double getTotal(Long id) {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			Transaction ts = session.beginTransaction();
+			String sql = "select sum(g.price*od.num) as total from  goods g , orders_detail od where g.id= od.goods_id and od.order_id = ? group by od.order_id";
+			SQLQuery query = session.createSQLQuery(sql);
+			query.setParameter(0, id);
+			query.setMaxResults(1);
+			Double total = (Double) query.addScalar("total", Hibernate.DOUBLE)
+					.uniqueResult();
+			Query query2 = session
+					.createQuery("update Orders set total = ? where id = ?");
+			query2.setParameter(0, total);
+			query2.setParameter(1, id);
+			query2.executeUpdate();
+			ts.commit();
 			return total;
 		} catch (Exception e) {
 			e.printStackTrace();

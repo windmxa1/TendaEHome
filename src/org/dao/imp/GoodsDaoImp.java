@@ -219,6 +219,50 @@ public class GoodsDaoImp implements GoodsDao {
 	}
 
 	@Override
+	public List<VGoodsId> getGoodsByOriginAndCatalogId(Integer start,
+			Integer limit, String origin, Short[] state, Long catalogId) {
+
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			StringBuilder sql = new StringBuilder(
+					"from VGoods v where  v.id.catalogId=? and v.id.state in (:stateList)");
+			Query query = null;
+			if (start == null) {
+				start = 0;
+			}
+			if (limit == null) {
+				limit = 15;
+			}
+			if (origin == null || origin.equals("")) {
+				sql.append(" order by v.id.count desc");
+				query = session.createQuery(sql.toString());
+			} else {
+				sql.append(" and origin like :origin  order by v.id.count desc");
+				query = session.createQuery(sql.toString());
+				query.setParameter("origin", "%" + origin + "%");
+			}
+			if (catalogId == null) {
+				catalogId = 1L;
+			}
+			query.setFirstResult(start);
+			query.setMaxResults(limit);
+			query.setParameter(0, catalogId);
+			query.setParameterList("stateList", state);
+			List<VGoods> vGoods = query.list();
+			List<VGoodsId> list = new ArrayList<VGoodsId>();
+			for (VGoods v : vGoods) {
+				list.add(v.getId());
+			}
+			return list;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
+	@Override
 	public List<VGoodsId> getCataGoods(Integer start, Integer limit,
 			Long catalogId, Short[] state) {
 
@@ -360,6 +404,7 @@ public class GoodsDaoImp implements GoodsDao {
 			HibernateSessionFactory.closeSession();
 		}
 	}
+
 	@Override
 	public Long getCount(Short[] state, Integer type) {
 		try {

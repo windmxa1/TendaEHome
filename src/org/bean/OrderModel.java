@@ -8,8 +8,8 @@ import java.util.Map;
 import org.model.OrdersDetail;
 
 public class OrderModel {
-	// private List<OrdersDetail> details = new ArrayList<>();
-	private Map<String, List<OrdersDetail>> details = new HashMap<>();
+	private List<OrdersDetail> details = new ArrayList<>();
+	// private Map<String, List<OrdersDetail>> details = new HashMap<>();
 	private Long addressId;
 	private Double total;
 	private Integer type = 0;
@@ -59,11 +59,11 @@ public class OrderModel {
 		this.type = type;
 	}
 
-	public Map<String, List<OrdersDetail>> getDetails() {
+	public List<OrdersDetail> getDetails() {
 		return details;
 	}
 
-	public void setDetails(Map<String, List<OrdersDetail>> details) {
+	public void setDetails(List<OrdersDetail> details) {
 		this.details = details;
 	}
 
