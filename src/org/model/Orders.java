@@ -43,6 +43,21 @@ public class Orders implements java.io.Serializable {
 		this.total = total;
 	}
 
+	public Orders(String orderNum, Long userid, Long time, String address,
+			Long franchiseeId, Integer type, String remarks, Double total,
+			String benefit) {
+		super();
+		this.orderNum = orderNum;
+		this.userid = userid;
+		this.time = time;
+		this.address = address;
+		this.franchiseeId = franchiseeId;
+		this.type = type;
+		this.remarks = remarks;
+		this.total = total;
+		this.benefit = benefit;
+	}
+
 	/** full constructor */
 	public Orders(String orderNum, Long userid, Long time, String address,
 			String staffNo, Integer isExport, Integer deliveryState,
@@ -72,20 +87,6 @@ public class Orders implements java.io.Serializable {
 	// Property accessors
 
 
-	public Orders(String orderNum, Long userid, Long time, String address,
-			Long franchiseeId, Integer type, String remarks, Double total,
-			String benefit) {
-		super();
-		this.orderNum = orderNum;
-		this.userid = userid;
-		this.time = time;
-		this.address = address;
-		this.franchiseeId = franchiseeId;
-		this.type = type;
-		this.remarks = remarks;
-		this.total = total;
-		this.benefit = benefit;
-	}
 
 	public Long getId() {
 		return this.id;

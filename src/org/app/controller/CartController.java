@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -15,7 +14,6 @@ import org.bean.CartBean;
 import org.dao.ActivityDao;
 import org.dao.imp.ActivityDaoImp;
 import org.model.OrdersDetail;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.util.JsonUtils;
@@ -24,8 +22,6 @@ import org.util.ResultUtils;
 import org.util.TokenUtils;
 import org.view.VActivityId;
 
-import com.alipay.api.domain.Data;
-import com.alipay.api.domain.OrderDetail;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -482,7 +478,7 @@ public class CartController {
 				// 遍历商品数组，确认活动类型
 				String type = "";
 				VActivityId activity = null;
-				if (cartBean.getActId() != 0) {
+				if (cartBean.getActId() != 0 && cartBean.getActId() != null) {
 					activity = aDao.getById(cartBean.getActId());
 					type = activity.getTypeName();
 				}

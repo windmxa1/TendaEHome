@@ -45,7 +45,8 @@ public interface GoodsDao {
 	/**
 	 * 获取折扣商品列表
 	 */
-	public List<VGoodsId> getDiscounts(Integer start, Integer limit,Integer type);
+	public List<VGoodsId> getDiscounts(Integer start, Integer limit,
+			Integer type);
 
 	/**
 	 * 最新上架商品列表,按时间选出最新的10种商品
@@ -77,12 +78,12 @@ public interface GoodsDao {
 	 * 获取指定名称的商品
 	 */
 	public List<VGoodsId> getGoodsByKey(Integer start, Integer limit,
-			String key, Short[] state,Integer type);
+			String key, Short[] state, Integer type);
 
 	/**
 	 * 获取指定名称的商品总数
 	 */
-	public Long getCountByKey(String key, Short[] state,Integer type);
+	public Long getCountByKey(String key, Short[] state, Integer type);
 
 	/**
 	 * 维护商品信息
@@ -94,10 +95,10 @@ public interface GoodsDao {
 	 */
 	public boolean delete(Long id);
 
-//	/**
-//	 * 获取最新上架的10中商品
-//	 */
-//	public List<VGoodsId> getNewArrival(String catalog);
+	// /**
+	// * 获取最新上架的10中商品
+	// */
+	// public List<VGoodsId> getNewArrival(String catalog);
 
 	/**
 	 * 获取最新上架的10中商品
@@ -108,26 +109,36 @@ public interface GoodsDao {
 	 * 获取目录ID列表
 	 */
 	public List<Long> getCatalogIds(Integer type);
+
 	/**
 	 * 获取商品目录列表
 	 */
 	public List<GoodsCatalog> getCatalog();
+
 	/**
 	 * 获取目录总数
 	 */
 	public Long getCatalogCount();
+
 	/**
 	 * 获取商品
 	 */
 	public List<VGoodsId> getList(Integer start, Integer limit, Short[] state);
+
 	/**
 	 * 获取商品总数
 	 */
 	public Long getCount(Short[] state);
+
 	/**
 	 * 根据原产地获取商品列表
 	 */
 	List<VGoodsId> getGoodsByOriginAndCatalogId(Integer start, Integer limit,
-			String origin, Short[] state,Long catalogId);
+			String origin, Short[] state, Long catalogId);
+
+	/**
+	 * 获取原产地列表
+	 */
+	List<String> getOrigins(Integer type);
 
 }

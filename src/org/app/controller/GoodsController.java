@@ -8,13 +8,11 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.bean.CartBean;
-import org.bean.OrderModel;
 import org.dao.GoodsDao;
 import org.dao.imp.GoodsDaoImp;
 import org.model.GoodsCatalog;
 import org.model.OrdersDetail;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.util.JsonUtils;
@@ -174,6 +172,16 @@ public class GoodsController {
 			List<VGoodsId> list = gDao.getNewArrival(catalog);
 			data.put("" + catalog, list);
 		}
+		return ResultUtils.toJson(100, "", data);
+	}
+
+	@RequestMapping("/getOriginList")
+	@ResponseBody
+	public Object getOriginList() throws Exception {
+		gDao = new GoodsDaoImp();
+		data = new HashMap<String, Object>();
+		List<String> list = gDao.getOrigins(0);
+		data.put("list", list);
 		return ResultUtils.toJson(100, "", data);
 	}
 

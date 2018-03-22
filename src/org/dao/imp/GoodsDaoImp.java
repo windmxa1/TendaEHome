@@ -544,4 +544,20 @@ public class GoodsDaoImp implements GoodsDao {
 		}
 	}
 
+	@Override
+	public List<String> getOrigins(Integer type) {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			String sql = "select distinct(origin) from Goods where type=:type and origin !='' ";
+			Query query = session.createQuery(sql);
+			query.setParameter("type", type);
+			List<String> list = query.list();
+			return list;
+		} catch (Exception e) {
+			return null;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
+
 }

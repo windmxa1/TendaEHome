@@ -38,12 +38,12 @@
             </column>
         </property>
         <property name="maxPrice" type="java.lang.Double">
-            <column name="maxPrice" precision="10">
+            <column name="max_price" precision="10">
                 <comment>0为无上限</comment>
             </column>
         </property>
         <property name="minPrice" type="java.lang.Double">
-            <column name="minPrice" precision="10" />
+            <column name="min_price" precision="10" />
         </property>
         <property name="type" type="java.lang.Integer">
             <column name="type">

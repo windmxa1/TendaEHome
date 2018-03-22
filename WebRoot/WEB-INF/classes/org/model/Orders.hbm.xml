@@ -69,5 +69,15 @@
         <property name="isComment" type="java.lang.Integer">
             <column name="is_comment" />
         </property>
+        <property name="total" type="java.lang.Double">
+            <column name="total" precision="11" not-null="true">
+                <comment>订单总价</comment>
+            </column>
+        </property>
+        <property name="benefit" type="java.lang.String">
+            <column name="benefit" length="100">
+                <comment>享受优惠</comment>
+            </column>
+        </property>
     </class>
 </hibernate-mapping>

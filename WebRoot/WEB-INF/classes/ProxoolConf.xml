@@ -5,12 +5,12 @@
 	<proxool>
 		<alias>proxoolPool</alias>
 		<!--proxool只能管理由自己产生的连接 -->
-		<!-- 
 		<driver-url>jdbc:mysql://39.108.82.55:3306/tendaehome?characterEncoding=UTF-8&amp;autoReconnect=true
 		</driver-url>
-		 -->
-		<driver-url>jdbc:mysql://localhost:3306/tendaehome?characterEncoding=UTF-8&amp;autoReconnect=true
+		<!-- 
+		<driver-url>jdbc:mysql://192.168.1.150:3306/tendaehome?characterEncoding=UTF-8&amp;autoReconnect=true
 		</driver-url>
+		 -->
 		<driver-class>com.mysql.jdbc.Driver</driver-class>
 		<driver-properties>
 			<property name="user" value="root" />

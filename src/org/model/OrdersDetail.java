@@ -168,14 +168,6 @@ public class OrdersDetail implements java.io.Serializable {
 		this.actName = actName;
 	}
 
-	public Double getActMinPrice() {
-		return this.actMinPrice;
-	}
-
-	public void setActMinPrice(Double actMinPrice) {
-		this.actMinPrice = actMinPrice;
-	}
-
 	public Boolean getIsShopSelect() {
 		return isShopSelect;
 	}
@@ -192,6 +184,12 @@ public class OrdersDetail implements java.io.Serializable {
 		this.isFirst = isFirst;
 	}
 
+	public Double getActMinPrice() {
+		return actMinPrice;
+	}
 
+	public void setActMinPrice(Double actMinPrice) {
+		this.actMinPrice = actMinPrice;
+	}
 
 }
