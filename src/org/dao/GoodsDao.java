@@ -11,6 +11,10 @@ public interface GoodsDao {
 	 * 获取商品对象
 	 */
 	public Goods getGoods(Long id);
+	/**
+	 * 获取商品对象
+	 */
+	public VGoodsId getVGoods(Long goodsId);
 
 	/**
 	 * 修改商品上下架状态

@@ -30,6 +30,23 @@ public class GoodsDaoImp implements GoodsDao {
 			HibernateSessionFactory.closeSession();
 		}
 	}
+	public VGoodsId getVGoods(Long GoodsId) {
+		try {
+			Session session = HibernateSessionFactory.getSession();
+			String sql = "from VGoods where id.id=?";
+			Query query = session.createQuery(sql);
+			query.setParameter(0, GoodsId);
+			query.setMaxResults(1);
+			VGoods goods = (VGoods) query.uniqueResult();
+			VGoodsId goodsId2=goods.getId();
+			return goodsId2;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			HibernateSessionFactory.closeSession();
+		}
+	}
 
 	public Goods getGoods(Long id, Long time, Short state) {
 		try {

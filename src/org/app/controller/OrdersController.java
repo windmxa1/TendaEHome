@@ -314,14 +314,7 @@ public class OrdersController {
 		Map<String, Object> result = null;
 		try {
 			result = getDetailsAndBenefit(userid, o.getSelectIds());
-		} catch (JsonParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		String illegalList = (String) result.get("illegalList");
@@ -342,18 +335,23 @@ public class OrdersController {
 		boolean isFree = false;
 		if (o.getType() == 0 && user.getIsFree() == 1 && o.getTotal() < 50d) {// 有免单特权且总价低于50
 			Integer count = Utils
-					.parseInt(RedisUtil.getData("userid" + userid));
+					.parseInt(RedisUtil.getData("free-" + userid));
 			if (count == null) {// 当天未免单，则免单
 				orders.setPayWay(2);
+				RedisUtil.addData("free-" + userid, "" + 1,
+						ChangeTime.weekendTime(24, time));
 				isFree = true;
-			} else if (count != null && count < 3) { // 本周有下单且免单数小于3，则免单
-				RedisUtil.addData("userid" + userid, "" + (count++),
+			} else if (count < 3) { // 本周有下单且免单数小于3，则免单
+				RedisUtil.addData("free-" + userid, "" + (++count),
 						ChangeTime.weekendTime(24, time));
 				orders.setPayWay(2);
 				isFree = true;
 			}
 		}
 		System.out.println(o.getAddressId() + "|||" + orders.getAddress());
+		if (details == null) {
+			return ResultUtils.toJson(101, "生成订单失败，请重试", "");
+		}
 		Long id = oDao.generateOrder(orders, details, giftList);
 		if (id > 0) {
 			data = new HashMap<>();

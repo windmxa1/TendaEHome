@@ -12,7 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.bean.CartBean;
 import org.dao.ActivityDao;
+import org.dao.GoodsDao;
 import org.dao.imp.ActivityDaoImp;
+import org.dao.imp.GoodsDaoImp;
 import org.model.OrdersDetail;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,6 +23,7 @@ import org.util.RedisUtil;
 import org.util.ResultUtils;
 import org.util.TokenUtils;
 import org.view.VActivityId;
+import org.view.VGoodsId;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JavaType;
@@ -30,6 +33,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @RestController("app/CartController")
 @RequestMapping("app/cart")
 public class CartController {
+	private GoodsDao gDao;
+	private ActivityDao aDao;
+
 	/**
 	 * @param selectIds
 	 *            参数格式为活动Id+"-"+商品Id
@@ -342,6 +348,24 @@ public class CartController {
 
 	}
 
+	private OrdersDetail getOrderDetail(OrdersDetail od1) {
+		gDao = new GoodsDaoImp();
+		aDao = new ActivityDaoImp();
+		VActivityId a = aDao.getById(od1.getActId());
+		VGoodsId gd = gDao.getVGoods(od1.getGoodsId());
+		OrdersDetail od2 = new OrdersDetail();
+		od2.setActId(od1.getActId());
+		od2.setGoodsId(gd.getGoodsId());
+		od2.setActMinPrice(a.getMinPrice());
+		od2.setActName(a.getTitle());
+		od2.setGoodsUrl(gd.getGoodsUrl());
+		od2.setPrice(gd.getPrice());
+		od2.setTime(gd.getTime());
+		od2.setIsSelect(true);
+		od2.setIsShopSelect(true);
+		return od2;
+	}
+
 	@RequestMapping("addObj")
 	public Object addObj(OrdersDetail od1, HttpServletRequest request)
 			throws JsonParseException, JsonMappingException, IOException {
@@ -350,7 +374,6 @@ public class CartController {
 		Long userid = Long.parseLong(""
 				+ TokenUtils.getValue(token, TokenUtils.getKey(), "userid"));
 		/*********************************/
-
 		String cartListStr = RedisUtil.getData("cart-" + userid);
 		ObjectMapper mapper = JsonUtils.getMapperInstance();
 		List<CartBean> cartList;
@@ -374,19 +397,21 @@ public class CartController {
 					}
 					if (!isExist) {// 商品不存在，则添加新的商品进去
 						System.out.println("商品不存在");
-						list.add(od1);
+						OrdersDetail od2 = getOrderDetail(od1);
+						list.add(od2);
 					}
 					cartBean.setList(list);
 				}
 			}
 			if (!isActExist) {//
 				System.out.println("活动不存在");
+				OrdersDetail od2 = getOrderDetail(od1);
 				CartBean cartBean = new CartBean();
-				cartBean.setActId(od1.getActId());
-				cartBean.setName(od1.getActName());
-				cartBean.setMinPrice(od1.getActMinPrice());
+				cartBean.setActId(od2.getActId());
+				cartBean.setName(od2.getActName());
+				cartBean.setMinPrice(od2.getActMinPrice());
 				List<OrdersDetail> list = new ArrayList<OrdersDetail>();
-				list.add(od1);
+				list.add(od2);
 				cartBean.setList(list);
 				cartList.add(cartBean);
 			}
@@ -394,12 +419,13 @@ public class CartController {
 					mapper.writeValueAsString(cartList), null);
 		} else {// 购物车不存在
 			System.out.println("购物车不存在");
+			OrdersDetail od2 = getOrderDetail(od1);
 			cartList = new ArrayList<>();
 			CartBean cartBean = new CartBean();
-			cartBean.setActId(od1.getActId());
-			cartBean.setName(od1.getActName());
+			cartBean.setActId(od2.getActId());
+			cartBean.setName(od2.getActName());
 			List<OrdersDetail> list = new ArrayList<OrdersDetail>();
-			list.add(od1);
+			list.add(od2);
 			cartBean.setList(list);
 			cartList.add(cartBean);
 			RedisUtil.addData("cart-" + userid,

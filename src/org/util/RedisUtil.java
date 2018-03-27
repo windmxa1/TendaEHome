@@ -1,6 +1,9 @@
 package org.util;
 
+import java.lang.reflect.Field;
 import java.util.List;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import redis.clients.jedis.GeoCoordinate;
 import redis.clients.jedis.GeoRadiusResponse;
@@ -141,18 +144,18 @@ public class RedisUtil {
 	// }
 	// }
 
-//	public static void main(String args[]) throws JsonProcessingException {
-//		Jedis jedis = null;
-//		try {
-//			jedis = jedisPool.getResource();
-//			
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} finally {
-//			if (null != jedis)
-//				jedis.close();
-//		}
-//	}
+	public static void main(String args[]) {
+		Jedis jedis = null;
+		try {
+			jedis = jedisPool.getResource();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (null != jedis)
+				jedis.close();
+		}
+	}
 
 	/**
 	 * 根据键获取值
@@ -169,6 +172,27 @@ public class RedisUtil {
 				jedis.close();
 		}
 		return null;
+	}
+
+	/**
+	 * 存hashmap表
+	 */
+	public static boolean setHashMap(String tbName, Object obj) {
+		Jedis jedis = null;
+		try {
+			jedis = jedisPool.getResource();
+			for (Field f : obj.getClass().getDeclaredFields()) {
+				f.setAccessible(true);
+				jedis.hset(tbName, f.getName(), "" + f.get(obj));
+			}
+			return true;
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		} finally {
+			if (null != jedis)
+				jedis.close();
+		}
+		return false;
 	}
 
 	/**
@@ -252,7 +276,7 @@ public class RedisUtil {
 		Jedis jedis = null;
 		try {
 			jedis = jedisPool.getResource();
-			// 第一个参数可以理解为表名			
+			// 第一个参数可以理解为表名
 			return jedis.geoadd(tag, coordinate.getLongitude(),
 					coordinate.getLatitude(), coordinate.getKey());
 		} catch (Exception e) {
@@ -266,9 +290,13 @@ public class RedisUtil {
 
 	/**
 	 * 查询附近人
-	 * @param coordinate 经纬度
-	 * @param tag 标签，相当于表名
-	 * @param radius 范围(单位为千米)
+	 * 
+	 * @param coordinate
+	 *            经纬度
+	 * @param tag
+	 *            标签，相当于表名
+	 * @param radius
+	 *            范围(单位为千米)
 	 */
 	public static List<GeoRadiusResponse> geoQuery(Coordinate coordinate,
 			String tag, Double radius) {
