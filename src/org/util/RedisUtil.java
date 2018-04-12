@@ -2,6 +2,8 @@ package org.util;
 
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -19,6 +21,7 @@ public class RedisUtil {
 	private static String ADDR = "localhost";
 	// Redis的端口号
 	private static int PORT = 6379;
+	  
 	// 访问密码
 	// private static String AUTH = "111111";
 
@@ -78,92 +81,13 @@ public class RedisUtil {
 		}
 	}
 
-	// public static void main(String[] args) {
-	// Jedis jedis = RedisUtil.getJedis();
-	//
-	// // 添加经纬度
-	// Coordinate coordinate = new Coordinate();
-	// coordinate.setLatitude(31.244803); // 维度
-	// coordinate.setLongitude(121.483671); // 经度
-	// coordinate.setKey("1"); // 可以作为用户表的id
-	//
-	// // 添加经纬度
-	// Coordinate coordinate1 = new Coordinate();
-	// coordinate1.setLatitude(31.245321); // 维度
-	// coordinate1.setLongitude(121.485015); // 经度
-	// coordinate1.setKey("2"); // 可以作为用户表的id
-	//
-	// // 添加经纬度
-	// Coordinate coordinate4 = new Coordinate();
-	// coordinate4.setLatitude(31.245331); // 维度
-	// coordinate4.setLongitude(121.485015); // 经度
-	// coordinate4.setKey("2"); // 可以作为用户表的id
-	//
-	// // 添加经纬度
-	// Coordinate coordinate2 = new Coordinate();
-	// coordinate2.setLatitude(31.245321); // 维度
-	// coordinate2.setLongitude(121.485015); // 经度
-	// // coordinate2.setLatitude(31.245456); // 维度
-	// // coordinate2.setLongitude(121.485285); // 经度
-	// coordinate2.setKey("3"); // 可以作为用户表的id
-	//
-	// System.out.println(addReo(coordinate, "test"));
-	// System.out.println(addReo(coordinate1, "test"));
-	// System.out.println(addReo(coordinate2, "test"));
-	// System.out.println(addReo(coordinate4, "test"));
-	//
-	// Coordinate coordinate3 = new Coordinate();
-	// coordinate3.setLatitude(31.245321); // 维度
-	// coordinate3.setLongitude(121.485015); // 经度
-	// coordinate3.setKey("4"); // 可以作为用户表的id
-	//
-	// try {
-	// List<GeoRadiusResponse> list = geoQuery(coordinate3);
-	// System.out.println(JsonUtils.getMapperInstance()
-	// .writeValueAsString(list));
-	// for (GeoRadiusResponse geo : list) {
-	// System.out.println(geo.getMemberByString()); // 主键 有主键了个人信息就很简单了
-	// System.out.println(geo.getDistance() < 0.001 ? 0 : geo
-	// .getDistance()); // 距离多少米
-	// }
-	// } catch (JsonProcessingException e) {
-	// e.printStackTrace();
-	// }
-	// RedisUtil.close(jedis);
-	// }
-	// public static void main(String[] args) {
-	// Jedis jedis = null;
-	// try {
-	// jedis = jedisPool.getResource();
-	// System.out.println(jedis.get("ab"));
-	// } catch (Exception e) {
-	// System.out.println(e.getMessage());
-	// } finally {
-	// if (null != jedis)
-	// jedis.close();
-	// }
-	// }
-
-	public static void main(String args[]) {
-		Jedis jedis = null;
-		try {
-			jedis = jedisPool.getResource();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			if (null != jedis)
-				jedis.close();
-		}
-	}
-
 	/**
 	 * 根据键获取值
 	 */
 	public static String getData(String key) {
 		Jedis jedis = null;
 		try {
-			jedis = jedisPool.getResource();
+			jedis = getJedis();
 			return jedis.get(key);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -175,15 +99,121 @@ public class RedisUtil {
 	}
 
 	/**
-	 * 存hashmap表
+	 * 增加数目
 	 */
-	public static boolean setHashMap(String tbName, Object obj) {
+	public static boolean increase(String tbName, String key, Long value) {
 		Jedis jedis = null;
 		try {
-			jedis = jedisPool.getResource();
-			for (Field f : obj.getClass().getDeclaredFields()) {
-				f.setAccessible(true);
-				jedis.hset(tbName, f.getName(), "" + f.get(obj));
+			jedis = getJedis();
+			jedis.hincrBy(tbName, key, value);
+			return true;
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		} finally {
+			if (null != jedis)
+				jedis.close();
+		}
+		return false;
+	}
+
+	/**
+	 * 存hashmap表
+	 */
+	public static Map<String, String> getHashMap(String tbName) {
+		Jedis jedis = null;
+		try {
+			jedis = getJedis();
+			return jedis.hgetAll(tbName);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		} finally {
+			if (null != jedis)
+				jedis.close();
+		}
+		return null;
+	}
+
+	/**
+	 * 删除Map中的数据
+	 */
+	public static boolean del(String tbName, String key) {
+		Jedis jedis = null;
+		try {
+			jedis = getJedis();
+			jedis.hdel(tbName, key);
+			return true;
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		} finally {
+			if (null != jedis)
+				jedis.close();
+		}
+		return false;
+	}
+
+	/**
+	 * 删除关键字对应的数据
+	 */
+	public static boolean del(String key) {
+		Jedis jedis = null;
+		try {
+			jedis = getJedis();
+			jedis.del(key);
+			return true;
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		} finally {
+			if (null != jedis)
+				jedis.close();
+		}
+		return false;
+	}
+
+	/**
+	 * 存hashmap表
+	 */
+	public static String getHashMapValue(String tbName, String key) {
+		Jedis jedis = null;
+		try {
+			jedis = getJedis();
+			return jedis.hget(tbName, key);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		} finally {
+			if (null != jedis)
+				jedis.close();
+		}
+		return null;
+	}
+
+	/**
+	 * 
+	 */
+	public static boolean setHashMap(String tbName, Map<String, String> map) {
+		Jedis jedis = null;
+		try {
+			jedis = getJedis();
+			jedis.hmset(tbName, map);
+			return true;
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		} finally {
+			if (null != jedis)
+				jedis.close();
+		}
+		return false;
+	}
+
+	/**
+	 * 删除所有相关缓存
+	 */
+	public static boolean delAll(String pattern) {
+		Jedis jedis = null;
+		try {
+			jedis = getJedis();
+			Set<String> set = jedis.keys(pattern);
+			for (String str : set) {
+				jedis.del(str);
 			}
 			return true;
 		} catch (Exception e) {
@@ -196,13 +226,31 @@ public class RedisUtil {
 	}
 
 	/**
-	 * 添加键值对
+	 * 创建/修改map中的键值对
+	 */
+	public static boolean setHashMap(String tbName, String key, String value) {
+		Jedis jedis = null;
+		try {
+			jedis = getJedis();
+			jedis.hset(tbName, key, value);
+			return true;
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		} finally {
+			if (null != jedis)
+				jedis.close();
+		}
+		return false;
+	}
+
+	/**
+	 * 获取列表
 	 */
 	public static List<String> getList(String key) {
 		Jedis jedis = null;
 		try {
-			jedis = jedisPool.getResource();
-			return jedis.lrange(key, 0, 1000);
+			jedis = getJedis();
+			return jedis.lrange(key, 0, -1);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		} finally {
@@ -218,8 +266,8 @@ public class RedisUtil {
 	public static boolean popList(String key, String value) {
 		Jedis jedis = null;
 		try {
-			jedis = jedisPool.getResource();
-			jedis.lrem(key, 10, value);
+			jedis = getJedis();
+			jedis.lrem(key, -1, value);
 			return true;
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -236,7 +284,7 @@ public class RedisUtil {
 	public static boolean pushList(String key, String value) {
 		Jedis jedis = null;
 		try {
-			jedis = jedisPool.getResource();
+			jedis = getJedis();
 			jedis.lpush(key, value);
 			return true;
 		} catch (Exception e) {
@@ -254,7 +302,7 @@ public class RedisUtil {
 	public static boolean addData(String key, String value, Long time) {
 		Jedis jedis = null;
 		try {
-			jedis = jedisPool.getResource();
+			jedis = getJedis();
 			jedis.set(key, value);
 			if (time != null) {
 				jedis.expireAt(key, time);
@@ -275,7 +323,7 @@ public class RedisUtil {
 	public static Long addReo(Coordinate coordinate, String tag) {
 		Jedis jedis = null;
 		try {
-			jedis = jedisPool.getResource();
+			jedis = getJedis();
 			// 第一个参数可以理解为表名
 			return jedis.geoadd(tag, coordinate.getLongitude(),
 					coordinate.getLatitude(), coordinate.getKey());
@@ -302,7 +350,7 @@ public class RedisUtil {
 			String tag, Double radius) {
 		Jedis jedis = null;
 		try {
-			jedis = jedisPool.getResource();
+			jedis = getJedis();
 			// 200F GeoUnit.KM表示km
 			return jedis.georadius(tag, coordinate.getLongitude(),
 					coordinate.getLatitude(), radius, GeoUnit.KM,
@@ -323,7 +371,7 @@ public class RedisUtil {
 			String tag) {
 		Jedis jedis = null;
 		try {
-			jedis = jedisPool.getResource();
+			jedis = getJedis();
 			// 200F GeoUnit.KM表示km
 			return jedis.georadius(tag, coordinate.getLongitude(), coordinate
 					.getLatitude(), 5F, GeoUnit.KM, GeoRadiusParam

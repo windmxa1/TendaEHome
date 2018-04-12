@@ -22,7 +22,7 @@
 	<!-- 开启这个配置，识别@Scheduled注解 -->
 	<task:annotation-driven executor="executor"
 		scheduler="scheduler" />
-		
+
 	<mvc:resources mapping="/js/**" location="/js/" />
 	<mvc:resources mapping="/css/**" location="/css/" />
 	<mvc:resources mapping="/upload/**" location="/upload/" />
@@ -46,7 +46,12 @@
 			<mvc:exclude-mapping path="/app/staff/register" />
 			<mvc:exclude-mapping path="/app/staff/register1" />
 			<mvc:exclude-mapping path="/app/scrollNews/**" />
+			<mvc:exclude-mapping path="/app/cart/**" />
 			<bean class="org.interceptor.AppInterceptor"></bean>
+		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/app/cart/**" />
+			<bean class="org.interceptor.CartInterceptor"></bean>
 		</mvc:interceptor>
 		<mvc:interceptor>
 			<mvc:mapping path="/back/**" />

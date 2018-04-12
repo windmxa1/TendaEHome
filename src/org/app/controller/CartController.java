@@ -15,6 +15,7 @@ import org.dao.ActivityDao;
 import org.dao.GoodsDao;
 import org.dao.imp.ActivityDaoImp;
 import org.dao.imp.GoodsDaoImp;
+import org.model.Activity;
 import org.model.OrdersDetail;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,12 +37,8 @@ public class CartController {
 	private GoodsDao gDao;
 	private ActivityDao aDao;
 
-	/**
-	 * @param selectIds
-	 *            参数格式为活动Id+"-"+商品Id
-	 */
 	@RequestMapping("deleteSelect")
-	public Object deleteSelect(HttpServletRequest request, String[] selectIds)
+	public Object deleteSelect(HttpServletRequest request)
 			throws JsonParseException, JsonMappingException, IOException {
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");
@@ -59,10 +56,11 @@ public class CartController {
 			int j = 0;
 			for (CartBean cartBean : cartList) {// 删除数组元素的方法，放在循环之外，否则一旦索引被改变，则无法通过下标找到正确的元素
 				Iterator<OrdersDetail> iterator = cartBean.getList().iterator();
-				while (iterator.hasNext()) {
+				while (iterator.hasNext()) {// 迭代遍历detailList
 					OrdersDetail od = iterator.next();
-					if (Arrays.asList(selectIds).contains(
-							cartBean.getActId() + "-" + od.getGoodsId())) {// 从购物车中移除选择的商品列表
+					if (od.getIsSelect()) {// 从购物车中移除选择的商品列表
+						RedisUtil.del(userid + "-actList-" + od.getActId(), ""
+								+ od.getGoodsId());
 						iterator.remove();
 					}
 				}
@@ -76,8 +74,10 @@ public class CartController {
 			Iterator<CartBean> iterator = cartList.iterator();
 			int m = 0;
 			while (iterator.hasNext()) {
-				iterator.next();
+				CartBean cartBean = iterator.next();
 				if (removeIndexs.contains(m)) {// 包含了需要删除的活动下标，则移除
+					RedisUtil.popList(userid + "-actList",
+							"" + cartBean.getActId());
 					iterator.remove();
 				}
 				m++;
@@ -129,6 +129,7 @@ public class CartController {
 		String cartListStr = RedisUtil.getData("cart-" + userid);
 		ObjectMapper mapper = JsonUtils.getMapperInstance();
 		List<CartBean> cartList;
+
 		if (cartListStr != null && !cartListStr.equals("")) {// 购物车存在
 			JavaType javaType = JsonUtils.getCollectionType(ArrayList.class,
 					CartBean.class);
@@ -207,8 +208,7 @@ public class CartController {
 
 	@RequestMapping("modifyGoods")
 	public Object modifyGoods(HttpServletRequest request, Integer actId,
-			Long goodsId, Integer newActId, String newActName,
-			Double newMinPrice) throws JsonParseException,
+			Long goodsId, Integer newActId) throws JsonParseException,
 			JsonMappingException, IOException {
 		/**** 获取header中的token并取出userid ****/
 		String token = request.getHeader("token");
@@ -218,6 +218,8 @@ public class CartController {
 		String cartListStr = RedisUtil.getData("cart-" + userid);
 		ObjectMapper mapper = JsonUtils.getMapperInstance();
 		List<CartBean> cartList;
+		aDao = new ActivityDaoImp();
+		VActivityId a = aDao.getById(newActId);
 		if (cartListStr != null && !cartListStr.equals("")) {// 购物车存在
 			JavaType javaType = JsonUtils.getCollectionType(ArrayList.class,
 					CartBean.class);
@@ -233,9 +235,12 @@ public class CartController {
 					for (OrdersDetail od : cartBean.getList()) {
 						if (od.getGoodsId().equals(goodsId)) {
 							od2 = od;
-							od2.setActId(newActId);
-							od2.setActName(newActName);
-							od2.setActMinPrice(newMinPrice);
+							od2.setActId(a.getId());
+							od2.setActName(a.getTitle());
+							od2.setActMinPrice(a.getMinPrice());
+							RedisUtil.del(
+									userid + "-actList+" + od.getActName(),
+									od.getGoodsId() + "");
 							cartBean.getList().remove(od);
 							break;
 						}
@@ -247,9 +252,9 @@ public class CartController {
 			}
 			if (newIndex == -1) {// 新活动不存在
 				CartBean cartBean = new CartBean();
-				cartBean.setActId(newActId);
-				cartBean.setName(newActName);
-				cartBean.setMinPrice(newMinPrice);
+				cartBean.setActId(a.getId());
+				cartBean.setName(a.getTitle());
+				cartBean.setMinPrice(a.getMinPrice());
 				List<OrdersDetail> list = new ArrayList<>();
 				list.add(od2);
 				cartBean.setList(list);
@@ -259,15 +264,22 @@ public class CartController {
 				for (OrdersDetail od : cartList.get(newIndex).getList()) {
 					if (od.getGoodsId().equals(goodsId)) {// 新活动中已存在该商品，直接将该商品的数目和原商品相加
 						od.setNum(od.getNum() + od2.getNum());
+						od.setPrices(od.getNum() * od.getPrice());
+						RedisUtil.setHashMap(userid + "-actList-" + newActId,
+								od.getGoodsId() + "", od.getNum() + "");
 						isGoodExist = true;
 						break;
 					}
 				}
 				if (!isGoodExist) {// 新活动中不存在该商品，则加入该商品
+					RedisUtil.setHashMap(userid + "-actList-" + newActId,
+							od2.getGoodsId() + "", od2.getNum() + "");
 					cartList.get(newIndex).getList().add(od2);
 				}
 			}
 			if (cartList.get(oldIndex).getList().size() == 0) {// 当活动组中商品数目为0，则删除该活动组
+				RedisUtil.popList(userid + "-actList", cartList.get(oldIndex)
+						.getActId() + "");
 				cartList.remove(oldIndex);
 			}
 		} else {
@@ -300,6 +312,9 @@ public class CartController {
 						if (od.getGoodsId().equals(od1.getGoodsId())) {// 商品存在
 							od.setNum(od1.getNum());
 							od.setPrices(od.getPrice() * od.getNum());
+							RedisUtil.setHashMap(userid + "-actList-"
+									+ cartBean.getActId(),
+									od.getGoodsId() + "", od.getNum() + "");
 							break;
 						}
 					}
@@ -354,12 +369,14 @@ public class CartController {
 		VActivityId a = aDao.getById(od1.getActId());
 		VGoodsId gd = gDao.getVGoods(od1.getGoodsId());
 		OrdersDetail od2 = new OrdersDetail();
+		od2.setName(gd.getName());
 		od2.setActId(od1.getActId());
 		od2.setGoodsId(gd.getGoodsId());
 		od2.setActMinPrice(a.getMinPrice());
 		od2.setActName(a.getTitle());
 		od2.setGoodsUrl(gd.getGoodsUrl());
 		od2.setPrice(gd.getPrice());
+		od2.setPrices(gd.getPrice());
 		od2.setTime(gd.getTime());
 		od2.setIsSelect(true);
 		od2.setIsShopSelect(true);
@@ -392,6 +409,9 @@ public class CartController {
 							od.setNum(od.getNum() + 1);
 							od.setPrices(od.getNum() * od.getPrice());
 							isExist = true;
+							RedisUtil.increase(
+									userid + "-actList-" + od1.getActId(), ""
+											+ od1.getGoodsId(), 1L);
 							break;
 						}
 					}
@@ -399,12 +419,22 @@ public class CartController {
 						System.out.println("商品不存在");
 						OrdersDetail od2 = getOrderDetail(od1);
 						list.add(od2);
+						Map<String, String> goodsMap = new HashMap<>();
+						goodsMap.put("goodsId", od1.getGoodsId() + "");
+						goodsMap.put("num", "" + 1);
+						RedisUtil
+								.setHashMap(
+										userid + "-actList-" + od1.getActId(),
+										goodsMap);
 					}
 					cartBean.setList(list);
 				}
 			}
 			if (!isActExist) {//
 				System.out.println("活动不存在");
+				RedisUtil.pushList(userid + "-actList", od1.getActId() + "");
+				RedisUtil.setHashMap(userid + "-actList-" + od1.getActId(),
+						od1.getGoodsId() + "", "" + 1);
 				OrdersDetail od2 = getOrderDetail(od1);
 				CartBean cartBean = new CartBean();
 				cartBean.setActId(od2.getActId());
@@ -420,6 +450,9 @@ public class CartController {
 		} else {// 购物车不存在
 			System.out.println("购物车不存在");
 			OrdersDetail od2 = getOrderDetail(od1);
+			RedisUtil.pushList(userid + "-actList", od1.getActId() + "");
+			RedisUtil.setHashMap(userid + "-actList-" + od1.getActId(),
+					od1.getGoodsId() + "", "" + 1);
 			cartList = new ArrayList<>();
 			CartBean cartBean = new CartBean();
 			cartBean.setActId(od2.getActId());
@@ -456,10 +489,15 @@ public class CartController {
 					for (int k = 0; k < list.size(); k++) {
 						OrdersDetail od = list.get(k);
 						if (od.getGoodsId().equals(od1.getGoodsId())) {// 商品存在
+							RedisUtil.del(
+									userid + "-cartList-" + od1.getActId(),
+									od1.getGoodsId() + "");
 							if (list.size() == 1) {
 								cartList.remove(cartBean);
 							} else {
 								list.remove(od);
+								RedisUtil.popList(userid + "-cartList", ""
+										+ od1.getActId());
 							}
 							break;
 						}

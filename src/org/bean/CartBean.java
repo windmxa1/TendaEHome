@@ -6,6 +6,7 @@ import org.model.OrdersDetail;
 
 public class CartBean {
 	private List<OrdersDetail> list;
+	// private String listId;
 	private Integer actId;
 	private String name;
 	private Double minPrice;
@@ -26,6 +27,14 @@ public class CartBean {
 	//
 	// public void setType(Integer type) {
 	// this.type = type;
+	// }
+
+	// public String getListId() {
+	// return listId;
+	// }
+	//
+	// public void setListId(String listId) {
+	// this.listId = listId;
 	// }
 
 	public OrdersDetail getGift() {

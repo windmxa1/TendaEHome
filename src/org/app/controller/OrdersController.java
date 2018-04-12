@@ -83,10 +83,28 @@ public class OrdersController {
 			data.put("list", new ArrayList<>());
 		} else {
 			for (VOrdersId order : list) {
+				order.setDetails(oDao.getDetailList(order.getId(), start, -1,
+						null));
 				order.setUrlList(oDao.getUrlList(order.getId()));
 			}
 			data.put("list", list);
 		}
+		return ResultUtils.toJson(100, "", data);
+	}
+
+	@RequestMapping("/getOrderById")
+	@ResponseBody
+	public Object getOrderById(HttpServletRequest request, Long id)
+			throws Exception {
+		oDao = new OrdersDaoImp();
+		VOrdersId v = oDao.getOrder(id);
+		if (v != null) {
+			List<VOrdersDetailsId> details = oDao.getDetailList(v.getId(), 0,
+					-1, null);
+			v.setDetails(details);
+		}
+		data = new HashMap<String, Object>();
+		data.put("order", v);
 		return ResultUtils.toJson(100, "", data);
 	}
 
@@ -271,11 +289,13 @@ public class OrdersController {
 				}
 				while (iterator.hasNext()) {
 					OrdersDetail od = iterator.next();
-					if (selectIds.contains(cartBean.getActId() + "-"
-							+ od.getGoodsId())) {// 从购物车中移除选择的商品列表
+					if (od.getIsSelect()) {// 从购物车中移除选择的商品列表
 						if (!cartBean.getName().equals("")) {
 							benefit.add(cartBean.getName());
 						}
+						RedisUtil.del(
+								userid + "-cartList-" + cartBean.getActId(),
+								od.getGoodsId() + "");
 						iterator.remove();
 						orderList.add(od);
 					}
@@ -334,8 +354,7 @@ public class OrdersController {
 		User user = uDao.getUser(userid);
 		boolean isFree = false;
 		if (o.getType() == 0 && user.getIsFree() == 1 && o.getTotal() < 50d) {// 有免单特权且总价低于50
-			Integer count = Utils
-					.parseInt(RedisUtil.getData("free-" + userid));
+			Integer count = Utils.parseInt(RedisUtil.getData("free-" + userid));
 			if (count == null) {// 当天未免单，则免单
 				orders.setPayWay(2);
 				RedisUtil.addData("free-" + userid, "" + 1,
@@ -349,7 +368,7 @@ public class OrdersController {
 			}
 		}
 		System.out.println(o.getAddressId() + "|||" + orders.getAddress());
-		if (details == null) {
+		if (details == null || details.size() == 0) {
 			return ResultUtils.toJson(101, "生成订单失败，请重试", "");
 		}
 		Long id = oDao.generateOrder(orders, details, giftList);

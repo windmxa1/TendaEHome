@@ -10,6 +10,7 @@ import org.hibernate.Transaction;
 import org.model.Goods;
 import org.model.GoodsCatalog;
 import org.util.HibernateSessionFactory;
+import org.util.RedisUtil;
 import org.view.VGoods;
 import org.view.VGoodsId;
 
@@ -33,7 +34,7 @@ public class GoodsDaoImp implements GoodsDao {
 	public VGoodsId getVGoods(Long GoodsId) {
 		try {
 			Session session = HibernateSessionFactory.getSession();
-			String sql = "from VGoods where id.id=?";
+			String sql = "from VGoods where id.goodsId=? and id.state=1";
 			Query query = session.createQuery(sql);
 			query.setParameter(0, GoodsId);
 			query.setMaxResults(1);
@@ -355,6 +356,7 @@ public class GoodsDaoImp implements GoodsDao {
 			Transaction ts = session.beginTransaction();
 			if (goods.getId() != null) {
 				session.update(goods);
+				RedisUtil.delAll("*-cart");
 			} else {
 				id = (Long) session.save(goods);
 			}
@@ -378,6 +380,7 @@ public class GoodsDaoImp implements GoodsDao {
 			query.setParameter(0, id);
 			query.executeUpdate();
 			ts.commit();
+			RedisUtil.delAll("*-cart");
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -521,6 +524,7 @@ public class GoodsDaoImp implements GoodsDao {
 			query.setParameter(1, id);
 			query.executeUpdate();
 			ts.commit();
+			RedisUtil.delAll("*-cart");
 			return true;
 		} catch (Exception e) {
 			return false;

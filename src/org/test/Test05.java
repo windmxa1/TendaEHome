@@ -1,107 +1,96 @@
 package org.test;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
-import java.util.Map.Entry;
+import java.util.Set;
 
-import org.bean.CartBean;
-import org.dao.ActivityDao;
-import org.dao.imp.ActivityDaoImp;
-import org.model.OrdersDetail;
-import org.util.JsonUtils;
-import org.view.VActivityId;
+import org.util.RedisUtil;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.params.sortedset.ZAddParams;
 
 public class Test05 {
 
-	public static void main(String[] args) throws JsonProcessingException {
-		OrdersDetail od1 = new OrdersDetail(1L, System.currentTimeMillis());
-		OrdersDetail od2 = new OrdersDetail(2L, System.currentTimeMillis());
-		OrdersDetail od3 = new OrdersDetail(3L, System.currentTimeMillis());
-		OrdersDetail od4 = new OrdersDetail(4L, System.currentTimeMillis());
-		OrdersDetail od5 = new OrdersDetail(5L, System.currentTimeMillis());
-		OrdersDetail od6 = new OrdersDetail(6L, System.currentTimeMillis());
-		List<CartBean> actList = new ArrayList();
-		CartBean cartBean1 = new CartBean();
-		List<OrdersDetail> details1 = new ArrayList<>();
-		details1.add(od1);
-		details1.add(od2);
-		cartBean1.setList(details1);
-		cartBean1.setName("满二十减一");
-		cartBean1.setActId(1);
-		actList.add(cartBean1);
-		CartBean cartBean2 = new CartBean();
-		List<OrdersDetail> details2 = new ArrayList<>();
-		details2.add(od3);
-		details2.add(od4);
-		details2.add(od5);
-		cartBean2.setList(details2);
-		cartBean2.setName("满三十减4");
-		cartBean2.setActId(2);
-		actList.add(cartBean2);
-		CartBean cartBean3 = new CartBean();
-		List<OrdersDetail> details3 = new ArrayList<>();
-		details3.add(od6);
-		cartBean3.setList(details3);
-		cartBean3.setName("满六十赠送礼品");
-		cartBean3.setActId(3);
-		actList.add(cartBean3);
-		Map<String, Object> result = new HashMap<>();
-		result.put("code", 100);
-		result.put("msg", "success");
-		result.put("data", actList);
-		System.out.println(JsonUtils.getMapperInstance().writeValueAsString(
-				result));
-		ActivityDao aDao = new ActivityDaoImp();
-		Double totalPrice = 0d;
-		for (CartBean cartBean : actList) {
-			// 遍历商品数组，确认活动类型
-			String type = "";
-			VActivityId activity = null;
-			if (cartBean.getActId() != 0) {
-				activity = aDao.getById(cartBean.getActId());
-				type = activity.getTypeName();
+	public static void main(String[] args) {
+		Jedis jedis = null;
+		try {
+			jedis = RedisUtil.getJedis();
+			String keys = "cart_goods-" + 233;
+			/** list **/
+			// jedis.lpush("cart_goods-" + 233, "13-233");
+			// jedis.lpush("cart_goods-" + 233, "14-251");
+			// jedis.lpush("cart_goods-" + 233, "01-231");
+			// jedis.lpush("cart_goods-" + 233, "06-165");
+			// jedis.lpush("cart_goods-" + 233, "05-241");
+			// jedis.lpush("cart_goods-" + 233, "02-351");
+			// System.out.println(jedis.lrange("cart_goods-" + 233, 0, -1));
+			// jedis.lrem("cart_goods-" + 233, -1, "05-241");
+			// System.out.println(jedis.lrange("cart_goods-" + 233, 0, -1));
+			// jedis.del("cart_goods-" + 233);
+			/** set **/
+			// jedis.sadd("cart_goods-" + 233, "13-233-1");
+			// jedis.sadd("cart_goods-" + 233, "14-251-2");
+			// jedis.sadd("cart_goods-" + 233, "01-231-3");
+			// jedis.sadd("cart_goods-" + 233, "06-165-4");
+			// jedis.sadd("cart_goods-" + 233, "05-241-5");
+			// jedis.sadd("cart_goods-" + 233, "02-351-6");
+			// System.out.println(jedis.smembers("cart_goods-" + 233));
+			// System.err.println(jedis.sinter(keys));
+			// Set<String> set = jedis.sinter(keys);
+			// set.remove("01-231-3");
+			// set.remove("02-351-6");
+			// set.add("05-124-7");
+			// System.out.println(set.retainAll(jedis.sinter(keys)));
+			// System.out.println(set.size());
+			// set.containsAll(jedis.sinter(keys));
+			// // jedis.lrem("cart_goods-" + 233, -1, "05-241");
+			// jedis.srem("cart_goods-" + 233, "05-241");
+			// System.out.println(jedis.smembers("cart_goods-" + 233));
+			/** zset **/
+			// jedis.zadd("cartgoods-" + 233, 13, "13-233-1");
+			// jedis.zadd("cartgoods-" + 233, 14, "14-251-2");
+			// jedis.zadd("cartgoods-" + 233, 1, "1-231-3");
+			// jedis.zadd("cartgoods-" + 233, 0, "0-231-3");
+			// jedis.zadd("cartgoods-" + 233, 06, "6-165-4");
+			// jedis.zadd("cartgoods-" + 233, 5, "5-241-5");
+			// jedis.zadd("cartgoods-" + 233, 2, "2-351-6");
+			// jedis.zadd("cartgoods-" + 233, 0, "0-351-6");
+			// System.out.println(jedis.zrange("cartgoods-" + 233, 0, -1));
+			/** list **/
+			jedis.flushAll();
+			Long userid = 233L;
+			String key1 = userid + "-actList";
+			jedis.lpush(key1, "0");
+			jedis.lpush(key1, "1");
+			jedis.lpush(key1, "2");
+			jedis.lpush(key1, "4");
+			jedis.lpush(key1, "5");
+			jedis.lpush(key1, "6");
+			System.out.println(jedis.lrange(key1, 0, -1));
+			String key2 = userid + "-actList-0";
+			jedis.hset(key2, "12", "1");
+			jedis.hset(key2, "13", "14");
+			jedis.hset(key2, "1", "3");
+			jedis.hset(key2, "3", "7");
+			jedis.hset(key2, "6", "8");
+			jedis.hincrBy(key2, "13", 1);
+			jedis.hset(key2, "6", "16");
+			jedis.hdel(key2, "3");
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("123", "345");
+			jedis.hmset(key2, map);
+			System.out.println(jedis.hgetAll(key2));
+
+			Set<String> set = jedis.keys(userid + "*");
+			for (String str : set) {
+				jedis.del(str);
 			}
-			switch (type) {// 判断活动类型
-			case "满减":
-				Double total1 = 0d;
-				for (OrdersDetail od : cartBean.getList()) {
-					total1 += od.getPrice();
-				}
-				if (activity.getMinPrice() < total1) {
-					totalPrice = totalPrice + total1 - activity.getNum();
-				}
-				break;
-			case "满赠":
-				Double total2 = 0d;
-				for (OrdersDetail od : cartBean.getList()) {
-					if (od.getIsGift() == 0) {
-						total2 += od.getPrice();
-					}
-					totalPrice += total2;
-				}
-				break;
-			case "折扣":
-				Double total3 = 0d;
-				for (OrdersDetail od : cartBean.getList()) {
-					if (od.getIsGift() == 0) {
-						total3 += od.getPrice();
-					}
-				}
-				break;
-			case "":
-				Double total4 = 0d;
-				for (OrdersDetail od : cartBean.getList()) {
-					if (od.getIsGift() == 0) {
-						total4 += od.getPrice();
-					}
-					totalPrice += total4;
-				}
-				break;
-			}
+			System.out.println(jedis.hgetAll(key2));
+			System.out.println(jedis.lrange(key1, 0, -1));
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+
 	}
 }

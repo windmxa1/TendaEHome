@@ -21,8 +21,25 @@ public class Test06 {
 
 	public static void main(String[] args) throws JsonParseException,
 			JsonMappingException, IOException {
-		empty();
-//		delete();
+		 empty();
+		// delete();
+//		test();
+	}
+
+	private static void test() {
+		System.out.println(RedisUtil.getData("1123"));
+		RedisUtil.addData("1123", "sdfs", null);
+		System.out.println(RedisUtil.getData("1123"));
+		RedisUtil.del("1123");
+		System.out.println(RedisUtil.getData("1123"));
+		RedisUtil.addData("151-asd-51", "12651", null);
+		RedisUtil.addData("151-asd", "12651", null);
+		RedisUtil.addData("asd-51", "12651", null);
+		RedisUtil.delAll("*asd");
+		System.out.println(RedisUtil.getData("151-asd-51"));
+		System.out.println(RedisUtil.getData("151-asd"));
+		System.out.println(RedisUtil.getData("asd-51"));
+		
 	}
 
 	private static void empty() throws JsonProcessingException {
